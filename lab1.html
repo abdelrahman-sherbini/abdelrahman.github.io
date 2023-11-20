@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Practical Malware Analysis - Lab 1 &mdash; abdelrahmn walkthrough 1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="_static/fonts.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Welcome to abdelrahmn walkthrough’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            abdelrahmn walkthrough
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Practical Malware Analysis - Lab 1</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#lab-1-1">Lab 1-1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lab-1-2">Lab 1-2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lab-1-3">Lab 1-3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lab-1-4">Lab 1-4</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">abdelrahmn walkthrough</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Practical Malware Analysis - Lab 1</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/lab1.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="practical-malware-analysis-lab-1">
+<h1>Practical Malware Analysis - Lab 1<a class="headerlink" href="#practical-malware-analysis-lab-1" title="Permalink to this heading"></a></h1>
+<section id="lab-1-1">
+<h2>Lab 1-1<a class="headerlink" href="#lab-1-1" title="Permalink to this heading"></a></h2>
+<p>This lab uses the files <em>Lab01-01.exe</em> and <em>Lab01-01.dll</em>. Use the tools and techniques
+described in the chapter to gain information about the files and
+answer the questions below.</p>
+<p><strong>Q1:</strong> <strong>Upload the files to http://www.VirusTotal.com/ and view the reports. Does either file match any existing antivirus signatures?</strong></p>
+<p>Uploading Lab01-01.dll 45 vendors flagged as suspicious</p>
+<img alt="_images/lab01-1dll.png" src="_images/lab01-1dll.png" />
+<p>Uploading Lab01-01.exe 55 vendors flagged as suspicious</p>
+<img alt="_images/lab01-1exe.png" src="_images/lab01-1exe.png" />
+<p><strong>Q2-</strong> <strong>When were these files compiled?</strong></p>
+<p>Lab01-01.dll is compiled at <code class="docutils literal notranslate"><span class="pre">Sun</span> <span class="pre">Dec</span> <span class="pre">19</span> <span class="pre">18:16:38</span> <span class="pre">2010</span></code></p>
+<img alt="_images/lab1-1q2.png" src="_images/lab1-1q2.png" />
+<p>Lab01-01.exe is compiled at <code class="docutils literal notranslate"><span class="pre">Sun</span> <span class="pre">Dec</span> <span class="pre">19</span> <span class="pre">18:16:19</span> <span class="pre">2010</span></code></p>
+<img alt="_images/lab1-1q2exe.png" src="_images/lab1-1q2exe.png" />
+<p><strong>Q3-</strong> <strong>Are there any indications that either of these files is packed or obfuscated? If so, what are these indicators?</strong></p>
+<p>Peid for Lab01-01.dll indicates no packing</p>
+<img alt="_images/lab1-1q3.png" src="_images/lab1-1q3.png" />
+<p>Peid for Lab01-01.exe indicates no packing</p>
+<img alt="_images/lab1-1q3exe.png" src="_images/lab1-1q3exe.png" />
+<p>Moreover both has decent number of imports</p>
+<p><strong>Q4-</strong> <strong>Do any imports hint at what this malware does? If so, which imports are they?</strong></p>
+<p>Using PsStudio to check imports on both</p>
+<p>Lab01-01.exe imports show it creates, find and views files</p>
+<img alt="_images/lab1-1q4exe.png" src="_images/lab1-1q4exe.png" />
+<p>Lab01-01.dll imports show it uses <code class="docutils literal notranslate"><span class="pre">WS2_32.dll</span></code> for creating sockets means we need to investigate the traffic, it also uses createprocess from <code class="docutils literal notranslate"><span class="pre">kernel32.dll</span></code>
+which means investigate new process spawned</p>
+<img alt="_images/lab1-1q4.png" src="_images/lab1-1q4.png" />
+<p><strong>Q5-</strong> <strong>Do any imports hint at what this malware does? If so, which imports are they?</strong></p>
+<p>Yes, FindFirstFile and FindNextFile imports tells us that the malware searches for somefile and that it can view and modify it</p>
+<p><strong>Q6-</strong> <strong>What network-based indicators could be used to find this malware on infected machines?</strong></p>
+<p>Running strings on the dll gives us some usefull information like the ip used <code class="docutils literal notranslate"><span class="pre">127.26.152.13</span></code> we need to watch traffic coming from and to this ip</p>
+<img alt="_images/lab1-1q5.png" src="_images/lab1-1q5.png" />
+<p>Running strings on the exe shows kerne132 (with 1 not l) we should investigate this file</p>
+<img alt="_images/lab1-1q7exe.png" src="_images/lab1-1q7exe.png" />
+<p><strong>Q7-</strong> <strong>What would you guess is the purpose of these files?</strong></p>
+<p>We noticed createprocess, sleep, exec, and socket imports are used. Which may mean it’s an agent to connect to a C&amp;C server</p>
+</section>
+<section id="lab-1-2">
+<h2>Lab 1-2<a class="headerlink" href="#lab-1-2" title="Permalink to this heading"></a></h2>
+<p>Analyze the file Lab01-02.exe.</p>
+<p><strong>Q1-</strong> <strong>Upload the Lab01-02.exe file to http://www.VirusTotal.com/. Does it match any existing antivirus definitions?</strong></p>
+<p>Yes, Trojan</p>
+<img alt="_images/lab1-2q1.png" src="_images/lab1-2q1.png" />
+<p><strong>Q2-</strong> <strong>Are there any indications that this file is packed or obfuscated? If so, what are these indicators? If the file is packed, unpack it if possible.</strong></p>
+<p>Yes, Running it against Peid shows it is packed with UPX</p>
+<img alt="_images/lab1-2q2.png" src="_images/lab1-2q2.png" />
+<p>We can unpack it with</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt;<span class="w"> </span>upx<span class="w"> </span>-d<span class="w"> </span>lab01-02.exe
+</pre></div>
+</div>
+<p><strong>Q3-</strong> <strong>Do any imports hint at this program’s functionality? If so, which imports are they and what do they tell you?</strong></p>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">CreateService,</span> <span class="pre">StartService*</span></code> which are used to create and start services.</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">internetopenurl,</span> <span class="pre">internetopen</span></code> which are used for Opening a resource specified by a complete FTP or HTTP URL</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">GetModuleFileName</span></code> which are used to obtain the fully qualified name of a module, given its handle.</div>
+</div>
+<img alt="_images/lab1-2q33.png" src="_images/lab1-2q33.png" />
+<p><strong>Q4-</strong> <strong>What host- or network-based indicators could be used to identify this malware on infected machines?</strong></p>
+<p>Running strings we could see it uses Internet Explorer 8.0 to connect to www.malwareanalysisbook.com</p>
+<img alt="_images/lab1-2q4.png" src="_images/lab1-2q4.png" />
+</section>
+<section id="lab-1-3">
+<h2>Lab 1-3<a class="headerlink" href="#lab-1-3" title="Permalink to this heading"></a></h2>
+<p>Analyze the file Lab01-03.exe.</p>
+<p><strong>Q1-</strong> <strong>Upload the Lab01-03.exe file to http://www.VirusTotal.com/. Does it match any existing antivirus definitions?</strong></p>
+<p>Yes, it flagged 64 AV as Trojan</p>
+<img alt="_images/lab1-3q1.png" src="_images/lab1-3q1.png" />
+<p><strong>Q2-</strong> <strong>Are there any indications that this file is packed or obfuscated? If so, what are these indicators? If the file is packed, unpack it if possible.</strong></p>
+<p>Running it against Peid shows it is packed with FSG 1.0 , looks like it has to be unpacked manually</p>
+<img alt="_images/lab1-3q2.png" src="_images/lab1-3q2.png" />
+<p><strong>Q3-</strong> <strong>Do any imports hint at this program’s functionality? If so, which imports are they and what do they tell you?</strong></p>
+<p>We can only see LoadLibrary and GetProcAddress imports which are used in packing</p>
+<p><strong>Q4-</strong> <strong>What host- or network-based indicators could be used to identify this malware on infected machines?</strong></p>
+<p>Can’t see any usefull strings as it is packed</p>
+<img alt="_images/lab1-3q4.png" src="_images/lab1-3q4.png" />
+</section>
+<section id="lab-1-4">
+<h2>Lab 1-4<a class="headerlink" href="#lab-1-4" title="Permalink to this heading"></a></h2>
+<p>Analyze the file Lab01-04.exe.</p>
+<p><strong>Q1-</strong> <strong>Upload the Lab01-04.exe file to http://www.VirusTotal.com/. Does it match any existing antivirus definitions?</strong></p>
+<p>Yes, it flagged 63 AV as Trojan</p>
+<img alt="_images/lab1-4q1.png" src="_images/lab1-4q1.png" />
+<p><strong>Q2-</strong> <strong>Are there any indications that this file is packed or obfuscated? If so,what are these indicators? If the file is packed, unpack it if possible.</strong></p>
+<p>No, it has no malformed section names , the virtualsize is close to rawsize and it has decent number of imports</p>
+<img alt="_images/lab1-4q2.png" src="_images/lab1-4q2.png" />
+<p><strong>Q3-</strong> <strong>When was this program compiled?</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">Sat</span> <span class="pre">Aug</span> <span class="pre">31</span> <span class="pre">00:26:59</span> <span class="pre">2019</span></code></p>
+<img alt="_images/lab1-4q3.png" src="_images/lab1-4q3.png" />
+<p><strong>Q4-</strong> <strong>Do any imports hint at this program’s functionality? If so, which imports are they and what do they tell you?</strong></p>
+<p>It can lookup privileges and adjust privileges and open token of a process and create and control process</p>
+<img alt="_images/lab1-4q4.png" src="_images/lab1-4q4.png" />
+<p><strong>Q5-</strong> <strong>What host- or network-based indicators could be used to identify this malware on infected machines?</strong></p>
+<p>It most likely creates a file wupdmgrd.exe we should investigate it and downloades file from <a class="reference external" href="https://www.thepracticalmalwareanalysis.com/updater.exe">https://www.thepracticalmalwareanalysis.com/updater.exe</a></p>
+<img alt="_images/lab1-4q6.png" src="_images/lab1-4q6.png" />
+<p><strong>Q6-</strong> <strong>This file has one resource in the resource section. Use Resource Hacker to examine that resource, and then use it to extract the resource. What can you learn from the resource?</strong></p>
+<p>There was a binary exe file in the .rsrc section. Looking at imports we see it used UrlDownloadToFile to download a file from a url most likely the updater.exe</p>
+<img alt="_images/lab1-4q66.png" src="_images/lab1-4q66.png" />
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to abdelrahmn walkthrough’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, abdelrahman khaled.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

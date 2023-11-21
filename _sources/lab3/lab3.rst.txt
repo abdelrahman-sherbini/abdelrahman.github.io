@@ -1,6 +1,6 @@
 Practical Malware Analysis - Lab 3
 ==================================
-| First my setup for this lab is two VMs Win7 and linux connected together with VMNET
+| First my setup for this lab is two VMs Win7 and linux connected together with Internal network
 | Setup INetSim on linux VM
 
 On Win7:
@@ -21,7 +21,7 @@ Using PeBear we get only ``exitprocess`` import from ``kernel32.dl`` (packed?)
 
 .. image:: lab3-1q1.png
 
-Using Strings command we get many useful information like registries used, domain name, and some executable name 
+Using Strings command we get many useful information like registries used, domain name, and some executable and driver name 
 
 .. image:: lab3-1q11.png
 
@@ -35,11 +35,19 @@ Analyze the malware found in the file *Lab03-02.dll* using basic dynamic analysi
 
 **Q1: How can you get this malware to install itself?**
 
+By utiltizing rundll32.exe
+
 **Q2: How would you get this malware to run after installation?**
+
+Using sc command
 
 **Q3: How can you find the process under which this malware is running?**
 
+Using filter process name in Process Explorer
+
 **Q4: Which filters could you set in order to use procmon to glean information?**
+
+By parent PID
 
 **Q5: What are the malware’s host-based indicators?**
 
@@ -63,6 +71,14 @@ Analyze the malware found in the *file Lab03-04.exe* using basic dynamic analysi
 
 **Q1: What happens when you run this file?**
 
+It deletes itself, in process Explorer searching for ProcessCreate for any processes created we notice it calls cmd to delete the exe
+
+.. image:: lab3-4q1.png
+
 **Q2: What is causing the roadblock in dynamic analysis?**
 
+Most likely it requires certain conditions for it not be deleted (command line argument or not VM environment)
+
 **Q3: Are there other ways to run this program?**
+
+Don't know at this stage

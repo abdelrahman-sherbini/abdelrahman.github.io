@@ -71,7 +71,7 @@ Analyze the malware found in the *file Lab03-04.exe* using basic dynamic analysi
 
 **Q1: What happens when you run this file?**
 
-It deletes itself, in process Explorer searching for ProcessCreate for any processes created we notice it calls cmd to delete the exe
+It deletes itself, in procmon searching for ProcessCreate for any processes created we notice it calls cmd to delete the exe
 
 .. image:: lab3-4q1.png
 

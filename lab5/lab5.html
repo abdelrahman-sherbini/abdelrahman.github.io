@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Practical Malware Analysis - Lab 5 &mdash; abdelrahmn walkthrough 1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Practical Malware Analysis - Lab 3" href="../lab3/lab3.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            abdelrahmn walkthrough
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../lab1/lab1.html">Practical Malware Analysis - Lab 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab3/lab3.html">Practical Malware Analysis - Lab 3</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Practical Malware Analysis - Lab 5</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#lab-5-1">Lab 5-1</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">abdelrahmn walkthrough</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Practical Malware Analysis - Lab 5</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/lab5/lab5.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="practical-malware-analysis-lab-5">
+<h1>Practical Malware Analysis - Lab 5<a class="headerlink" href="#practical-malware-analysis-lab-5" title="Permalink to this heading"></a></h1>
+<div class="line-block">
+<div class="line">Utilizing IDA Pro</div>
+<div class="line">Analyze the malware found in the file Lab05-01.dll using only IDA Pro. The goal of this lab is to give you hands-on experience with IDA Pro. If you’ve already worked with IDA Pro, you may choose to ignore these questions and focus on reverse-engineering the malware.</div>
+</div>
+<section id="lab-5-1">
+<h2>Lab 5-1<a class="headerlink" href="#lab-5-1" title="Permalink to this heading"></a></h2>
+<p><strong>Q1: What is the address of DllMain?</strong></p>
+<p>When i loaded the dll into IDA Pro i was directed to the DllMain at address <code class="docutils literal notranslate"><span class="pre">1000D02E</span></code></p>
+<img alt="../_images/q1.png" src="../_images/q1.png" />
+<p>We can also search for the DllMain in Functions window</p>
+<img alt="../_images/q11.png" src="../_images/q11.png" />
+<p><strong>Q2: Use the Imports window to browse to gethostbyname. Where is the import located?</strong></p>
+<p>Viewing the Imports window then searching for gethostbyname we find it referenced at address <code class="docutils literal notranslate"><span class="pre">100163CC</span></code></p>
+<img alt="../_images/q2.png" src="../_images/q2.png" />
+<p><strong>Q3: How many functions call gethostbyname?</strong></p>
+<p>Using Xref (by pressing <code class="docutils literal notranslate"><span class="pre">x</span></code> on its idata address ). It was called 9 times with 5 times from unique methods</p>
+<img alt="../_images/q3.png" src="../_images/q3.png" />
+<p><strong>Q4: Focusing on the call to gethostbyname located at 0x10001757, can you figure out which DNS request will be made?</strong></p>
+<p>Pressing g to jump to <code class="docutils literal notranslate"><span class="pre">0x10001757</span></code> scrolling up we find the argument to the call pushed is the EAX Which
+Contains Data String reference address added with 0x0D which is 13 in decimal</p>
+<img alt="../_images/q4.png" src="../_images/q4.png" />
+<p>Going to the reference address by clicking twice on it and pressing U to undefine data then going up 13 places
+and pressing A to redefine at that offset +13 We get <code class="docutils literal notranslate"><span class="pre">pics.praticalmalwareanalysis.com</span></code></p>
+<img alt="../_images/q44.png" src="../_images/q44.png" />
+<p><strong>Q5: How many local variables has IDA Pro recognized for the subroutine at 0x10001656?</strong></p>
+<p>Jumping to same address we find 24 variable</p>
+<img alt="../_images/q5.png" src="../_images/q5.png" />
+<p><strong>Q6: How many parameters has IDA Pro recognized for the subroutine at 0x10001656?</strong></p>
+<p>Arguments passed to subroutine are referenced by positive value (with respect to ebp) and local variable negative values</p>
+<p>we notice only lpThreadParameter is the only parameter</p>
+<p><strong>Q7: Use the Strings window to locate the string cmd.exe /c in the disassembly. Where is it located?</strong></p>
+<p>At  <code class="docutils literal notranslate"><span class="pre">100101D0</span></code></p>
+<img alt="../_images/q6.png" src="../_images/q6.png" />
+<p><strong>Q8: What is happening in the area of code that references cmd.exe /c?</strong></p>
+<p>scrolling up we find string reference at <code class="docutils literal notranslate"><span class="pre">1001009D</span></code> “hi master” going to that offset we find “remote shell” which
+sounds like a C&amp;C session what this area of code opens</p>
+<img alt="../_images/q9.png" src="../_images/q9.png" />
+<img alt="../_images/q8.png" src="../_images/q8.png" />
+<p><strong>Q9: In the same area, at 0x100101C8, it looks like dword_1008E5C4 is a global variable that helps decide which path to take.
+How does the malware set dword_1008E5C4? (Hint: Use dword_1008E5C4’s cross-references.)</strong></p>
+<p>Going to dword_1008E5C4 offset by double clicking</p>
+<img alt="../_images/q99.png" src="../_images/q99.png" />
+<p>Pressing x to see the places where it was referenced to see how it was set. Going to the most likely place it was set in <code class="docutils literal notranslate"><span class="pre">mov</span> <span class="pre">dword_1008E5C4,eax</span></code></p>
+<img alt="../_images/q999.png" src="../_images/q999.png" />
+<p>Noticed that a function is called then the return (EAX) is passed to the global variable dword_1008E5C4</p>
+<img alt="../_images/q9999.png" src="../_images/q9999.png" />
+<p>Going into the function. It begins with initializing the stack then allocating space on the stack (for variables and other data)
+Then initializing the structure VersionInformation to be passed (its pointer) into GetVersionEXA, setting eax to zero , then comparing
+dwPlatformId if equal to 2 and setting 1 (True) or 0 (False) to al register the result register then returning</p>
+<p>The Function in overall checks the OS is Win32NT and acts on it</p>
+<img alt="../_images/q99999.png" src="../_images/q99999.png" />
+<p><strong>Q10: A few hundred lines into the subroutine at 0x1000FF58, a series of comparisons use memcmp to compare strings.
+What happens if the string comparison to robotwork is successful (when memcmp returns 0)?</strong></p>
+<p><strong>Q11: What does the export PSLIST do?</strong></p>
+<p><strong>Q12: Use the graph mode to graph the cross-references from sub_10004E79. Which API functions could be called by entering this function? Based on the API functions alone, what could you rename this function?</strong></p>
+<p><strong>Q13: How many Windows API functions does DllMain call directly? How many at a depth of 2?</strong></p>
+<p><strong>Q14: At 0x10001358, there is a call to Sleep (an API function that takes one parameter containing the number of milliseconds to sleep). Looking backward through the code, how long will the program sleep if this code executes?</strong></p>
+<p><strong>Q15: At 0x10001701 is a call to socket. What are the three parameters?</strong></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../lab3/lab3.html" class="btn btn-neutral float-left" title="Practical Malware Analysis - Lab 3" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, abdelrahman khaled.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

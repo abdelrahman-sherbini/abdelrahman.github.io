@@ -129,7 +129,7 @@
 <h2>Lab 3-4<a class="headerlink" href="#lab-3-4" title="Permalink to this heading"></a></h2>
 <p>Analyze the malware found in the <em>file Lab03-04.exe</em> using basic dynamic analysis tools. (This program is analyzed further in the Chapter 9 labs.)</p>
 <p><strong>Q1: What happens when you run this file?</strong></p>
-<p>It deletes itself, in process Explorer searching for ProcessCreate for any processes created we notice it calls cmd to delete the exe</p>
+<p>It deletes itself, in procmon searching for ProcessCreate for any processes created we notice it calls cmd to delete the exe</p>
 <img alt="../_images/lab3-4q1.png" src="../_images/lab3-4q1.png" />
 <p><strong>Q2: What is causing the roadblock in dynamic analysis?</strong></p>
 <p>Most likely it requires certain conditions for it not be deleted (command line argument or not VM environment)</p>

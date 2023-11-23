@@ -127,11 +127,44 @@ How does the malware set dword_1008E5C4? (Hint: Use dword_1008E5C4’s cross-ref
 <p>Going into the function. It begins with initializing the stack then allocating space on the stack (for variables and other data)
 Then initializing the structure VersionInformation to be passed (its pointer) into GetVersionEXA, setting eax to zero , then comparing
 dwPlatformId if equal to 2 and setting 1 (True) or 0 (False) to al register the result register then returning</p>
-<p>The Function in overall checks the OS is Win32NT and acts on it</p>
+<p>The Function in overall checks the OS is <code class="docutils literal notranslate"><span class="pre">Win32NT</span></code> and acts on it</p>
 <img alt="../_images/q99999.png" src="../_images/q99999.png" />
 <p><strong>Q10: A few hundred lines into the subroutine at 0x1000FF58, a series of comparisons use memcmp to compare strings.
 What happens if the string comparison to robotwork is successful (when memcmp returns 0)?</strong></p>
+<p>Going to the address using jump (g) then search for text memcmp</p>
+<img alt="../_images/q10.png" src="../_images/q10.png" />
+<p>When memcmp is successful and EAX is 0 , <code class="docutils literal notranslate"><span class="pre">Test</span> <span class="pre">eax,eax</span></code> sets Zero flag to 1, and JNZ jumps if zero flag is 0, so no jump</p>
+<img alt="../_images/q102.png" src="../_images/q102.png" />
+<p>We go into next instruction the flow should take is <code class="docutils literal notranslate"><span class="pre">call</span> <span class="pre">sub_100052A2</span></code> going into that routine</p>
+<img alt="../_images/q105.png" src="../_images/q105.png" />
+<p>First in the start of function it takes parameter of type socket and sets variables ida named it buffer and data
+looks like it will send data over the network need to watch the network traffic</p>
+<img alt="../_images/q107.png" src="../_images/q107.png" />
+<p>It’s trying to open registery <code class="docutils literal notranslate"><span class="pre">SOFTWARE\\Microsoft\\Windows\\CurrentVersion</span></code> if it opens it ,RegOpenKeyEXA sets eax to 0 if successful
+and the flow jumps to (JZ) <code class="docutils literal notranslate"><span class="pre">loc_10005309</span></code></p>
+<img alt="../_images/q106.png" src="../_images/q106.png" />
+<p>at <code class="docutils literal notranslate"><span class="pre">10005322</span></code> it is querying registery worktime which may be sent over the network</p>
 <p><strong>Q11: What does the export PSLIST do?</strong></p>
+<p>Going to exports windows, double clicking PSLIST to see its code</p>
+<img alt="../_images/q111.png" src="../_images/q111.png" />
+<p>First it sets global vaiable <code class="docutils literal notranslate"><span class="pre">dword_1008E5BC</span></code> to 1 then calls the function <code class="docutils literal notranslate"><span class="pre">sub_100036C3</span></code> going into that function</p>
+<img alt="../_images/q112.png" src="../_images/q112.png" />
+<div class="line-block">
+<div class="line">It check the OS is WIN32NT</div>
+<div class="line">and <code class="docutils literal notranslate"><span class="pre">cmp</span> <span class="pre">majorversion</span> <span class="pre">,</span> <span class="pre">5</span></code> <code class="docutils literal notranslate"><span class="pre">jb</span> <span class="pre">short</span> <span class="pre">loc_100036FA</span></code></div>
+<div class="line">It will jump to specified location if version of OS is less than 5 (if CF is set)</div>
+<div class="line">if it passes all checks it returns 1</div>
+<div class="line">Then in pslist the flow checks if the returned value is 0 or 1</div>
+</div>
+<img alt="../_images/q113.png" src="../_images/q113.png" />
+<p>If it’s 1 the flow goes on to the next piece which checks Str variable isnot null or empty</p>
+<img alt="../_images/q114.png" src="../_images/q114.png" />
+<div class="line-block">
+<div class="line">if null or empty strlen returns (sets EAX) 0 which set ZF to 1 the JNZ jump is not taken (taken if ZF not set  )</div>
+<div class="line">if the Str variable is non-zero it will call <code class="docutils literal notranslate"><span class="pre">1000664C</span></code></div>
+<div class="line">if Str is zero or null it will call <code class="docutils literal notranslate"><span class="pre">10006518</span></code></div>
+</div>
+<img alt="../_images/q115.png" src="../_images/q115.png" />
 <p><strong>Q12: Use the graph mode to graph the cross-references from sub_10004E79. Which API functions could be called by entering this function? Based on the API functions alone, what could you rename this function?</strong></p>
 <p><strong>Q13: How many Windows API functions does DllMain call directly? How many at a depth of 2?</strong></p>
 <p><strong>Q14: At 0x10001358, there is a call to Sleep (an API function that takes one parameter containing the number of milliseconds to sleep). Looking backward through the code, how long will the program sleep if this code executes?</strong></p>

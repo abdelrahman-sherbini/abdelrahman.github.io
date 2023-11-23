@@ -86,14 +86,67 @@ Going into the function. It begins with initializing the stack then allocating s
 Then initializing the structure VersionInformation to be passed (its pointer) into GetVersionEXA, setting eax to zero , then comparing
 dwPlatformId if equal to 2 and setting 1 (True) or 0 (False) to al register the result register then returning
 
-The Function in overall checks the OS is Win32NT and acts on it
+The Function in overall checks the OS is ``Win32NT`` and acts on it
 
 .. image:: q99999.png
 
 **Q10: A few hundred lines into the subroutine at 0x1000FF58, a series of comparisons use memcmp to compare strings.
 What happens if the string comparison to robotwork is successful (when memcmp returns 0)?**
 
+Going to the address using jump (g) then search for text memcmp
+
+.. image:: q10.png
+
+When memcmp is successful and EAX is 0 , ``Test eax,eax`` sets Zero flag to 1, and JNZ jumps if zero flag is 0, so no jump 
+
+.. image:: q102.png
+
+We go into next instruction the flow should take is ``call sub_100052A2`` going into that routine
+
+.. image:: q105.png
+
+First in the start of function it takes parameter of type socket and sets variables ida named it buffer and data
+looks like it will send data over the network need to watch the network traffic
+
+.. image:: q107.png
+
+
+It's trying to open registery ``SOFTWARE\\Microsoft\\Windows\\CurrentVersion`` if it opens it ,RegOpenKeyEXA sets eax to 0 if successful
+and the flow jumps to (JZ) ``loc_10005309`` 
+
+.. image:: q106.png
+
+at ``10005322`` it is querying registery worktime which may be sent over the network
+
 **Q11: What does the export PSLIST do?**
+
+Going to exports windows, double clicking PSLIST to see its code
+
+.. image:: q111.png
+
+First it sets global vaiable ``dword_1008E5BC`` to 1 then calls the function ``sub_100036C3`` going into that function
+
+.. image:: q112.png
+
+| It check the OS is WIN32NT 
+| and ``cmp majorversion , 5`` ``jb short loc_100036FA`` 
+| It will jump to specified location if version of OS is less than 5 (if CF is set) 
+| if it passes all checks it returns 1 
+| Then in pslist the flow checks if the returned value is 0 or 1
+
+.. image:: q113.png
+
+If it's 1 the flow goes on to the next piece which checks Str variable isnot null or empty 
+
+.. image:: q114.png
+
+| if null or empty strlen returns (sets EAX) 0 which set ZF to 1 the JNZ jump is not taken (taken if ZF not set  )
+| if the Str variable is non-zero it will call ``1000664C``
+| if Str is zero or null it will call ``10006518`` 
+
+.. image:: q115.png
+    
+
 
 **Q12: Use the graph mode to graph the cross-references from sub_10004E79. Which API functions could be called by entering this function? Based on the API functions alone, what could you rename this function?**
 

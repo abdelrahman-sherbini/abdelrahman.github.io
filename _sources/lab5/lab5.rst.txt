@@ -166,12 +166,40 @@ Going over that other branch if Str is zero or null ``10006518``
 Seems like its the same but without sending any data over the network
 
 
-**Q12: Use the graph mode to graph the cross-references from sub_10004E79. Which API functions could be called by entering this function? Based on the API functions alone, what could you rename this function?**
+**Q12: Use the graph mode to graph the cross-references from sub_10004E79. Which API functions 
+could be called by entering this function? Based on the API functions alone, what could you rename this function?**
 
+View -> Graph -> XRef From 
 
+.. image:: q12.png
+
+Sounds like it get the langauge identifier from ``GetSystemLanguageID`` then sets it to some buffer with ``sprintf`` to send 
+it over the network with ``sub_100038EE`` , we could name this function send_languageId
 
 **Q13: How many Windows API functions does DllMain call directly? How many at a depth of 2?**
 
+For direct calls setting depth at 1
+
+.. image:: q13.png
+
+We see 4 WIN API calls
+
+.. image:: q131.png
+
+At depth 2 A lot
+
 **Q14: At 0x10001358, there is a call to Sleep (an API function that takes one parameter containing the number of milliseconds to sleep). Looking backward through the code, how long will the program sleep if this code executes?**
 
+First offset 10019020 ([This is CTI]30) is moved to eax ,then add with 0x0D which is 13 in decimal which sets eax to offset starting with string data 30
+Then converted to int then multiplied with 1000 decimal and passed to sleep
+
+It sleep for 30 seconds
+
+.. image:: q14.png
+
 **Q15: At 0x10001701 is a call to socket. What are the three parameters?**
+
+The three parameters pushed to the stack before the call protocol,type,af (6,1,2)
+
+.. image:: q15.png
+

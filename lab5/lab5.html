@@ -175,10 +175,26 @@ Creates a structure <code class="docutils literal notranslate"><span class="pre"
 <p>Going over that other branch if Str is zero or null <code class="docutils literal notranslate"><span class="pre">10006518</span></code></p>
 <img alt="../_images/q119.png" src="../_images/q119.png" />
 <p>Seems like its the same but without sending any data over the network</p>
-<p><strong>Q12: Use the graph mode to graph the cross-references from sub_10004E79. Which API functions could be called by entering this function? Based on the API functions alone, what could you rename this function?</strong></p>
+<p><strong>Q12: Use the graph mode to graph the cross-references from sub_10004E79. Which API functions
+could be called by entering this function? Based on the API functions alone, what could you rename this function?</strong></p>
+<p>View -&gt; Graph -&gt; XRef From</p>
+<img alt="../_images/q12.png" src="../_images/q12.png" />
+<p>Sounds like it get the langauge identifier from <code class="docutils literal notranslate"><span class="pre">GetSystemLanguageID</span></code> then sets it to some buffer with <code class="docutils literal notranslate"><span class="pre">sprintf</span></code> to send
+it over the network with <code class="docutils literal notranslate"><span class="pre">sub_100038EE</span></code> , we could name this function send_languageId</p>
 <p><strong>Q13: How many Windows API functions does DllMain call directly? How many at a depth of 2?</strong></p>
+<p>For direct calls setting depth at 1</p>
+<img alt="../_images/q13.png" src="../_images/q13.png" />
+<p>We see 4 WIN API calls</p>
+<img alt="../_images/q131.png" src="../_images/q131.png" />
+<p>At depth 2 A lot</p>
 <p><strong>Q14: At 0x10001358, there is a call to Sleep (an API function that takes one parameter containing the number of milliseconds to sleep). Looking backward through the code, how long will the program sleep if this code executes?</strong></p>
+<p>First offset 10019020 ([This is CTI]30) is moved to eax ,then add with 0x0D which is 13 in decimal which sets eax to offset starting with string data 30
+Then converted to int then multiplied with 1000 decimal and passed to sleep</p>
+<p>It sleep for 30 seconds</p>
+<img alt="../_images/q14.png" src="../_images/q14.png" />
 <p><strong>Q15: At 0x10001701 is a call to socket. What are the three parameters?</strong></p>
+<p>The three parameters pushed to the stack before the call protocol,type,af (6,1,2)</p>
+<img alt="../_images/q15.png" src="../_images/q15.png" />
 </section>
 </section>
 

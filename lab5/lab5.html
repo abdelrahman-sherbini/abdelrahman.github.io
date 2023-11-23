@@ -165,6 +165,16 @@ and the flow jumps to (JZ) <code class="docutils literal notranslate"><span clas
 <div class="line">if Str is zero or null it will call <code class="docutils literal notranslate"><span class="pre">10006518</span></code></div>
 </div>
 <img alt="../_images/q115.png" src="../_images/q115.png" />
+<p>In <code class="docutils literal notranslate"><span class="pre">1000664C</span></code> We can see it call CreateToolHelp32Snapshot which <code class="docutils literal notranslate"><span class="pre">Takes</span> <span class="pre">a</span> <span class="pre">snapshot</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">specified</span> <span class="pre">processes,</span> <span class="pre">as</span> <span class="pre">well</span> <span class="pre">as</span> <span class="pre">the</span> <span class="pre">heaps,</span> <span class="pre">modules,</span> <span class="pre">and</span> <span class="pre">threads</span> <span class="pre">used</span> <span class="pre">by</span> <span class="pre">these</span> <span class="pre">processes.</span></code>
+Creates a structure <code class="docutils literal notranslate"><span class="pre">PROCESSENTRY32</span></code> puts the snapshot into it</p>
+<img alt="../_images/q116.png" src="../_images/q116.png" />
+<p>In the loop, it checks if the name of the process (pe.szExeFile) matches a specified string (Str) If checks to gathers information about that process from the snapshot</p>
+<img alt="../_images/q117.png" src="../_images/q117.png" />
+<p>It sends those information to the network</p>
+<img alt="../_images/q118.png" src="../_images/q118.png" />
+<p>Going over that other branch if Str is zero or null <code class="docutils literal notranslate"><span class="pre">10006518</span></code></p>
+<img alt="../_images/q119.png" src="../_images/q119.png" />
+<p>Seems like its the same but without sending any data over the network</p>
 <p><strong>Q12: Use the graph mode to graph the cross-references from sub_10004E79. Which API functions could be called by entering this function? Based on the API functions alone, what could you rename this function?</strong></p>
 <p><strong>Q13: How many Windows API functions does DllMain call directly? How many at a depth of 2?</strong></p>
 <p><strong>Q14: At 0x10001358, there is a call to Sleep (an API function that takes one parameter containing the number of milliseconds to sleep). Looking backward through the code, how long will the program sleep if this code executes?</strong></p>

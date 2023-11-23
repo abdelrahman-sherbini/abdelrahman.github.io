@@ -145,10 +145,30 @@ If it's 1 the flow goes on to the next piece which checks Str variable isnot nul
 | if Str is zero or null it will call ``10006518`` 
 
 .. image:: q115.png
-    
+
+In ``1000664C`` We can see it call CreateToolHelp32Snapshot which ``Takes a snapshot of the specified processes, as well as the heaps, modules, and threads used by these processes.``
+Creates a structure ``PROCESSENTRY32`` puts the snapshot into it 
+
+.. image:: q116.png
+
+In the loop, it checks if the name of the process (pe.szExeFile) matches a specified string (Str) If checks to gathers information about that process from the snapshot
+
+.. image:: q117.png
+
+It sends those information to the network
+
+.. image:: q118.png
+
+Going over that other branch if Str is zero or null ``10006518``
+
+.. image:: q119.png
+
+Seems like its the same but without sending any data over the network
 
 
 **Q12: Use the graph mode to graph the cross-references from sub_10004E79. Which API functions could be called by entering this function? Based on the API functions alone, what could you rename this function?**
+
+
 
 **Q13: How many Windows API functions does DllMain call directly? How many at a depth of 2?**
 

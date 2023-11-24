@@ -193,8 +193,42 @@ Then converted to int then multiplied with 1000 decimal and passed to sleep</p>
 <p>It sleep for 30 seconds</p>
 <img alt="../_images/q14.png" src="../_images/q14.png" />
 <p><strong>Q15: At 0x10001701 is a call to socket. What are the three parameters?</strong></p>
-<p>The three parameters pushed to the stack before the call protocol,type,af (6,1,2)</p>
+<p>The three parameters pushed to the stack before the call; protocol,type,af (6,1,2)</p>
 <img alt="../_images/q15.png" src="../_images/q15.png" />
+<p><strong>Q16: Using the MSDN page for socket and the named symbolic constants functionality
+in IDA Pro, can you make the parameters more meaningful?
+What are the parameters after you apply changes?</strong></p>
+<p>Using
+.. _target MSDN page:https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-socket</p>
+<img alt="../_images/q16.png" src="../_images/q16.png" />
+<img alt="../_images/q161.png" src="../_images/q161.png" />
+<img alt="../_images/q162.png" src="../_images/q162.png" />
+<p>We rename the parameters with right click -&gt; Symbolic constant -&gt; Use Symbolic constant</p>
+<img alt="../_images/q163.png" src="../_images/q163.png" />
+<p><strong>Q17: Search for usage of the in instruction (opcode 0xED). This instruction is
+used with a magic string VMXh to perform VMware detection. Is that in use
+in this malware? Using the cross-references to the function that executes
+the in instruction, is there further evidence of VMware detection?</strong></p>
+<p>ALT +b for search byte then set all occurences</p>
+<img alt="../_images/q17.png" src="../_images/q17.png" />
+<p>going into sub_10006196, we see there is a compare with hex when converted to ASCII it get string VMXh</p>
+<img alt="../_images/q18.png" src="../_images/q18.png" />
+<p>There are 3 functions that references this functions, which they cancel install if VM detected</p>
+<img alt="../_images/q172.png" src="../_images/q172.png" />
+<p><strong>Q18: Jump your cursor to 0x1001D988. What do you find?</strong></p>
+<p>Data of characters</p>
+<img alt="../_images/q181.png" src="../_images/q181.png" />
+<p><strong>Q19: If you have the IDA Python plug-in installed (included with the commercial
+version of IDA Pro), run Lab05-01.py, an IDA Pro Python script
+provided with the malware for this book. (Make sure the cursor is at
+0x1001D988.) What happens after you run the script?</strong></p>
+<p>Can’t run the files the python file is outdated but it XORs the data with 0x55</p>
+<p><strong>Q20: With the cursor in the same location, how do you turn this data into a
+single ASCII string?</strong></p>
+<p>By pressing a   (to change default formatting alt + a)</p>
+<p><strong>Q21: Open the script with a text editor. How does it work?</strong></p>
+<p>Xors data from current selected in screen to 0x50 loop with 0x55</p>
+<img alt="../_images/q21.png" src="../_images/q21.png" />
 </section>
 </section>
 

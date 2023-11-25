@@ -11,6 +11,7 @@ Welcome to abdelrahmn walkthrough!
    lab1/lab1
    lab3/lab3
    lab5/lab5
+   lab6/lab6
 
 
 

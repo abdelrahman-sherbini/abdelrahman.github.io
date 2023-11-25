@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Practical Malware Analysis - Lab 6 &mdash; abdelrahmn walkthrough 1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Practical Malware Analysis - Lab 5" href="../lab5/lab5.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            abdelrahmn walkthrough
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../lab1/lab1.html">Practical Malware Analysis - Lab 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab3/lab3.html">Practical Malware Analysis - Lab 3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab5/lab5.html">Practical Malware Analysis - Lab 5</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Practical Malware Analysis - Lab 6</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#lab-6-1">Lab 6-1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lab-6-2">Lab 6-2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lab-6-3">Lab 6-3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lab-6-4">Lab 6-4</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">abdelrahmn walkthrough</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Practical Malware Analysis - Lab 6</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/lab6/lab6.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="practical-malware-analysis-lab-6">
+<h1>Practical Malware Analysis - Lab 6<a class="headerlink" href="#practical-malware-analysis-lab-6" title="Permalink to this heading"></a></h1>
+<p>The goal of the labs for this chapter is to help you to understand the overall
+functionality of a program by analyzing code constructs. Each lab will guide
+you through discovering and analyzing a new code construct. Each lab builds
+on the previous one, thus creating a single, complicated piece of malware
+with four constructs. Once you’ve finished working through the labs, you
+should be able to more easily recognize these individual constructs when you
+encounter them in malware.</p>
+<section id="lab-6-1">
+<h2>Lab 6-1<a class="headerlink" href="#lab-6-1" title="Permalink to this heading"></a></h2>
+<p>In this lab, you will analyze the malware found in the file Lab06-01.exe.</p>
+<p><strong>Q1: What is the major code construct found in the only subroutine called by main?</strong></p>
+<p>In the main function we see a JNZ after compare instruction so it’s most likely if construct</p>
+<img alt="../_images/q19.png" src="../_images/q19.png" />
+<p>There a function called before, it checks Internet connection and prints the state with if condition (cmp + JZ) based on output</p>
+<img alt="../_images/q1110.png" src="../_images/q1110.png" />
+<p>Then string is pushed as a parameter to a subroutine for the next question</p>
+<p><strong>Q2: What is the subroutine located at 0x40105F?</strong></p>
+<p>Going into the subroutine it is most likely doing string operations into I/O stream</p>
+<img alt="../_images/q22.png" src="../_images/q22.png" />
+<p><strong>Q3: What is the purpose of this program?</strong></p>
+<p>Checking the Internet connection and printing to the output if there is a connected success or fail</p>
+<p>running the file</p>
+<img alt="../_images/q132.png" src="../_images/q132.png" />
+</section>
+<section id="lab-6-2">
+<h2>Lab 6-2<a class="headerlink" href="#lab-6-2" title="Permalink to this heading"></a></h2>
+<p>Analyze the malware found in the file Lab06-02.exe.</p>
+<p><strong>Q1: What operation does the first subroutine called by main perform?</strong></p>
+<p>It returns 1 if there is Internet connection and prints success</p>
+<img alt="../_images/q211.png" src="../_images/q211.png" />
+<p><strong>Q2: What is the subroutine located at 0x40117F?</strong></p>
+<p>A string argument is passed before calling that routine (same string format passed to printf)</p>
+<img alt="../_images/q221.png" src="../_images/q221.png" />
+<p>Same as Q2 in Lab 6-1</p>
+<p><strong>Q3: What does the second subroutine called by main do?</strong></p>
+<p>Here it tries to openurl practicalmalwareanalysis.com with internet explorer v7.5 agent and depending if success  jumps to location to continue or prints fail and returns</p>
+<img alt="../_images/q23.png" src="../_images/q23.png" />
+<p>If success it calls internetreadfile to try to read 200 bytes of the url and if fails, it prints failed to readfile and returns</p>
+<img alt="../_images/q231.png" src="../_images/q231.png" />
+<p>If success it compares first bye with 0x3C (“&lt;” in ASCII) and other conditions (when combined &lt;!–)</p>
+<img alt="../_images/q232.png" src="../_images/q232.png" />
+<p>If it fails any condition it prints failed to receive command and returns</p>
+<img alt="../_images/q234.png" src="../_images/q234.png" />
+<p><strong>Q4: What type of code construct is used in this subroutine?</strong></p>
+<p>It is a bunch of if conditions then switch case</p>
+<img alt="../_images/q232.png" src="../_images/q232.png" />
+<p><strong>Q5: Are there any network-based indicators for this program?</strong></p>
+<p>Yes User agent and Url</p>
+<img alt="../_images/q31.png" src="../_images/q31.png" />
+<p><strong>Q6: What is the purpose of this malware?</strong></p>
+<p>As a summary it will check internet connection then openurl to the url pma/cc.htm and check if it starts with &lt;!– then outputs <code class="docutils literal notranslate"><span class="pre">success</span> <span class="pre">parsed</span> <span class="pre">command</span></code>
+then sleeps for 6 seconds</p>
+<img alt="../_images/q25.png" src="../_images/q25.png" />
+</section>
+<section id="lab-6-3">
+<h2>Lab 6-3<a class="headerlink" href="#lab-6-3" title="Permalink to this heading"></a></h2>
+<p>In this lab, we’ll analyze the malware found in the file Lab06-03.exe.</p>
+<p><strong>Q1: Compare the calls in main to Lab 6-2 ’s main method. What is the new function called from main?</strong></p>
+<p><strong>Q2: What parameters does this new function take?</strong></p>
+<p><strong>Q3: What major code construct does this function contain?</strong></p>
+<p><strong>Q4: What can this function do?</strong></p>
+<p><strong>Q5: Are there any host-based indicators for this malware?</strong></p>
+<p><strong>Q6: What is the purpose of this malware?</strong></p>
+</section>
+<section id="lab-6-4">
+<h2>Lab 6-4<a class="headerlink" href="#lab-6-4" title="Permalink to this heading"></a></h2>
+<p>In this lab, we’ll analyze the malware found in the file Lab06-04.exe.</p>
+<p><strong>Q1: What is the difference between the calls made from the main method in Labs 6-3 and 6-4?</strong></p>
+<p><strong>Q2: What new code construct has been added to main?</strong></p>
+<p><strong>Q3: What is the difference between this lab ’s parse HTML function and those of the previous labs?</strong></p>
+<p><strong>Q4: How long will this program run? (Assume that it is connected to the Internet.)</strong></p>
+<p><strong>Q5: Are there any new network-based indicators for this malware?</strong></p>
+<p><strong>Q6: What is the purpose of this malware?</strong></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../lab5/lab5.html" class="btn btn-neutral float-left" title="Practical Malware Analysis - Lab 5" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, abdelrahman khaled.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

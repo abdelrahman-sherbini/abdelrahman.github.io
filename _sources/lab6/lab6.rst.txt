@@ -174,10 +174,17 @@ Lab 6-4
 -------
 In this lab, we’ll analyze the malware found in the file Lab06-04.exe.
 
+the new thing here the call to retrieve command from the pma site after <!-- is put in a loop (1440 times)
+
+.. image:: q6.png
+
+The current counter var_C is passed into the function html parser to be printed out with printf 
+
+.. image:: q61.png
+
+Summary: it will loop throughtout the day with 100 seconds intervals for commands to execute from practicalmalwareanalysis.com/cc.htm
+
 **Q1: What is the difference between the calls made from the main method in Labs 6-3 and 6-4?**
-
-
-
 
 **Q2: What new code construct has been added to main?**
 

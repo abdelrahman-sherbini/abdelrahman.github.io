@@ -96,6 +96,7 @@ then sleeps for 6 seconds
 
 .. image:: q25.png
 
+.. image:: q26.png
 
 Lab 6-3
 -------
@@ -103,22 +104,80 @@ In this lab, we’ll analyze the malware found in the file Lab06-03.exe.
 
 **Q1: Compare the calls in main to Lab 6-2 ’s main method. What is the new function called from main?**
 
+subroutine ``401130``
+
+.. image:: q31.png
+
+.. image:: q312.png
+
 **Q2: What parameters does this new function take?**
+
+Two parameters pushed ``lpExistingfile`` and ``char``
+
+First parameter is argv (the start of argv array address) and second parameter al is lower byte of EAX which is return of 401040 Lab 6-2 Q3 the parsed command after <!--
+
+.. image:: q31.png
 
 **Q3: What major code construct does this function contain?**
 
+switch case
+
+.. image:: q312.png
+
 **Q4: What can this function do?**
+
+A switch case based on input which is parsed after <!-- (a, b, c ,d ..) it does different function like 
+
+.. image:: q4.png
+
+In case of 'a' it creates directory ``c:\\Temp``
+
+.. image:: q41.png
+
+In case of 'b' it copies a file (in argv) into ``c:\\Temp\\cc.exe``
+
+.. image:: q42.png
+
+In case of 'c' it deletes the file ``c:\\Temp\\cc.exe``
+
+.. image:: q43.png
+
+In case of 'd' it set ``c:\\Temp\\cc.exe`` in registry key ``Software\Microsoft\Windows\CurrentVersion\Run`` for persistance to starte the exe at startup 
+
+.. image:: q44.png
+
+In case of 'e' it sleeps 100 seconds
+
+.. image:: q45.png
+
+In the default case it print Error  
+
+.. image:: q46.png
+
+
+
 
 **Q5: Are there any host-based indicators for this malware?**
 
+The registry ``Software\Microsoft\Windows\CurrentVersion\Run``
+
+The file ``c:\\Temp\\cc.exe``
+
+The url and User-Agent from lab 6-2
+
 **Q6: What is the purpose of this malware?**
 
+As a summary it will check internet connection then openurl to the url pma/cc.htm and copy first 200 bytes then check if it starts with <!-- then takes first char after and in switch case 
+it does multiple functions  
 
 Lab 6-4
 -------
 In this lab, we’ll analyze the malware found in the file Lab06-04.exe.
 
 **Q1: What is the difference between the calls made from the main method in Labs 6-3 and 6-4?**
+
+
+
 
 **Q2: What new code construct has been added to main?**
 

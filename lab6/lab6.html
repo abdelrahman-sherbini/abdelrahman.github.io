@@ -135,16 +135,44 @@ encounter them in malware.</p>
 <p>As a summary it will check internet connection then openurl to the url pma/cc.htm and check if it starts with &lt;!– then outputs <code class="docutils literal notranslate"><span class="pre">success</span> <span class="pre">parsed</span> <span class="pre">command</span></code>
 then sleeps for 6 seconds</p>
 <img alt="../_images/q25.png" src="../_images/q25.png" />
+<img alt="../_images/q26.png" src="../_images/q26.png" />
 </section>
 <section id="lab-6-3">
 <h2>Lab 6-3<a class="headerlink" href="#lab-6-3" title="Permalink to this heading"></a></h2>
 <p>In this lab, we’ll analyze the malware found in the file Lab06-03.exe.</p>
 <p><strong>Q1: Compare the calls in main to Lab 6-2 ’s main method. What is the new function called from main?</strong></p>
+<p>subroutine <code class="docutils literal notranslate"><span class="pre">401130</span></code></p>
+<img alt="../_images/q311.png" src="../_images/q311.png" />
+<img alt="../_images/q312.png" src="../_images/q312.png" />
 <p><strong>Q2: What parameters does this new function take?</strong></p>
+<p>Two parameters pushed <code class="docutils literal notranslate"><span class="pre">lpExistingfile</span></code> and <code class="docutils literal notranslate"><span class="pre">char</span></code></p>
+<p>First parameter is argv (the start of argv array address) and second parameter al is lower byte of EAX which is return of 401040 Lab 6-2 Q3 the parsed command after &lt;!–</p>
+<img alt="../_images/q311.png" src="../_images/q311.png" />
 <p><strong>Q3: What major code construct does this function contain?</strong></p>
+<p>switch case</p>
+<img alt="../_images/q312.png" src="../_images/q312.png" />
 <p><strong>Q4: What can this function do?</strong></p>
+<p>A switch case based on input which is parsed after &lt;!– (a, b, c ,d ..) it does different function like</p>
+<img alt="../_images/q41.png" src="../_images/q41.png" />
+<p>In case of ‘a’ it creates directory <code class="docutils literal notranslate"><span class="pre">c:\\Temp</span></code></p>
+<img alt="../_images/q411.png" src="../_images/q411.png" />
+<p>In case of ‘b’ it copies a file (in argv) into <code class="docutils literal notranslate"><span class="pre">c:\\Temp\\cc.exe</span></code></p>
+<img alt="../_images/q42.png" src="../_images/q42.png" />
+<p>In case of ‘c’ it deletes the file <code class="docutils literal notranslate"><span class="pre">c:\\Temp\\cc.exe</span></code></p>
+<img alt="../_images/q43.png" src="../_images/q43.png" />
+<p>In case of ‘d’ it set <code class="docutils literal notranslate"><span class="pre">c:\\Temp\\cc.exe</span></code> in registry key <code class="docutils literal notranslate"><span class="pre">Software\Microsoft\Windows\CurrentVersion\Run</span></code> for persistance to starte the exe at startup</p>
+<img alt="../_images/q441.png" src="../_images/q441.png" />
+<p>In case of ‘e’ it sleeps 100 seconds</p>
+<img alt="../_images/q45.png" src="../_images/q45.png" />
+<p>In the default case it print Error</p>
+<img alt="../_images/q46.png" src="../_images/q46.png" />
 <p><strong>Q5: Are there any host-based indicators for this malware?</strong></p>
+<p>The registry <code class="docutils literal notranslate"><span class="pre">Software\Microsoft\Windows\CurrentVersion\Run</span></code></p>
+<p>The file <code class="docutils literal notranslate"><span class="pre">c:\\Temp\\cc.exe</span></code></p>
+<p>The url and User-Agent from lab 6-2</p>
 <p><strong>Q6: What is the purpose of this malware?</strong></p>
+<p>As a summary it will check internet connection then openurl to the url pma/cc.htm and copy first 200 bytes then check if it starts with &lt;!– then takes first char after and in switch case
+it does multiple functions</p>
 </section>
 <section id="lab-6-4">
 <h2>Lab 6-4<a class="headerlink" href="#lab-6-4" title="Permalink to this heading"></a></h2>

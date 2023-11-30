@@ -152,11 +152,46 @@ but we’ve set it to connect to localhost to protect you.)</p>
 <p>This lab may be a bit more challenging than previous ones. You’ll need
 to use a combination of static and dynamic methods, and focus on the big
 picture in order to avoid getting bogged down by the details.</p>
+<hr class="docutils" />
+<p>Into the main function IoCs:</p>
+<p>It opens <code class="docutils literal notranslate"><span class="pre">C:\\Windows\\System32\\Kerne132.dll</span></code> and maps it into memory (then any changes there will be reflected to the disk)
+And opens <code class="docutils literal notranslate"><span class="pre">Lab07-03.dll</span></code> the same way</p>
+<img alt="../_images/q7.png" src="../_images/q7.png" />
+<p>After some processing it copies <code class="docutils literal notranslate"><span class="pre">Lab07-03.dll</span></code> into <code class="docutils literal notranslate"><span class="pre">C:\\Windows\\System32\\Kerne132.dll</span></code> (notice 132 not l32)</p>
+<img alt="../_images/q71.png" src="../_images/q71.png" />
+<p>And if successful it will likely loop through <code class="docutils literal notranslate"><span class="pre">C:\\*</span></code> in function 4011E0</p>
+<img alt="../_images/q72.png" src="../_images/q72.png" />
+<p>it iterates through the files</p>
+<img alt="../_images/q73.png" src="../_images/q73.png" />
+<p>and after file names processing it searches for .exe files</p>
+<img alt="../_images/q74.png" src="../_images/q74.png" />
+<p>If it finds .exe files it then calls a subroutine with the file name</p>
+<img alt="../_images/q75.png" src="../_images/q75.png" />
+<p>It maps the file into memory</p>
+<img alt="../_images/q76.png" src="../_images/q76.png" />
+<p>It loops through the file mapped in memory and searches for string2 which is Kernel32.dll and
+if it finds it in the mapping it replaces it with dword_403010 which contains <code class="docutils literal notranslate"><span class="pre">kerne132.dll</span></code> (notice 132 not l32) in the <code class="docutils literal notranslate"><span class="pre">qmemcpy</span></code></p>
+<img alt="../_images/q77.png" src="../_images/q77.png" />
+<p>Going into the Lab07-03.dll dllMain function
+First it starts a mutex to ensure only one instance of it running</p>
+<img alt="../_images/q78.png" src="../_images/q78.png" />
+<p>Then it connects to ip <code class="docutils literal notranslate"><span class="pre">127.26.152.13</span></code></p>
+<img alt="../_images/q79.png" src="../_images/q79.png" />
+<p>It is likely here checking for connection like <code class="docutils literal notranslate"><span class="pre">send</span> <span class="pre">ping</span> <span class="pre">pong</span></code> to recieve data</p>
+<img alt="../_images/q710.png" src="../_images/q710.png" />
+<img alt="../_images/q711.png" src="../_images/q711.png" />
+<p>And then executes what it recieves</p>
+<img alt="../_images/q712.png" src="../_images/q712.png" />
 <p><strong>Q1: How does this program achieve persistence to ensure that it continues running when the computer is restarted?</strong></p>
-<p>Into the main function it starts a service</p>
+<p>By overwriting files with <code class="docutils literal notranslate"><span class="pre">.exe</span></code> in C:\* to use the kerne132.dll which is Lab07-03.dll instead of kernel32.dll</p>
 <p><strong>Q2: What are two good host-based signatures for this malware?</strong></p>
+<p>file <code class="docutils literal notranslate"><span class="pre">C:\\Windows\\System32\\Kerne132.dll</span></code></p>
+<p>Mutex with hardcoded string <code class="docutils literal notranslate"><span class="pre">SADFHUHF</span></code></p>
 <p><strong>Q3: What is the purpose of this program?</strong></p>
+<p>To inject malicious dll for C&amp;C url into all exe files under C</p>
 <p><strong>Q4: How could you remove this malware once it is installed?</strong></p>
+<p>By reversing the logic used going through all files under C and then mapping it into memory searching for kerne132.dll and
+changing it into the real kernel32.dll</p>
 </section>
 </section>
 

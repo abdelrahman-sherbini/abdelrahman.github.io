@@ -110,13 +110,79 @@ This lab may be a bit more challenging than previous ones. You’ll need
 to use a combination of static and dynamic methods, and focus on the big
 picture in order to avoid getting bogged down by the details.
 
+#################################################################################
+
+Into the main function IoCs:
+
+It opens ``C:\\Windows\\System32\\Kerne132.dll`` and maps it into memory (then any changes there will be reflected to the disk)
+And opens ``Lab07-03.dll`` the same way
+
+.. image:: q7.png
+
+After some processing it copies ``Lab07-03.dll`` into ``C:\\Windows\\System32\\Kerne132.dll`` (notice 132 not l32)
+
+.. image:: q71.png
+
+And if successful it will likely loop through ``C:\\*`` in function 4011E0
+
+.. image:: q72.png
+
+it iterates through the files
+
+.. image:: q73.png
+
+and after file names processing it searches for .exe files
+
+.. image:: q74.png
+
+If it finds .exe files it then calls a subroutine with the file name
+
+.. image:: q75.png
+
+It maps the file into memory 
+
+.. image:: q76.png
+
+It loops through the file mapped in memory and searches for string2 which is Kernel32.dll and 
+if it finds it in the mapping it replaces it with dword_403010 which contains ``kerne132.dll`` (notice 132 not l32) in the ``qmemcpy``
+
+.. image:: q77.png
+
+Going into the Lab07-03.dll dllMain function
+First it starts a mutex to ensure only one instance of it running
+
+.. image:: q78.png
+
+Then it connects to ip ``127.26.152.13``
+
+.. image:: q79.png
+
+It is likely here checking for connection like ``send ping pong`` to recieve data 
+
+.. image:: q710.png
+
+.. image:: q711.png
+
+And then executes what it recieves 
+
+.. image:: q712.png
+
 **Q1: How does this program achieve persistence to ensure that it continues running when the computer is restarted?**
 
-Into the main function it starts a service 
+By overwriting files with ``.exe`` in C:\\* to use the kerne132.dll which is Lab07-03.dll instead of kernel32.dll 
 
 **Q2: What are two good host-based signatures for this malware?**
 
+file ``C:\\Windows\\System32\\Kerne132.dll``
+
+Mutex with hardcoded string ``SADFHUHF``
+
 **Q3: What is the purpose of this program?**
 
+To inject malicious dll for C&C url into all exe files under C
+
 **Q4: How could you remove this malware once it is installed?**
+
+By reversing the logic used going through all files under C and then mapping it into memory searching for kerne132.dll and
+changing it into the real kernel32.dll
 

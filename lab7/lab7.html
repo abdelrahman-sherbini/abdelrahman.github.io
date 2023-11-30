@@ -191,7 +191,8 @@ First it starts a mutex to ensure only one instance of it running</p>
 <p>To inject malicious dll for C&amp;C url into all exe files under C</p>
 <p><strong>Q4: How could you remove this malware once it is installed?</strong></p>
 <p>By reversing the logic used going through all files under C and then mapping it into memory searching for kerne132.dll and
-changing it into the real kernel32.dll</p>
+changing it into the real kernel32.dll
+Or easier change kerne132 to be kernel32 in <code class="docutils literal notranslate"><span class="pre">C:\\Windows\\System32\\Kerne132.dll</span></code></p>
 </section>
 </section>
 

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Practical Malware Analysis - Lab 9 &mdash; abdelrahmn walkthrough 1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Practical Malware Analysis - Lab 7" href="../lab7/lab7.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            abdelrahmn walkthrough
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../lab1/lab1.html">Practical Malware Analysis - Lab 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab3/lab3.html">Practical Malware Analysis - Lab 3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab5/lab5.html">Practical Malware Analysis - Lab 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab6/lab6.html">Practical Malware Analysis - Lab 6</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab7/lab7.html">Practical Malware Analysis - Lab 7</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Practical Malware Analysis - Lab 9</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#lab-9-1">Lab 9-1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lab-9-2">Lab 9-2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lab-9-3">Lab 9-3</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">abdelrahmn walkthrough</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Practical Malware Analysis - Lab 9</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/lab9/lab9.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="practical-malware-analysis-lab-9">
+<h1>Practical Malware Analysis - Lab 9<a class="headerlink" href="#practical-malware-analysis-lab-9" title="Permalink to this heading"></a></h1>
+<section id="lab-9-1">
+<h2>Lab 9-1<a class="headerlink" href="#lab-9-1" title="Permalink to this heading"></a></h2>
+<p>Analyze the malware found in the file Lab09-01.exe using OllyDbg and IDA
+Pro to answer the following questions. This malware was initially analyzed in
+the Chapter 3 labs using basic static and dynamic analysis techniques.</p>
+<p><strong>Q1: How can you get this malware to install itself?</strong></p>
+<p>Going into sub_402410 where the flow has to pass many conditions for the malware not go into that function
+It Gets the filename then calls cmd /c del which shows that this function responsible for the deletion of the malware</p>
+<img alt="../_images/1q1.png" src="../_images/1q1.png" />
+<p>Going to branch to avoid deletion we see check in function with parameter last argv[argc-1] going into that function
+it’s checks to see if string passed is equal to “abcd” or not</p>
+<img alt="../_images/1q2.png" src="../_images/1q2.png" />
+<p>Passing that check then we see it needs arguments in like with last argument argv[argc-1] is abcd (the passkey)</p>
+<dl class="option-list">
+<dt><kbd><span class="option">-i<var>n</var></span></kbd></dt>
+<dd><p>“abcd”</p>
+</dd>
+<dt><kbd><span class="option">-r<var>e</var></span></kbd></dt>
+<dd><p>“abcd”</p>
+</dd>
+<dt><kbd><span class="option">-c</span></kbd></dt>
+<dd><p>“abcd”</p>
+</dd>
+<dt><kbd><span class="option">-c<var>c</var></span></kbd></dt>
+<dd><p>“abcd”</p>
+</dd>
+</dl>
+<img alt="../_images/1q3.png" src="../_images/1q3.png" />
+<img alt="../_images/1q4.png" src="../_images/1q4.png" />
+<p>following the code to see what arguments it needs</p>
+<p>we notice <code class="docutils literal notranslate"><span class="pre">-in</span></code> requires one argument and there is a function in it involves around service manager and creating a service</p>
+<img alt="../_images/1q8.png" src="../_images/1q8.png" />
+<p><code class="docutils literal notranslate"><span class="pre">-re</span></code> is opposite of -in it involves around deleting a service and a file</p>
+<img alt="../_images/1q7.png" src="../_images/1q7.png" />
+<p>we notice if <code class="docutils literal notranslate"><span class="pre">-cc</span></code> is supplied it queries xps register with what -c set then some processing and prints it</p>
+<img alt="../_images/1q6.png" src="../_images/1q6.png" />
+<p>we notice <code class="docutils literal notranslate"><span class="pre">-c</span></code> requires 6 arguments
+looks like here it sets XPS register subkey with the 4 aruguments passed</p>
+<img alt="../_images/1q5.png" src="../_images/1q5.png" />
+<p>we now run the malware in OllyDbg with aruguments -in qw abcd to test the functionality so it doesn’t delete itself (not that it could)
+As both in IDA and OllyDbg starts with same base it’s easier to identify functions the main function in IDA was at 402AF0 we search for it in OllyDbg</p>
+<img alt="../_images/1q9.png" src="../_images/1q9.png" />
+<p>stepping over till we reach this instruction then stepping into it</p>
+<p>We reach the function that checks the password since we provided the correct one stepping over</p>
+<img alt="../_images/1q10.png" src="../_images/1q10.png" />
+<p>we Get at eax 1 and we skip the selfdelete routine after stepping we arrive at this code check as we provided argc=4</p>
+<img alt="../_images/1q12.png" src="../_images/1q12.png" />
+<p>we arrive at the routine with install a service it, preparing procmon here</p>
+<img alt="../_images/1q11.png" src="../_images/1q11.png" />
+<p>We can see the malware create path string with its name likely to create itself there</p>
+<img alt="../_images/1q13.png" src="../_images/1q13.png" />
+<p>it will open servicemanager to create service with its name and specified parameters in system32 dir</p>
+<img alt="../_images/1q14.png" src="../_images/1q14.png" />
+<p>Here what it does creates file kernel32  and Lab09-01.exe under syswow</p>
+<img alt="../_images/1q15.png" src="../_images/1q15.png" />
+<p>and sets this register</p>
+<img alt="../_images/1q16.png" src="../_images/1q16.png" />
+<p><strong>Q2: What are the command-line options for this program? What is the password
+requirement?</strong></p>
+<p><strong>Q3: How can you use OllyDbg to permanently patch this malware, so that it
+doesn’t require the special command-line password?</strong></p>
+<p>by converting password checking function to mov eax,1</p>
+<img alt="../_images/1q17.png" src="../_images/1q17.png" />
+<img alt="../_images/1q18.png" src="../_images/1q18.png" />
+<p><strong>Q4: What are the host-based indicators of this malware?</strong></p>
+<p>%SYSTEMROOT%WindowsSystem32
+HKLMSOFTWAREMicrosoft XPS
+opening service manager</p>
+<p><strong>Q5: What are the different actions this malware can be instructed to take via
+the network?</strong></p>
+<img alt="../_images/1q19.png" src="../_images/1q19.png" />
+<p><strong>Q6: Are there any useful network-based signatures for this malware?</strong></p>
+<p><a class="reference external" href="http://www.practicalmalwareanalysis.com">http://www.practicalmalwareanalysis.com</a></p>
+</section>
+<section id="lab-9-2">
+<h2>Lab 9-2<a class="headerlink" href="#lab-9-2" title="Permalink to this heading"></a></h2>
+<p>Analyze the malware found in the file Lab09-02.exe using OllyDbg to answer
+the following questions.</p>
+<p><strong>Q1: What strings do you see statically in the binary?</strong></p>
+<img alt="../_images/2q1.png" src="../_images/2q1.png" />
+<p><strong>Q2: What happens when you run this binary?</strong></p>
+<p>Nothing in the foreground</p>
+<p><strong>Q3: How can you get this sample to run its malicious payload?</strong></p>
+<p>In OllyDbg after stepping into first function it utilizes the malware name in something</p>
+<img alt="../_images/2q2.png" src="../_images/2q2.png" />
+<p>It compares the name of exe to ocl.exe based on the output it terminates or not</p>
+<img alt="../_images/2q3.png" src="../_images/2q3.png" />
+<p>so we rename the file to ocl.exe</p>
+<p><strong>Q4: What is happening at 0x00401133?</strong></p>
+<p>Using command line to <code class="docutils literal notranslate"><span class="pre">bp</span> <span class="pre">401133</span></code> then running till breakpoint</p>
+<p>we see hex values moved to the stack (encoded?)</p>
+<img alt="../_images/2q4.png" src="../_images/2q4.png" />
+<p><strong>Q5: What arguments are being passed to subroutine 0x00401089?</strong></p>
+<p>our encoded hex in ascii, is gonna be decoded ?</p>
+<img alt="../_images/2q5.png" src="../_images/2q5.png" />
+<p><strong>Q6: What domain name does this malware use?</strong></p>
+<p>By executing till return we can see the domain</p>
+<img alt="../_images/2q6.png" src="../_images/2q6.png" />
+<p><strong>Q7: What encoding routine is being used to obfuscate the domain name?</strong></p>
+<p>putting breakpoint at the xor in the loop we see it xor the 46 with 31 (l in ascii)</p>
+<img alt="../_images/2q7.png" src="../_images/2q7.png" />
+<p>it xors letters with different keys till the decoded string appear in the memory dump</p>
+<p><strong>Q8: What is the significance of the CreateProcessA call at 0x0040106E?</strong></p>
+<p>Creating cmd process which will likely execute commands from the domain at Q6</p>
+<img alt="../_images/2q8.png" src="../_images/2q8.png" />
+</section>
+<section id="lab-9-3">
+<h2>Lab 9-3<a class="headerlink" href="#lab-9-3" title="Permalink to this heading"></a></h2>
+<p>Analyze the malware found in the file Lab09-03.exe using OllyDbg and IDA Pro.
+This malware loads three included DLLs (DLL1.dll, DLL2.dll, and DLL3.dll)
+that are all built to request the same memory load location. Therefore, when
+viewing these DLLs in OllyDbg versus IDA Pro, code may appear at different
+memory locations. The purpose of this lab is to make you comfortable with
+finding the correct location of code within IDA Pro when you are looking at
+code in OllyDbg.</p>
+<p><strong>Q1: What DLLs are imported by Lab09-03.exe?</strong></p>
+<p><strong>Q2: What is the base address requested by DLL1.dll, DLL2.dll, and DLL3.dll?</strong></p>
+<p><strong>Q3: When you use OllyDbg to debug Lab09-03.exe, what is the assigned based
+address for: DLL1.dll, DLL2.dll, and DLL3.dll?</strong></p>
+<p><strong>Q4: When Lab09-03.exe calls an import function from DLL1.dll, what does
+this import function do?</strong></p>
+<p><strong>Q5: When Lab09-03.exe calls WriteFile, what is the filename it writes to?</strong></p>
+<p><strong>Q6: When Lab09-03.exe creates a job using NetScheduleJobAdd, where does it get
+the data for the second parameter?</strong></p>
+<p><strong>Q7: While running or debugging the program, you will see that it prints out
+three pieces of mystery data. What are the following: DLL 1 mystery
+data 1, DLL 2 mystery data 2, and DLL 3 mystery data 3?</strong></p>
+<p><strong>Q8: How can you load DLL2.dll into IDA Pro so that it matches the load</strong></p>
+<p>address used by OllyDbg?</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../lab7/lab7.html" class="btn btn-neutral float-left" title="Practical Malware Analysis - Lab 7" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, abdelrahman khaled.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

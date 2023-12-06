@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Practical Malware Analysis - Lab 11 &mdash; abdelrahmn walkthrough 1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Practical Malware Analysis - Lab 10" href="../lab10/lab10.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            abdelrahmn walkthrough
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../lab1/lab1.html">Practical Malware Analysis - Lab 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab3/lab3.html">Practical Malware Analysis - Lab 3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab5/lab5.html">Practical Malware Analysis - Lab 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab6/lab6.html">Practical Malware Analysis - Lab 6</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab7/lab7.html">Practical Malware Analysis - Lab 7</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab9/lab9.html">Practical Malware Analysis - Lab 9</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab10/lab10.html">Practical Malware Analysis - Lab 10</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Practical Malware Analysis - Lab 11</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#lab-11-1">Lab 11-1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lab-11-2">Lab 11-2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lab-11-3">Lab 11-3</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">abdelrahmn walkthrough</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Practical Malware Analysis - Lab 11</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/lab11/lab11.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="practical-malware-analysis-lab-11">
+<h1>Practical Malware Analysis - Lab 11<a class="headerlink" href="#practical-malware-analysis-lab-11" title="Permalink to this heading"></a></h1>
+<section id="lab-11-1">
+<h2>Lab 11-1<a class="headerlink" href="#lab-11-1" title="Permalink to this heading"></a></h2>
+<p>Analyze the malware found in Lab11-01.exe.</p>
+<p><strong>Q1: What does the malware drop to disk?</strong></p>
+<p>Examining the exe in ida it first clears some memory with zeroes (rep stosd with the zero eax ecx(43h) times) then passes module handle to a function</p>
+<img alt="../_images/1q111.png" src="../_images/1q111.png" />
+<p>in the function it searches for a resource (in .rsrc) named <code class="docutils literal notranslate"><span class="pre">TGAD</span></code> of type binary</p>
+<img alt="../_images/1q22.png" src="../_images/1q22.png" />
+<img alt="../_images/1q32.png" src="../_images/1q32.png" />
+<p>Checking in pestudio we find there is an executable in .rsrc so it drops with <code class="docutils literal notranslate"><span class="pre">LoadResource</span></code> call</p>
+<img alt="../_images/1q42.png" src="../_images/1q42.png" />
+<p><strong>Q2: How does the malware achieve persistence?</strong></p>
+<p>Going into function call 40100 in main function (after it does the gina interception)</p>
+<p>It regsets Ginadll value to the binary in .rsrc to registry winlogon which helps in loading them in between Winlogon and the GINA DLL</p>
+<img alt="../_images/1q51.png" src="../_images/1q51.png" />
+<p><strong>Q3: How does the malware steal user credentials?</strong></p>
+<p>extracting the TGAD binary using exeinfo it is a dll</p>
+<p>Using floss we find many functions where user credentials are passed into it like the gina.dll</p>
+<img alt="../_images/1q61.png" src="../_images/1q61.png" />
+<p>it will likely replace the oringinal gina</p>
+<p><strong>Q4: What does the malware do with stolen credentials?</strong></p>
+<p>Most likely it will open this file msutil and write the data to it</p>
+<img alt="../_images/1q71.png" src="../_images/1q71.png" />
+<p><strong>Q5: How can you use this malware to get user credentials from your test environment?</strong></p>
+<p>It doesn’t work on win 7 but likely by just logging in</p>
+</section>
+<section id="lab-11-2">
+<h2>Lab 11-2<a class="headerlink" href="#lab-11-2" title="Permalink to this heading"></a></h2>
+<p>Analyze the malware found in Lab11-02.dll. Assume that a suspicious file
+named Lab11-02.ini was also found with this malware.</p>
+<p><strong>Q1: What are the exports for this DLL malware?</strong></p>
+<img alt="../_images/1q81.png" src="../_images/1q81.png" />
+<p><strong>Q2: What happens after you attempt to install this malware using rundll32.exe?</strong></p>
+<p>it copies the dll to many places</p>
+<img alt="../_images/2q11.png" src="../_images/2q11.png" />
+<p>It creates this dll with write permission (opening in ida seems similar to Lab11-02.dll)</p>
+<img alt="../_images/2q21.png" src="../_images/2q21.png" />
+<p><strong>Q3: Where must Lab11-02.ini reside in order for the malware to install properly?</strong></p>
+<p>It returns not found here so it must reside there</p>
+<img alt="../_images/2q31.png" src="../_images/2q31.png" />
+<p><strong>Q4: How is this malware installed for persistence?</strong></p>
+<p>Going into imports found regset function, getting cross references and then going to the caller</p>
+<img alt="../_images/2q41.png" src="../_images/2q41.png" />
+<p>We find it regset the dll to appleinit registry under windows registry</p>
+<img alt="../_images/2q51.png" src="../_images/2q51.png" />
+<p><strong>Q5: What user-space rootkit technique does this malware employ?</strong></p>
+<p>Analyzing all functions one stood out with comparing to exe files</p>
+<img alt="../_images/2q61.png" src="../_images/2q61.png" />
+<p>First function call it calls modulefilename with parameter filename which likely is the Lab11-02.dll</p>
+<img alt="../_images/2q71.png" src="../_images/2q71.png" />
+<p>It does memcmp with multiple exe files with the dll which means it checks if the dll is used by any of the exe files then it
+does three calls to three functions</p>
+<img alt="../_images/2q81.png" src="../_images/2q81.png" />
+<p>first call it gets processid of the parameter input to the function plus getting process structure using snapshottool in
+function 100012FE <code class="docutils literal notranslate"><span class="pre">which</span> <span class="pre">Takes</span> <span class="pre">a</span> <span class="pre">snapshot</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">specified</span> <span class="pre">processes,</span> <span class="pre">as</span> <span class="pre">well</span> <span class="pre">as</span> <span class="pre">the</span> <span class="pre">heaps,</span> <span class="pre">modules,</span> <span class="pre">and</span> <span class="pre">threads</span> <span class="pre">used</span> <span class="pre">by</span> <span class="pre">these</span> <span class="pre">processes.</span> <span class="pre">Creates</span> <span class="pre">a</span> <span class="pre">structure</span> <span class="pre">PROCESSENTRY32</span> <span class="pre">puts</span> <span class="pre">the</span> <span class="pre">snapshot</span> <span class="pre">into</span> <span class="pre">it</span></code></p>
+<img alt="../_images/2q9.png" src="../_images/2q9.png" />
+<p>second call gets send and wsock32.dll which likely loads them</p>
+<img alt="../_images/2q10.png" src="../_images/2q10.png" />
+<p>Here we see the location of wsock32.dll is got by using getprocaddress</p>
+<img alt="../_images/2q111.png" src="../_images/2q111.png" />
+<p>then after that we see function 10001203 is called which contains code about calling virtualprotect to change memory protections with the location of wsock32.dll allocating memory then writing to it</p>
+<img alt="../_images/2q12.png" src="../_images/2q12.png" />
+<p>the rootkit technique it uses is inline hooking</p>
+<p><strong>Q6: What does the hooking code do?</strong></p>
+<p>inside the hooking install function it gets the address of the passed function send in wsock32 then pass it main install hooking</p>
+<img alt="../_images/2q14.png" src="../_images/2q14.png" />
+<p>it first does some calculation, calculates the distance between arg_4 and start of send function plus 5 bytes (arg_4-(sendAddr+5))</p>
+<img alt="../_images/2q13.png" src="../_images/2q13.png" />
+<p>we it allocates place in memory (0xff bytes) then copies first 5 bytes of send function (lpaddress) to the allocated memory
+then sets after that a jump with relative offset to complete the rest of the send function code (it will overwrite first bytes of the send)</p>
+<img alt="../_images/2q17.png" src="../_images/2q17.png" />
+<p>0xe9 is opcode for JMP we see it makes send function starts with JMP then with v6 which is arg_4 which seems like the main hook function</p>
+<img alt="../_images/2q15.png" src="../_images/2q15.png" />
+<p>by tracing back we find 1000113d is the function passed then to be arg_4 to jump at it</p>
+<img alt="../_images/2q16.png" src="../_images/2q16.png" />
+<p>now we look at 1000113d, it first searches for substr rept to when its not found likely jump back to rest of normal send function
+else continue the flow</p>
+<img alt="../_images/2q19.png" src="../_images/2q19.png" />
+<p>we need to debug the file to see the data but likely here it changes the recepient like a way to intercept data being sent in the email</p>
+<img alt="../_images/2q20.png" src="../_images/2q20.png" />
+<p>and we notice it used 100034A0 which was used for modulefilename to the ini file</p>
+<img alt="../_images/2q18.png" src="../_images/2q18.png" />
+<p><strong>Q7: Which process(es) does this malware attack and why?</strong></p>
+<p><strong>Q8: What is the significance of the .ini file?</strong></p>
+<p><strong>Q9: How can you dynamically capture this malware’s activity with Wireshark?</strong></p>
+</section>
+<section id="lab-11-3">
+<h2>Lab 11-3<a class="headerlink" href="#lab-11-3" title="Permalink to this heading"></a></h2>
+<p>Analyze the malware found in Lab11-03.exe and Lab11-03.dll. Make sure that
+both files are in the same directory during analysis.</p>
+<p><strong>Q1: What interesting analysis leads can you discover using basic static analysis?</strong></p>
+<p><strong>Q2: What happens when you run this malware?</strong></p>
+<p><strong>Q3: How does Lab11-03.exe persistently install Lab11-03.dll?</strong></p>
+<p><strong>Q4: Which Windows system file does the malware infect?</strong></p>
+<p><strong>Q5: What does Lab11-03.dll do?</strong></p>
+<p><strong>Q6: Where does the malware store the data it collects?</strong></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../lab10/lab10.html" class="btn btn-neutral float-left" title="Practical Malware Analysis - Lab 10" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, abdelrahman khaled.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

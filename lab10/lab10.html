@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Practical Malware Analysis - Lab 10 &mdash; abdelrahmn walkthrough 1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Practical Malware Analysis - Lab 11" href="../lab11/lab11.html" />
+    <link rel="prev" title="Practical Malware Analysis - Lab 9" href="../lab9/lab9.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            abdelrahmn walkthrough
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../lab1/lab1.html">Practical Malware Analysis - Lab 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab3/lab3.html">Practical Malware Analysis - Lab 3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab5/lab5.html">Practical Malware Analysis - Lab 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab6/lab6.html">Practical Malware Analysis - Lab 6</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab7/lab7.html">Practical Malware Analysis - Lab 7</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab9/lab9.html">Practical Malware Analysis - Lab 9</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Practical Malware Analysis - Lab 10</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#lab-10-1">Lab 10-1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lab-10-2">Lab 10-2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lab-10-3">Lab 10-3</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../lab11/lab11.html">Practical Malware Analysis - Lab 11</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">abdelrahmn walkthrough</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Practical Malware Analysis - Lab 10</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/lab10/lab10.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="practical-malware-analysis-lab-10">
+<h1>Practical Malware Analysis - Lab 10<a class="headerlink" href="#practical-malware-analysis-lab-10" title="Permalink to this heading"></a></h1>
+<section id="lab-10-1">
+<h2>Lab 10-1<a class="headerlink" href="#lab-10-1" title="Permalink to this heading"></a></h2>
+<p>This lab includes both a driver and an executable. You can run the executable
+from anywhere, but in order for the program to work properly, the
+driver must be placed in the C:WindowsSystem32 directory where it was originally
+found on the victim computer. The executable is Lab10-01.exe, and the
+driver is Lab10-01.sys.</p>
+<p><strong>Q1: Does this program make any direct changes to the registry? (Use procmon to check.)</strong></p>
+<p>Setting procmon filter for Lab10-01.sys/exe then running the exe</p>
+<p>no regsetvalue no registries set</p>
+<p><strong>Q2: The user-space program calls the ControlService function. Can you set a breakpoint
+with WinDbg to see what is executed in the kernel as a result of the call to ControlService?</strong></p>
+<p>opening exe file into ida we see it creates a service named <code class="docutils literal notranslate"><span class="pre">Lab10-01</span></code> using the file <code class="docutils literal notranslate"><span class="pre">C:\\Windows\\System32\\Lab10-01.sys</span></code>
+with 0x01 service type which is <code class="docutils literal notranslate"><span class="pre">SERVICE_KERNEL_DRIVER</span> <span class="pre">0x00000001</span></code></p>
+<img alt="../_images/1q110.png" src="../_images/1q110.png" />
+<p>the logic here when the create service returns non zero to eax means it failed meaning it couldnt create the service because it is already created so
+it opens the service with the same name <code class="docutils literal notranslate"><span class="pre">Lab10-01</span></code></p>
+<img alt="../_images/1q21.png" src="../_images/1q21.png" />
+<p>Then it starts the service and after successful opening it calls ControlService with dwcontrol argument set to 0x01 <code class="docutils literal notranslate"><span class="pre">SERVICE_CONTROL_STOP</span> <span class="pre">0x00000001</span></code></p>
+<img alt="../_images/1q31.png" src="../_images/1q31.png" />
+<p>So it starts the kernel driver then stops it, we need to put a breakpoint there at ControlService for the driver to be still in memory to be examined</p>
+<img alt="../_images/1q41.png" src="../_images/1q41.png" />
+<p><strong>Q3: What does this program do?</strong></p>
+<p>Going into WinDbg in the host machine, hitting break we know the service name started is Lab10-01</p>
+</section>
+<section id="lab-10-2">
+<h2>Lab 10-2<a class="headerlink" href="#lab-10-2" title="Permalink to this heading"></a></h2>
+<p>The file for this lab is Lab10-02.exe.</p>
+<p><strong>Q1: Does this program create any files? If so, what are they?</strong></p>
+<p><strong>Q2: Does this program have a kernel component?</strong></p>
+<p><strong>Q3: What does this program do?</strong></p>
+</section>
+<section id="lab-10-3">
+<h2>Lab 10-3<a class="headerlink" href="#lab-10-3" title="Permalink to this heading"></a></h2>
+<p>This lab includes a driver and an executable. You can run the executable
+from anywhere, but in order for the program to work properly, the driver
+must be placed in the C:WindowsSystem32 directory where it was originally
+found on the victim computer. The executable is Lab10-03.exe, and the driver
+is Lab10-03.sys.</p>
+<p><strong>Q1: What does this program do?</strong></p>
+<p><strong>Q2: Once this program is running, how do you stop it?</strong></p>
+<p><strong>Q3: What does the kernel component do?</strong></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../lab9/lab9.html" class="btn btn-neutral float-left" title="Practical Malware Analysis - Lab 9" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../lab11/lab11.html" class="btn btn-neutral float-right" title="Practical Malware Analysis - Lab 11" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, abdelrahman khaled.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

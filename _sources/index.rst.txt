@@ -14,6 +14,8 @@ Welcome to abdelrahmn walkthrough!
    lab6/lab6
    lab7/lab7
    lab9/lab9
+   lab10/lab10
+   lab11/lab11
 
 
 Indices and tables

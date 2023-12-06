@@ -154,19 +154,33 @@ we need to debug the file to see the data but likely here it changes the recepie
 
 .. image:: 2q20.png
 
-and we notice it used 100034A0 which was used for modulefilename to the ini file
+and we notice it used destination which was used for the ini file
 
 .. image:: 2q18.png
 
 
-
-
 **Q7: Which process(es) does this malware attack and why?**
+
+answered above email processes
 
 **Q8: What is the significance of the .ini file?**
 
+as ini file contains gibberish data and at the start of dllmain it read the file then passes it to function 100010B3 we bp that function at ollydbg
+
+.. image:: 2q21.png
+
+bp at this (https://www.ollydbg.de/Loaddll.htm)
+
+.. image:: 2q23.png
+
+which contains the decoded email recepient
+
+.. image:: 2q25.png
+
+
 **Q9: How can you dynamically capture this malware’s activity with Wireshark?**
 
+by sending email with outlook
 
 Lab 11-3
 --------
@@ -174,6 +188,15 @@ Analyze the malware found in Lab11-03.exe and Lab11-03.dll. Make sure that
 both files are in the same directory during analysis.
 
 **Q1: What interesting analysis leads can you discover using basic static analysis?**
+
+running strings we see the marked functions which are used to keylogger, and create file function which may record keys then save to a file
+
+.. image:: 3q1.png
+
+we also functions responsible for manipulating memory
+
+.. image:: 3q2.png
+
 
 **Q2: What happens when you run this malware?**
 

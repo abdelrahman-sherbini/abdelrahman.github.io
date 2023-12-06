@@ -165,17 +165,29 @@ else continue the flow</p>
 <img alt="../_images/2q19.png" src="../_images/2q19.png" />
 <p>we need to debug the file to see the data but likely here it changes the recepient like a way to intercept data being sent in the email</p>
 <img alt="../_images/2q20.png" src="../_images/2q20.png" />
-<p>and we notice it used 100034A0 which was used for modulefilename to the ini file</p>
+<p>and we notice it used destination which was used for the ini file</p>
 <img alt="../_images/2q18.png" src="../_images/2q18.png" />
 <p><strong>Q7: Which process(es) does this malware attack and why?</strong></p>
+<p>answered above email processes</p>
 <p><strong>Q8: What is the significance of the .ini file?</strong></p>
+<p>as ini file contains gibberish data and at the start of dllmain it read the file then passes it to function 100010B3 we bp that function at ollydbg</p>
+<img alt="../_images/2q211.png" src="../_images/2q211.png" />
+<p>bp at this (<a class="reference external" href="https://www.ollydbg.de/Loaddll.htm">https://www.ollydbg.de/Loaddll.htm</a>)</p>
+<img alt="../_images/2q23.png" src="../_images/2q23.png" />
+<p>which contains the decoded email recepient</p>
+<img alt="../_images/2q25.png" src="../_images/2q25.png" />
 <p><strong>Q9: How can you dynamically capture this malware’s activity with Wireshark?</strong></p>
+<p>by sending email with outlook</p>
 </section>
 <section id="lab-11-3">
 <h2>Lab 11-3<a class="headerlink" href="#lab-11-3" title="Permalink to this heading"></a></h2>
 <p>Analyze the malware found in Lab11-03.exe and Lab11-03.dll. Make sure that
 both files are in the same directory during analysis.</p>
 <p><strong>Q1: What interesting analysis leads can you discover using basic static analysis?</strong></p>
+<p>running strings we see the marked functions which are used to keylogger, and create file function which may record keys then save to a file</p>
+<img alt="../_images/3q1.png" src="../_images/3q1.png" />
+<p>we also functions responsible for manipulating memory</p>
+<img alt="../_images/3q2.png" src="../_images/3q2.png" />
 <p><strong>Q2: What happens when you run this malware?</strong></p>
 <p><strong>Q3: How does Lab11-03.exe persistently install Lab11-03.dll?</strong></p>
 <p><strong>Q4: Which Windows system file does the malware infect?</strong></p>

@@ -193,17 +193,85 @@ running strings we see the marked functions which are used to keylogger, and cre
 
 .. image:: 3q1.png
 
-we also functions responsible for manipulating memory
+we also functions responsible for manipulating memory plus dlls not found in disk
 
 .. image:: 3q2.png
 
 
 **Q2: What happens when you run this malware?**
 
+in procmon ofc it loads the Lab11-03.dll then creates the new dll inet_epar32.dll
+
+.. image:: 3q3.png
+
+it modifies the file cisvc.exe
+
+.. image:: 3q4.png
+
+loads cmd 
+
+.. image:: 3q5.png
+
+it looks like searching for something under syswow
+
+.. image:: 3q6.png
+
+the buffer is the result of formatting the string "C:\WINDOWS\System32\%s" with the argument "cisvc.exe". 
+then the lpfilename is set to the buffer ``lea ecx, [ebp + Buffer]`` which is then passed to the function 401070
+This means that lpFileName would contain the full path to the file "C:\WINDOWS\System32\cisvc.exe". 
+
+.. image:: 3q8.png
+
+in the function we see it create mapping view of the file into memory to likely modify it 
+
 **Q3: How does Lab11-03.exe persistently install Lab11-03.dll?**
+
+After mapping the file in memory we see function used a lot 409030 in a loop then mem copied to cisvc.exe
+
+.. image:: 3q10.png
+
+going into the function we see simple routine with a jump
+
+.. image:: 3q9.png
+
+Going to the jump place we see undefined data, it might be some code as it is memcopied into cisvc 
+so pressing c in ida reveals its assembly instructions to do some more (maybe load the lab.dll which is inet_epar32 now )
+
+.. image:: 3q11.png
+
+.. image:: 3q12.png
+
+going to cisvc in my sysWOW64 it was modified (in same day i ran the malware)
+
+.. image:: 3q13.png
+
+seems like it should have had changed the file to contain the assembly code but it didnt work (maybe because it is meant for win xp)
 
 **Q4: Which Windows system file does the malware infect?**
 
 **Q5: What does Lab11-03.dll do?**
 
+Looking at the dll we multiple functions 
+
+.. image:: 3q14.png
+
+at start address it is creating a mutex and a file (likely to put the keys logged in)) 
+
+.. image:: 3q15.png
+
+function 10001000 gets the current window opened 
+
+.. image:: 3q16.png
+
+here sounds like the main function it loops over 0xff (to check all keys) it it was pressed or not using getasyncstate 
+
+.. image:: 3q17.png
+
+and here it prints if a key was pressed to the kernel64 file then sleeps a bit
+
+.. image:: 3q18.png
+
+
 **Q6: Where does the malware store the data it collects?**
+
+``C:\WINDOWS\System32\kernel64x.dll``

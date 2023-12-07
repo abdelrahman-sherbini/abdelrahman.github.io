@@ -186,13 +186,48 @@ both files are in the same directory during analysis.</p>
 <p><strong>Q1: What interesting analysis leads can you discover using basic static analysis?</strong></p>
 <p>running strings we see the marked functions which are used to keylogger, and create file function which may record keys then save to a file</p>
 <img alt="../_images/3q1.png" src="../_images/3q1.png" />
-<p>we also functions responsible for manipulating memory</p>
+<p>we also functions responsible for manipulating memory plus dlls not found in disk</p>
 <img alt="../_images/3q2.png" src="../_images/3q2.png" />
 <p><strong>Q2: What happens when you run this malware?</strong></p>
+<p>in procmon ofc it loads the Lab11-03.dll then creates the new dll inet_epar32.dll</p>
+<img alt="../_images/3q3.png" src="../_images/3q3.png" />
+<p>it modifies the file cisvc.exe</p>
+<img alt="../_images/3q4.png" src="../_images/3q4.png" />
+<p>loads cmd</p>
+<img alt="../_images/3q5.png" src="../_images/3q5.png" />
+<p>it looks like searching for something under syswow</p>
+<img alt="../_images/3q6.png" src="../_images/3q6.png" />
+<p>the buffer is the result of formatting the string “C:WINDOWSSystem32%s” with the argument “cisvc.exe”.
+then the lpfilename is set to the buffer <code class="docutils literal notranslate"><span class="pre">lea</span> <span class="pre">ecx,</span> <span class="pre">[ebp</span> <span class="pre">+</span> <span class="pre">Buffer]</span></code> which is then passed to the function 401070
+This means that lpFileName would contain the full path to the file “C:WINDOWSSystem32cisvc.exe”.</p>
+<img alt="../_images/3q8.png" src="../_images/3q8.png" />
+<p>in the function we see it create mapping view of the file into memory to likely modify it</p>
 <p><strong>Q3: How does Lab11-03.exe persistently install Lab11-03.dll?</strong></p>
+<p>After mapping the file in memory we see function used a lot 409030 in a loop then mem copied to cisvc.exe</p>
+<img alt="../_images/3q10.png" src="../_images/3q10.png" />
+<p>going into the function we see simple routine with a jump</p>
+<img alt="../_images/3q9.png" src="../_images/3q9.png" />
+<p>Going to the jump place we see undefined data, it might be some code as it is memcopied into cisvc
+so pressing c in ida reveals its assembly instructions to do some more (maybe load the lab.dll which is inet_epar32 now )</p>
+<img alt="../_images/3q11.png" src="../_images/3q11.png" />
+<img alt="../_images/3q12.png" src="../_images/3q12.png" />
+<p>going to cisvc in my sysWOW64 it was modified (in same day i ran the malware)</p>
+<img alt="../_images/3q13.png" src="../_images/3q13.png" />
+<p>seems like it should have had changed the file to contain the assembly code but it didnt work (maybe because it is meant for win xp)</p>
 <p><strong>Q4: Which Windows system file does the malware infect?</strong></p>
 <p><strong>Q5: What does Lab11-03.dll do?</strong></p>
+<p>Looking at the dll we multiple functions</p>
+<img alt="../_images/3q14.png" src="../_images/3q14.png" />
+<p>at start address it is creating a mutex and a file (likely to put the keys logged in))</p>
+<img alt="../_images/3q15.png" src="../_images/3q15.png" />
+<p>function 10001000 gets the current window opened</p>
+<img alt="../_images/3q16.png" src="../_images/3q16.png" />
+<p>here sounds like the main function it loops over 0xff (to check all keys) it it was pressed or not using getasyncstate</p>
+<img alt="../_images/3q17.png" src="../_images/3q17.png" />
+<p>and here it prints if a key was pressed to the kernel64 file then sleeps a bit</p>
+<img alt="../_images/3q18.png" src="../_images/3q18.png" />
 <p><strong>Q6: Where does the malware store the data it collects?</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">C:\WINDOWS\System32\kernel64x.dll</span></code></p>
 </section>
 </section>
 

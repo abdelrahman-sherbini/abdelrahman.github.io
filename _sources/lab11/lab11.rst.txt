@@ -264,6 +264,10 @@ function 10001000 gets the current window opened
 .. image:: 3q16.png
 
 here sounds like the main function it loops over 0xff (to check all keys) it it was pressed or not using getasyncstate 
+The purpose of the code seems to be monitoring key presses, updating a string based on certain key conditions, and storing the result in a data structure (a1)
+
+getasyncstate(16) is Shift key (16) and so on , Caps Lock key (20), Left Shift key (160), or Right Shift key (161)
+to check if the character is capital or not
 
 .. image:: 3q17.png
 

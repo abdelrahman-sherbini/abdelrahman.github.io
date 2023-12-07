@@ -271,6 +271,10 @@ to check if the character is capital or not
 
 .. image:: 3q17.png
 
+If any keys were pressed in the loop, the content of v7 is copied to a specific location in the structure (a1 + 1032).
+The field pointed to by a1 is set to 1
+.. image:: 4q1.png
+
 and here it prints if a key was pressed to the kernel64 file then sleeps a bit
 
 .. image:: 3q18.png

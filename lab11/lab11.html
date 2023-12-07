@@ -227,6 +227,9 @@ The purpose of the code seems to be monitoring key presses, updating a string ba
 <p>getasyncstate(16) is Shift key (16) and so on , Caps Lock key (20), Left Shift key (160), or Right Shift key (161)
 to check if the character is capital or not</p>
 <img alt="../_images/3q17.png" src="../_images/3q17.png" />
+<p>If any keys were pressed in the loop, the content of v7 is copied to a specific location in the structure (a1 + 1032).
+The field pointed to by a1 is set to 1
+.. image:: 4q1.png</p>
 <p>and here it prints if a key was pressed to the kernel64 file then sleeps a bit</p>
 <img alt="../_images/3q18.png" src="../_images/3q18.png" />
 <p><strong>Q6: Where does the malware store the data it collects?</strong></p>

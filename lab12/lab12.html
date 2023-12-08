@@ -181,7 +181,7 @@ Lab12-03.exe.</p>
 <p><strong>Q1: What is the purpose of this malicious payload?</strong></p>
 <p>it creates a hidden console as cmdshow set to 0</p>
 <img alt="../_images/3q19.png" src="../_images/3q19.png" />
-<p>It creates a hook (so this maybe dll injection by hooking) with threadid set to 0 (meaning all threads) and idhook set to 13 and procedure at fn and hmod set to the calling process (as getmodulehandle had parameter 0)</p>
+<p>It creates a hook (so this maybe dll injection by hooking) with threadid set to 0 (meaning all threads are hooked) and idhook set to 13 and procedure at fn and hmod set to the calling process (as getmodulehandle had parameter 0)</p>
 <img alt="../_images/3q21.png" src="../_images/3q21.png" />
 <p>idhook 13 in MSDN</p>
 <p>For WH_KEYBOARD_LL , the events are sent directly to the process
@@ -200,16 +200,47 @@ call chain gets the message and that the system continues to run properly. (also
 <p>answered above by dll injection with SetWindowsHookExA</p>
 <p><strong>Q3: What filesystem residue does this program create?</strong></p>
 <p><code class="docutils literal notranslate"><span class="pre">practicalmalwareanalysis.log</span></code></p>
+<img alt="../_images/3q111.png" src="../_images/3q111.png" />
 </section>
 <section id="lab-12-4">
 <h2>Lab 12-4<a class="headerlink" href="#lab-12-4" title="Permalink to this heading"></a></h2>
 <p>Analyze the malware found in the file Lab12-04.exe.</p>
 <p><strong>Q1: What does the code at 0x401000 accomplish?</strong></p>
+<p>It get parameter PID, it opens process associated with that pid then calls two functions (global variable ) 40312C and 403128</p>
+<img alt="../_images/4q1.png" src="../_images/4q1.png" />
+<p>the two functions global variables doesnt contain anything going to their cross refrences where they are set likely
+and they got resolved automatically by ida
+So it searches the modules for specified PID and gets the modules name
+So it searches for winlogon.exe within the pid process if found return 1</p>
+<img alt="../_images/4q2.png" src="../_images/4q2.png" />
 <p><strong>Q2: Which process has code injected?</strong></p>
+<p>Going to cross refrences for 401000. We see it is inside a loop which checks all PIDs  so lets follow the branch where winlogon is found</p>
+<img alt="../_images/4q4.png" src="../_images/4q4.png" />
+<img alt="../_images/4q3.png" src="../_images/4q3.png" />
+<p>it calls 401174 with pid passed, we see it open the process associated with the pid then call the CreateRemoteThread to inject code there</p>
+<img alt="../_images/4q5.png" src="../_images/4q5.png" />
+<p>winlogon is process being injected</p>
 <p><strong>Q3: What DLL is loaded using LoadLibraryA?</strong></p>
+<p>sfc_os.dll <a class="reference external" href="https://www.file.net/process/sfc_os.dll.html">https://www.file.net/process/sfc_os.dll.html</a></p>
 <p><strong>Q4: What is the fourth argument passed to the CreateRemoteThread call?</strong></p>
+<p>address to sfc_os.dll</p>
+<img alt="../_images/4q7.png" src="../_images/4q7.png" />
+<p>notice it gets the second function from sfc_os.dll we see example here <a class="reference external" href="https://ntcore.com/files/wfp.htm">https://ntcore.com/files/wfp.htm</a> that used it for disabling Windows File Protection</p>
+<img alt="../_images/4q6.png" src="../_images/4q6.png" />
 <p><strong>Q5: What malware is dropped by the main executable?</strong></p>
+<p>Following the flow of main after the above, it create a backup of \system32\wupdmgr.exe then calls another routine</p>
+<img alt="../_images/5q1.png" src="../_images/5q1.png" />
+<p>into 4011FC, it loads exe file from .rsrc named <code class="docutils literal notranslate"><span class="pre">#101</span></code> type BIN</p>
+<img alt="../_images/5q2.png" src="../_images/5q2.png" />
+<p>and writes it into \system32\wupdmgr.exe</p>
+<img alt="../_images/5q3.png" src="../_images/5q3.png" />
+<p>then executes and hides it (with cmdshow set 0)</p>
+<img alt="../_images/5q4.png" src="../_images/5q4.png" />
 <p><strong>Q6: What is the purpose of this and the dropped malware?</strong></p>
+<p>replacing legit update manager with malicious one
+it executes first the legit one then the malicious one
+.. image:: 5q5.png</p>
+<img alt="../_images/5q6.png" src="../_images/5q6.png" />
 </section>
 </section>
 

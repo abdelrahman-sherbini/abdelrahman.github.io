@@ -156,7 +156,7 @@ it creates a hidden console as cmdshow set to 0
 
 .. image:: 3q1.png
 
-It creates a hook (so this maybe dll injection by hooking) with threadid set to 0 (meaning all threads) and idhook set to 13 and procedure at fn and hmod set to the calling process (as getmodulehandle had parameter 0)
+It creates a hook (so this maybe dll injection by hooking) with threadid set to 0 (meaning all threads are hooked) and idhook set to 13 and procedure at fn and hmod set to the calling process (as getmodulehandle had parameter 0)
 
 .. image:: 3q2.png
 
@@ -192,19 +192,77 @@ answered above by dll injection with SetWindowsHookExA
 
 ``practicalmalwareanalysis.log``
 
+.. image:: 3q11.png
+
 Lab 12-4
 --------
 Analyze the malware found in the file Lab12-04.exe.
 
 **Q1: What does the code at 0x401000 accomplish?**
 
+It get parameter PID, it opens process associated with that pid then calls two functions (global variable ) 40312C and 403128
+
+.. image:: 4q1.png
+
+the two functions global variables doesnt contain anything going to their cross refrences where they are set likely
+and they got resolved automatically by ida
+So it searches the modules for specified PID and gets the modules name
+So it searches for winlogon.exe within the pid process if found return 1 
+
+.. image:: 4q2.png
+
+
 **Q2: Which process has code injected?**
+
+Going to cross refrences for 401000. We see it is inside a loop which checks all PIDs  so lets follow the branch where winlogon is found
+
+.. image:: 4q4.png
+
+.. image:: 4q3.png
+
+it calls 401174 with pid passed, we see it open the process associated with the pid then call the CreateRemoteThread to inject code there
+
+.. image:: 4q5.png
+
+winlogon is process being injected
 
 **Q3: What DLL is loaded using LoadLibraryA?**
 
+sfc_os.dll https://www.file.net/process/sfc_os.dll.html
+
 **Q4: What is the fourth argument passed to the CreateRemoteThread call?**
+
+address to sfc_os.dll
+
+.. image:: 4q7.png
+
+notice it gets the second function from sfc_os.dll we see example here https://ntcore.com/files/wfp.htm that used it for disabling Windows File Protection
+
+.. image:: 4q6.png
 
 **Q5: What malware is dropped by the main executable?**
 
+Following the flow of main after the above, it create a backup of \\system32\\wupdmgr.exe then calls another routine
+
+.. image:: 5q1.png
+
+into 4011FC, it loads exe file from .rsrc named ``#101`` type BIN
+
+.. image:: 5q2.png
+
+and writes it into \\system32\\wupdmgr.exe
+
+.. image:: 5q3.png
+
+then executes and hides it (with cmdshow set 0)
+
+.. image:: 5q4.png
+
 **Q6: What is the purpose of this and the dropped malware?**
+
+replacing legit update manager with malicious one
+it executes first the legit one then the malicious one
+.. image:: 5q5.png
+
+.. image:: 5q6.png
 

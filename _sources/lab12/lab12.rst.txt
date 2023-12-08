@@ -119,13 +119,15 @@ the malware sections to the victim process space
 .. image:: 2q11.png
 
 In the final step, the malware restores the victim process environment so
-that the malicious code can run by calling SetThreadContext to set the entry
+that the malicious code can run by calling ``SetThreadContext`` to set the entry
 point to point to the malicious code. Finally, ResumeThread is called to initiate
 the malware, which has now replaced the victim process.
 
 .. image:: 2q12.png
 
 We can gather now it is process replacement (hollowing) malware
+
+the docoded malware is Lab12-03.exe in next section
 
 **Q2: How does the launcher program hide execution?**
 
@@ -150,10 +152,45 @@ Lab12-03.exe.
 
 **Q1: What is the purpose of this malicious payload?**
 
+it creates a hidden console as cmdshow set to 0
+
+.. image:: 3q1.png
+
+It creates a hook (so this maybe dll injection by hooking) with threadid set to 0 (meaning all threads) and idhook set to 13 and procedure at fn and hmod set to the calling process (as getmodulehandle had parameter 0)
+
+.. image:: 3q2.png
+
+idhook 13 in MSDN
+
+For WH_KEYBOARD_LL , the events are sent directly to the process
+that installed the hook, so the hook will be running in the context of the
+process that created it.
+
+.. image:: 3q4.png
+
+In fn the hook procedure, it calls a function then calls ``CallNextHookExA`` which ensures that the next hook procedure in the
+call chain gets the message and that the system continues to run properly. (also so victim doesnt get no keyboard input is registered)
+
+.. image:: 3q3.png
+
+in 4010C7 routine it creates file ``practicalmalwareanalysis.log``
+
+.. image:: 3q5.png
+
+Then logs the keys pressed into the file while keeping in mind which window and special keys like capslock
+
+.. image:: 3q6.png
+
+.. image:: 3q7.png
+
+
 **Q2: How does the malicious payload inject itself?**
+
+answered above by dll injection with SetWindowsHookExA
 
 **Q3: What filesystem residue does this program create?**
 
+``practicalmalwareanalysis.log``
 
 Lab 12-4
 --------

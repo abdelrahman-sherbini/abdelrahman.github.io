@@ -159,11 +159,12 @@ memory with the malicious executable and uses <code class="docutils literal notr
 the malware sections to the victim process space</p>
 <img alt="../_images/2q112.png" src="../_images/2q112.png" />
 <p>In the final step, the malware restores the victim process environment so
-that the malicious code can run by calling SetThreadContext to set the entry
+that the malicious code can run by calling <code class="docutils literal notranslate"><span class="pre">SetThreadContext</span></code> to set the entry
 point to point to the malicious code. Finally, ResumeThread is called to initiate
 the malware, which has now replaced the victim process.</p>
 <img alt="../_images/2q121.png" src="../_images/2q121.png" />
 <p>We can gather now it is process replacement (hollowing) malware</p>
+<p>the docoded malware is Lab12-03.exe in next section</p>
 <p><strong>Q2: How does the launcher program hide execution?</strong></p>
 <p>answered above by process hollowing</p>
 <p><strong>Q3: Where is the malicious payload stored?</strong></p>
@@ -178,8 +179,27 @@ the malware, which has now replaced the victim process.</p>
 <p>Analyze the malware extracted during the analysis of Lab 12-2, or use the file
 Lab12-03.exe.</p>
 <p><strong>Q1: What is the purpose of this malicious payload?</strong></p>
+<p>it creates a hidden console as cmdshow set to 0</p>
+<img alt="../_images/3q19.png" src="../_images/3q19.png" />
+<p>It creates a hook (so this maybe dll injection by hooking) with threadid set to 0 (meaning all threads) and idhook set to 13 and procedure at fn and hmod set to the calling process (as getmodulehandle had parameter 0)</p>
+<img alt="../_images/3q21.png" src="../_images/3q21.png" />
+<p>idhook 13 in MSDN</p>
+<p>For WH_KEYBOARD_LL , the events are sent directly to the process
+that installed the hook, so the hook will be running in the context of the
+process that created it.</p>
+<img alt="../_images/3q41.png" src="../_images/3q41.png" />
+<p>In fn the hook procedure, it calls a function then calls <code class="docutils literal notranslate"><span class="pre">CallNextHookExA</span></code> which ensures that the next hook procedure in the
+call chain gets the message and that the system continues to run properly. (also so victim doesnt get no keyboard input is registered)</p>
+<img alt="../_images/3q31.png" src="../_images/3q31.png" />
+<p>in 4010C7 routine it creates file <code class="docutils literal notranslate"><span class="pre">practicalmalwareanalysis.log</span></code></p>
+<img alt="../_images/3q51.png" src="../_images/3q51.png" />
+<p>Then logs the keys pressed into the file while keeping in mind which window and special keys like capslock</p>
+<img alt="../_images/3q61.png" src="../_images/3q61.png" />
+<img alt="../_images/3q7.png" src="../_images/3q7.png" />
 <p><strong>Q2: How does the malicious payload inject itself?</strong></p>
+<p>answered above by dll injection with SetWindowsHookExA</p>
 <p><strong>Q3: What filesystem residue does this program create?</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">practicalmalwareanalysis.log</span></code></p>
 </section>
 <section id="lab-12-4">
 <h2>Lab 12-4<a class="headerlink" href="#lab-12-4" title="Permalink to this heading"></a></h2>

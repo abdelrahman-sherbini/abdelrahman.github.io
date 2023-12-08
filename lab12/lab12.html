@@ -114,15 +114,64 @@ then it is passing all process identifiers (pid) to 40100 function we said above
 <p>Now the overhead is done, the main part here, first it allocates space in explorer process memory then writing Lab12-01.dll to it
 then calling CreateRemoteThread with all prepared parameters (handle to loadlibrary +handle to explorer +the base address where Lab12-01.dll where written to ,to load it )</p>
 <img alt="../_images/1q82.png" src="../_images/1q82.png" />
+<p>in the dll simple program in a loop to create a thread with open messagebox</p>
+<img alt="../_images/1q91.png" src="../_images/1q91.png" />
+<img alt="../_images/1q101.png" src="../_images/1q101.png" />
 </section>
 <section id="lab-12-2">
 <h2>Lab 12-2<a class="headerlink" href="#lab-12-2" title="Permalink to this heading"></a></h2>
 <p>Analyze the malware found in the file Lab12-02.exe.</p>
 <p><strong>Q1: What is the purpose of this program?</strong></p>
+<p>In the imports we see it is importing to write something to another process memory</p>
+<img alt="../_images/2q22.png" src="../_images/2q22.png" />
+<p>then we see it loading resource maybe it is hiding something in its resources</p>
+<img alt="../_images/2q110.png" src="../_images/2q110.png" />
+<p>at main we see it first passes ApplicationName and string containing <code class="docutils literal notranslate"><span class="pre">\\svchost.exe</span></code> and calls 40149D
+Then pass a handle to the calling (exe) process and calls 40132C</p>
+<img alt="../_images/2q32.png" src="../_images/2q32.png" />
+<div class="line-block">
+<div class="line">we will first check 40149D routine</div>
+<div class="line">Looks like it just concatenates the systemdirectory to \svchost output to -&gt; ApplicationName</div>
+</div>
+<img alt="../_images/2q42.png" src="../_images/2q42.png" />
+<div class="line-block">
+<div class="line">going to the second call 40132C</div>
+</div>
+<p>It loads something from resource with name <code class="docutils literal notranslate"><span class="pre">LOCALIZATION</span></code> and type <code class="docutils literal notranslate"><span class="pre">UNICODE</span></code> then allocates place in memory copies the resource to it
+and checks if first character or second character doesnt equal to <code class="docutils literal notranslate"><span class="pre">MZ</span></code> (which is start of exe file)
+then calls 401000 routine maybe it will decode what is in the resource</p>
+<p>Yup it xors the resource file with 65</p>
+<img alt="../_images/2q62.png" src="../_images/2q62.png" />
+<p>then all the routine returns pointer to the start of allocated memory which contains the decoded resource</p>
+<img alt="../_images/2q72.png" src="../_images/2q72.png" />
+<p>It then calls 4010EA with parameters decoded resource (lpBuffer) and svchost (lpApplicationName)
+| after the call it zeroes the ApplicationName and virtualfrees the decoded resource</p>
+<img alt="../_images/2q82.png" src="../_images/2q82.png" />
+<p>into 4010EA, it does some checks then starts process with name of module to be executed svchost.exe</p>
+<img alt="../_images/2q91.png" src="../_images/2q91.png" />
+<p>notice it created the process in suspended state with creationflag set to 0x4 means it used to load a process into memory and suspend it at the entrypoint.</p>
+<img alt="../_images/9q9.png" src="../_images/9q9.png" />
+<p>with similar overhead discussed in Lab12-01 to allocate space for the decoded resource
+and using ZwUnmapViewOfSection to release all memory pointed to by a section passed as a parameter (the svchost)</p>
+<img alt="../_images/2q101.png" src="../_images/2q101.png" />
+<p>then Once the process is created, the next step is to replace the victim process’s
+memory with the malicious executable and uses <code class="docutils literal notranslate"><span class="pre">WriteProcessMemory</span></code> to write each of
+the malware sections to the victim process space</p>
+<img alt="../_images/2q112.png" src="../_images/2q112.png" />
+<p>In the final step, the malware restores the victim process environment so
+that the malicious code can run by calling SetThreadContext to set the entry
+point to point to the malicious code. Finally, ResumeThread is called to initiate
+the malware, which has now replaced the victim process.</p>
+<img alt="../_images/2q121.png" src="../_images/2q121.png" />
+<p>We can gather now it is process replacement (hollowing) malware</p>
 <p><strong>Q2: How does the launcher program hide execution?</strong></p>
+<p>answered above by process hollowing</p>
 <p><strong>Q3: Where is the malicious payload stored?</strong></p>
+<p>answered above in .rsrc</p>
 <p><strong>Q4: How is the malicious payload protected?</strong></p>
+<p>answered above by encoding routine</p>
 <p><strong>Q5: How are strings protected?</strong></p>
+<p>answered above by encoding routine</p>
 </section>
 <section id="lab-12-3">
 <h2>Lab 12-3<a class="headerlink" href="#lab-12-3" title="Permalink to this heading"></a></h2>

@@ -47,20 +47,101 @@ then calling CreateRemoteThread with all prepared parameters (handle to loadlibr
 
 .. image:: 1q8.png
 
+in the dll simple program in a loop to create a thread with open messagebox 
+
+.. image:: 1q9.png
+
+.. image:: 1q10.png
+
+
 Lab 12-2
 --------
 Analyze the malware found in the file Lab12-02.exe.
 
 **Q1: What is the purpose of this program?**
 
+In the imports we see it is importing to write something to another process memory 
+
+.. image:: 2q2.png
+
+then we see it loading resource maybe it is hiding something in its resources 
+
+.. image:: 2q1.png
+
+at main we see it first passes ApplicationName and string containing ``\\svchost.exe`` and calls 40149D
+Then pass a handle to the calling (exe) process and calls 40132C
+
+.. image:: 2q3.png
+
+| we will first check 40149D routine
+| Looks like it just concatenates the systemdirectory to \\svchost output to -> ApplicationName 
+
+.. image:: 2q4.png
+
+| going to the second call 40132C 
+
+It loads something from resource with name ``LOCALIZATION`` and type ``UNICODE`` then allocates place in memory copies the resource to it 
+and checks if first character or second character doesnt equal to ``MZ`` (which is start of exe file)
+then calls 401000 routine maybe it will decode what is in the resource
+
+.. image::2q5.png
+
+Yup it xors the resource file with 65
+
+.. image:: 2q6.png
+
+then all the routine returns pointer to the start of allocated memory which contains the decoded resource
+
+.. image:: 2q7.png
+
+It then calls 4010EA with parameters decoded resource (lpBuffer) and svchost (lpApplicationName) 
+| after the call it zeroes the ApplicationName and virtualfrees the decoded resource
+
+.. image:: 2q8.png
+
+into 4010EA, it does some checks then starts process with name of module to be executed svchost.exe 
+
+.. image:: 2q9.png
+
+notice it created the process in suspended state with creationflag set to 0x4 means it used to load a process into memory and suspend it at the entrypoint.
+
+.. image:: 9q9.png
+
+with similar overhead discussed in Lab12-01 to allocate space for the decoded resource
+and using ZwUnmapViewOfSection to release all memory pointed to by a section passed as a parameter (the svchost)
+
+.. image:: 2q10.png
+
+then Once the process is created, the next step is to replace the victim process’s
+memory with the malicious executable and uses ``WriteProcessMemory`` to write each of
+the malware sections to the victim process space
+
+.. image:: 2q11.png
+
+In the final step, the malware restores the victim process environment so
+that the malicious code can run by calling SetThreadContext to set the entry
+point to point to the malicious code. Finally, ResumeThread is called to initiate
+the malware, which has now replaced the victim process.
+
+.. image:: 2q12.png
+
+We can gather now it is process replacement (hollowing) malware
+
 **Q2: How does the launcher program hide execution?**
+
+answered above by process hollowing
 
 **Q3: Where is the malicious payload stored?**
 
+answered above in .rsrc 
+
 **Q4: How is the malicious payload protected?**
+
+answered above by encoding routine
 
 **Q5: How are strings protected?**
 
+answered above by encoding routine
 
 Lab 12-3
 --------

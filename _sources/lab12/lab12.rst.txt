@@ -262,6 +262,7 @@ then executes and hides it (with cmdshow set 0)
 
 replacing legit update manager with malicious one
 it executes first the legit one then the malicious one
+
 .. image:: 5q5.png
 
 .. image:: 5q6.png

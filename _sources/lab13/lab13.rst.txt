@@ -1,0 +1,269 @@
+Practical Malware Analysis - Lab 13
+===================================
+
+Lab 13-1
+--------
+Analyze the malware found in the file Lab13-01.exe.
+
+**Q1: Compare the strings in the malware (from the output of the strings command)
+with the information available via dynamic analysis. Based on this
+comparison, which elements might be encoded?**
+
+we see the Base64 stream 64 byte which indicates it may use Base64
+
+.. image:: 1q2.png
+
+libraries to load resource maybe something is hiding the .rsrc section plus memory manipulation labraries like virtualalloc to allocate mem0ry in another process 
+plus using internet we need to watch traffic at dynamic analysis ((with fakenet))
+
+.. image:: 1q1.png
+
+.. image:: 1q3.png
+
+running the malware we see two interesting keys from https://www.allthingsdfir.com/tracing-malicious-downloads/
+we can say the malware tried to download something from the internet
+
+.. image:: 1q4.png
+
+maybe it will modify wow64cpu.dll in memory as it create a mapping for it 
+
+.. image:: Screenshot_1.png
+
+didn't find this file
+
+.. image:: 1q5.png
+
+checking fakenet we requests to Practicalmalwareanalysis.com with path Base64 decoded ``a2xhc2gtUEM=`` which is my PC-Name  
+also a request to pastebin page which is removed network
+
+.. image:: 1q6.png
+
+
+
+**Q2: Use IDA Pro to look for potential encoding by searching for the string
+xor. What type of encoding do you find?**
+
+overview of the main fucntion it first call 401300 then initiate WSA for winsock.dll then calls 4011C9 and based on the return it will loop endlessly or finish
+we can infer that 401300 will gather data and encode then 4011C9 will call a request to the internet and if successful it will end the loop
+
+.. image:: 1q7.png
+
+now by searching xor instruction we find xor with constant 
+
+.. image:: 1q8.png
+
+it is encoding an array and outputing in same array with simple xor 3Bh
+
+.. image:: 1q9.png
+
+
+**Q3: What is the key used for encoding and what content does it encode?**
+
+key 3Bh and the array encoded is passed as arguemnt cross reference the function to see what is input
+| We see the resource is one being pushed 
+
+.. image:: 1q10.png
+
+**Q4: Use the static tools FindCrypt2, Krypto ANALyzer (KANAL), and the
+IDA Entropy Plugin to identify any other encoding mechanisms. What
+do you find?**
+
+As noticed from the floss output using KANAL from PEID we see Base64 is used (based on Base64 default table)
+
+.. image:: 1q11.png
+
+**Q5: What type of encoding is used for a portion of the network traffic sent by
+the malware?**
+
+the Base64 table used here which seems like the function for indexing which char from the table corresponds to the encoded Base64
+
+.. image:: 1q12.png
+
+cross reference 401000 routine above we find it is used here with str variable the one being encoded 
+as v7 variable contains the string code which is input onto 401000 fucntion (as the first loop put the string into v7 in groups of three then pads with 0)
+
+.. image:: 1q13.png
+
+it is sending the host name into the encoding function above
+
+.. image:: 1q14.png
+
+then sends that data over the url and recieves the response if first character is o return true
+
+.. image:: 1q15.png
+
+
+**Q6: Where is the Base64 function in the disassembly?**
+
+sub_4010B1(Destination, (int)v8);
+
+**Q7: What is the maximum length of the Base64-encoded data that is sent?
+What is encoded?**
+
+the Base64 used here we see it is grouping in 3 the input data then indexing then grouping in 4 the output data 
+so for every 3 input we get 4 output and if input not divisble by 3 we pad 0 till it is 
+
+.. image:: 1q16.png
+
+then here it only copies 12 chars strncpy to input of encoding Base64 function which is divisble by 3
+so we can max length (12/3) \*4 = 16 byte
+
+.. image:: 1q17.png
+
+**Q8: In this malware, would you ever see the padding characters (= or ==) in
+the Base64-encoded data?**
+
+maybe if the host is not divisble by 3 so the routine above adds 0 to the input but it the host name has to be less than 12 characters
+
+**Q9: What does this malware do?**
+
+get the hostname Base64 encode send it to host in a loop till the response of the host first character is o
+
+.. image:: 1q18.png
+
+.. image:: 1q15.png
+
+Lab 13-2
+--------
+Analyze the malware found in the file Lab13-02.exe.
+
+**Q1: Using dynamic analysis, determine what this malware creates.**
+
+Lots of files created with seemingly encoded data all same size
+
+.. image:: 2q1.png
+
+
+**Q2: Use static techniques such as an xor search, FindCrypt2, KANAL, and the
+IDA Entropy Plugin to look for potential encoding. What do you find?**
+
+nothing found in KANAL, searching for xor we find a function using a lot of xor going there 
+it sounds like the encoding function we looking for 
+
+.. image:: 2q2.png
+
+**Q3: Based on your answer to question 1, which imported function would be a
+good prospect for finding the encoding functions?**
+
+.. image:: 2q3.png
+ 
+then we can follow back from there to find what is written but i will start from main as it seems a simple application
+
+**Q4: Where is the encoding function in the disassembly?**
+
+we will start from main it sleeps then call a function then sleeps in a infinite loop
+
+.. image:: 2q4.png
+
+| Into that function, first we see at the end, arguemnts pushed to the fucntion 401000 filename, numberOfByeToWrite and buffer 
+
+| so 401000 is the one to create files 
+
+.. image:: 2q5.png
+
+the first function seems to calls The GetDC function `` retrieves a handle to a device context (DC) for the client area of a specified window which is the desktop window``
+creates a bitmap for it, stores it inside structure (take a screenshot)
+
+.. image:: 2q6.png
+
+in the second function, it recieves the structure which is calling the function encoding from question 2
+
+.. image:: 2q7.png
+
+
+**Q5: Trace from the encoding function to the source of the encoded content.
+What is the content?**
+
+answered above, bitmap of desktop window 
+
+**Q6: Can you find the algorithm used for encoding? If not, how can you
+decode the content?**
+
+it is kinda hard to know 
+
+.. image:: 2q8.png
+
+but since we expecting it to be xor based we will using ollydbg  by following same example in the chapter
+| We set a breakpoint before the encoding function call at 401880 and before the writefile function call 4018B8
+| then replace the data in the stack in encoding function with one of the files dumped 
+
+.. image:: 2q9.png
+
+we've hit the encoder function, then follow in dump the top of the stack
+
+.. image:: 2q13.png
+
+Opening one of the files in 010 editor and dump all hex values
+
+.. image:: 2q11.png
+
+pasting our hex in the mem0ry block
+
+.. image:: 2q12.png
+
+complete the execution till new file created add .bmp extension as the file starts with bm magic bytes
+it's a screenshot when we ran the malware (was looking at the procmon at that time)
+
+.. image:: 2q16.png
+
+**Q7: Using instrumentation, can you recover the original source of one of the
+encoded files?**
+
+using same example in the book, then in immunity debugger ImmLib->Run Python Script,
+
+.. code-block:: python2
+    
+    #!/usr/bin/env python
+    import immlib
+    def main():
+    imm = immlib.Debugger()
+    imm.setBreakpoint(0x00401875) # break just before pushing args for encoding
+    imm.Run() # Execute until breakpoint before crypto
+    cfile = open("C:\\Users\\klash\\Desktop\\practical malware\\Practical Malware Analysis Labs\\BinaryCollection\\Chapter_13L\\temp00c6d5db",'rb') without the b flag,
+    binary characters can be evaluated as end-of-file characters, terminating thereading prematurely).
+    buffer = cfile.read()  #Read encrypted file into buffer
+    sz = len (buffer)
+    membuf = imm.remoteVirtualAlloc(sz)  # Allocate memory within debugger process
+    imm.writeMemory(membuf,buffer)
+    regs = imm.getRegs()
+    imm.writeLong(regs['EBP']-12, membuf)  # Set stack variables
+    imm.writeLong(regs['EBP']-8, sz)
+    imm.setBreakpoint(0x0040190A) # after single loop
+    imm.Run()
+
+
+Lab 13-3
+--------
+Analyze the malware found in the file Lab13-03.exe.
+
+**Q1: Compare the output of strings with the information available via
+dynamic analysis. Based on this comparison, which elements might
+be encoded?**
+
+
+**Q2: Use static analysis to look for potential encoding by searching for the
+string xor. What type of encoding do you find?**
+
+
+**Q3: Use static tools like FindCrypt2, KANAL, and the IDA Entropy Plugin to
+identify any other encoding mechanisms. How do these findings compare
+with the XOR findings?**
+
+
+**Q4: Which two encoding techniques are used in this malware?**
+
+
+**Q5: For each encoding technique, what is the key?**
+
+
+**Q6: For the cryptographic encryption algorithm, is the key sufficient? What
+else must be known?**
+
+
+**Q7: What does this malware do?**
+
+
+**Q8: Create code to decrypt some of the content produced during dynamic
+analysis. What is this content?**
+
+

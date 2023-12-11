@@ -319,7 +319,7 @@ Into the function we see a check if the firs parameter is null (zero) it throws 
 **Q6: For the cryptographic encryption algorithm, is the key sufficient? What
 else must be known?**
 
-maybe other things are needed as in online AES decryption we need those inputs IV, keysize, secret, Mode
+maybe other things are needed (if IV is not initiatialized as zero)as in online AES decryption we need those inputs IV, keysize, secret, Mode
 
 .. image:: 3q16.png
 
@@ -369,7 +369,5 @@ Which marked by sigsrch as encryption,(Te1)
 .. image:: 4q7.png
 
 
-**Q8: Create code to decrypt some of the content produced during dynamic
-analysis. What is this content?**
 
 

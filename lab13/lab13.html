@@ -278,7 +278,7 @@ with the XOR findings?</strong></p>
 <img alt="../_images/3q151.png" src="../_images/3q151.png" />
 <p><strong>Q6: For the cryptographic encryption algorithm, is the key sufficient? What
 else must be known?</strong></p>
-<p>maybe other things are needed as in online AES decryption we need those inputs IV, keysize, secret, Mode</p>
+<p>maybe other things are needed (if IV is not initiatialized as zero)as in online AES decryption we need those inputs IV, keysize, secret, Mode</p>
 <img alt="../_images/3q161.png" src="../_images/3q161.png" />
 <p><strong>Q7: What does this malware do?</strong></p>
 <p>Some preparing at main for the AES Encryption and socket connection then the main function at 4015B7 which holds the socket created</p>
@@ -305,8 +305,6 @@ the stdout pipe.</p>
 <img alt="../_images/4q61.png" src="../_images/4q61.png" />
 <p>Which marked by sigsrch as encryption,(Te1)</p>
 <img alt="../_images/4q71.png" src="../_images/4q71.png" />
-<p><strong>Q8: Create code to decrypt some of the content produced during dynamic
-analysis. What is this content?</strong></p>
 </section>
 </section>
 

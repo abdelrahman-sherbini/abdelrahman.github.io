@@ -212,7 +212,7 @@ encoded files?**
 using same example in the book, then in immunity debugger ImmLib->Run Python Script,
 
 .. code-block:: python2
-    
+
     #!/usr/bin/env python
     import immlib
     def main():
@@ -240,27 +240,133 @@ Analyze the malware found in the file Lab13-03.exe.
 dynamic analysis. Based on this comparison, which elements might
 be encoded?**
 
+Running floss, there is a custom Base64 stream buffer we will need it to decode 
+
+.. image:: 3q1.png
+
+it will create files 
+
+.. image:: 3q2.png
+
+it will likely use cmd, open that url to connect shell
+
+.. image:: 3q3.png
+
+running the malware we see that typical C&C plus its querying a lot of my hosts file and cache network
+
+.. image:: 3q4.png
+
+.. image:: 3q5.png
 
 **Q2: Use static analysis to look for potential encoding by searching for the
 string xor. What type of encoding do you find?**
 
+A lot of xors focusing on non zeroing xors
+
+.. image:: 3q6.png
+
+These are the functions that contain interesting xor : 403166, 402DA8, 4027ED, 40223A, 401AC2 i will rename them interesting[count]
+
+.. image:: 3q7.png
+
+We see two calls of our interesting functions which may be our encoding scheme in sub_40352D
+
+.. image:: 3q8.png
+
+plus we know there is custom Base64 we check strings then cross reference that to a fucntion
+
+.. image:: 3q9.png
+
+which is called here 
+
+.. image:: 3q10.png
 
 **Q3: Use static tools like FindCrypt2, KANAL, and the IDA Entropy Plugin to
 identify any other encoding mechanisms. How do these findings compare
 with the XOR findings?**
 
+Running sigsearch plugin in ida we find 401AC2 (interesting_1) and 4027ED (interesting_3)  maybe uses AES encryption
+
+.. image:: 3q11.png
+
+.. image:: 3q13.png
+
+Which corresponds with what PEID KANAL found 
+
+.. image:: 3q12.png
+
+
 
 **Q4: Which two encoding techniques are used in this malware?**
 
+custom Base64 , AES
 
 **Q5: For each encoding technique, what is the key?**
 
+For Base64 as we found above ``CDEFGHIJKLMNOPQRSTUVWXYZABcdefghijklmnopqrstuvwxyzab0123456789+/``
+
+| The Advanced Encryption Standard (AES) is an algorithm that uses the same key to encrypt and decrypt protected data
+| So by knowing the key we can decrypt the data 
+
+When we go in the main fucntion we see some string (likely the key) ``ijklmnopqrstuvwx`` is pushed to our function interesting_1 as first parameter
+
+.. image:: 3q14.png
+
+Into the function we see a check if the firs parameter is null (zero) it throws Exception empty key
+
+.. image:: 3q15.png
 
 **Q6: For the cryptographic encryption algorithm, is the key sufficient? What
 else must be known?**
 
+maybe other things are needed as in online AES decryption we need those inputs IV, keysize, secret, Mode
+
+.. image:: 3q16.png
+
 
 **Q7: What does this malware do?**
+
+Some preparing at main for the AES Encryption and socket connection then the main function at 4015B7 which holds the socket created
+
+.. image:: 4q1.png
+
+Into 4015B7, we see ``CreatePipe`` is used to tie together read and
+write ends to a pipe, standard input (stdin) and standard output
+(stdout). The ``CreateProcess`` method is used to tie the standard streams
+to pipes instead of directly to the sockets. After ``CreateProcess`` is called, the
+malware will spawn two threads: one for reading from the stdin pipe and
+writing to the socket, and the other for reading the socket and writing to
+the stdout pipe.
+
+.. image:: 3q17.png
+
+Which creates a reverse shell with the CMD 
+
+.. image:: 3q18.png
+
+It creates a thread within CMD 
+
+.. image:: 4q2.png
+
+After going through it we can gather it is reads, Base64-encode it , then writes it ,so it opens a cmd and any command it recieves or sends is Base64-encoded 
+
+.. image:: 4q3.png
+
+Into the second thread created, we suspect this the actual data grabbed encrypted then sent to the C2 
+
+.. image:: 4q4.png
+
+Same as above reads the buffer does a call then writes likely to the socket 
+
+.. image:: 4q5.png
+
+It uses two of our interesting functions 
+
+.. image:: 4q6.png
+
+Which marked by sigsrch as encryption,(Te1)
+
+.. image:: 4q7.png
 
 
 **Q8: Create code to decrypt some of the content produced during dynamic

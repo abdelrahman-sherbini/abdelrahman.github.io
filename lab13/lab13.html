@@ -235,16 +235,76 @@ encoded files?</strong></p>
 <p><strong>Q1: Compare the output of strings with the information available via
 dynamic analysis. Based on this comparison, which elements might
 be encoded?</strong></p>
+<p>Running floss, there is a custom Base64 stream buffer we will need it to decode</p>
+<img alt="../_images/3q110.png" src="../_images/3q110.png" />
+<p>it will create files</p>
+<img alt="../_images/3q22.png" src="../_images/3q22.png" />
+<p>it will likely use cmd, open that url to connect shell</p>
+<img alt="../_images/3q32.png" src="../_images/3q32.png" />
+<p>running the malware we see that typical C&amp;C plus its querying a lot of my hosts file and cache network</p>
+<img alt="../_images/3q42.png" src="../_images/3q42.png" />
+<img alt="../_images/3q52.png" src="../_images/3q52.png" />
 <p><strong>Q2: Use static analysis to look for potential encoding by searching for the
 string xor. What type of encoding do you find?</strong></p>
+<p>A lot of xors focusing on non zeroing xors</p>
+<img alt="../_images/3q62.png" src="../_images/3q62.png" />
+<p>These are the functions that contain interesting xor : 403166, 402DA8, 4027ED, 40223A, 401AC2 i will rename them interesting[count]</p>
+<img alt="../_images/3q71.png" src="../_images/3q71.png" />
+<p>We see two calls of our interesting functions which may be our encoding scheme in sub_40352D</p>
+<img alt="../_images/3q81.png" src="../_images/3q81.png" />
+<p>plus we know there is custom Base64 we check strings then cross reference that to a fucntion</p>
+<img alt="../_images/3q91.png" src="../_images/3q91.png" />
+<p>which is called here</p>
+<img alt="../_images/3q101.png" src="../_images/3q101.png" />
 <p><strong>Q3: Use static tools like FindCrypt2, KANAL, and the IDA Entropy Plugin to
 identify any other encoding mechanisms. How do these findings compare
 with the XOR findings?</strong></p>
+<p>Running sigsearch plugin in ida we find 401AC2 (interesting_1) and 4027ED (interesting_3)  maybe uses AES encryption</p>
+<img alt="../_images/3q112.png" src="../_images/3q112.png" />
+<img alt="../_images/3q131.png" src="../_images/3q131.png" />
+<p>Which corresponds with what PEID KANAL found</p>
+<img alt="../_images/3q121.png" src="../_images/3q121.png" />
 <p><strong>Q4: Which two encoding techniques are used in this malware?</strong></p>
+<p>custom Base64 , AES</p>
 <p><strong>Q5: For each encoding technique, what is the key?</strong></p>
+<p>For Base64 as we found above <code class="docutils literal notranslate"><span class="pre">CDEFGHIJKLMNOPQRSTUVWXYZABcdefghijklmnopqrstuvwxyzab0123456789+/</span></code></p>
+<div class="line-block">
+<div class="line">The Advanced Encryption Standard (AES) is an algorithm that uses the same key to encrypt and decrypt protected data</div>
+<div class="line">So by knowing the key we can decrypt the data</div>
+</div>
+<p>When we go in the main fucntion we see some string (likely the key) <code class="docutils literal notranslate"><span class="pre">ijklmnopqrstuvwx</span></code> is pushed to our function interesting_1 as first parameter</p>
+<img alt="../_images/3q141.png" src="../_images/3q141.png" />
+<p>Into the function we see a check if the firs parameter is null (zero) it throws Exception empty key</p>
+<img alt="../_images/3q151.png" src="../_images/3q151.png" />
 <p><strong>Q6: For the cryptographic encryption algorithm, is the key sufficient? What
 else must be known?</strong></p>
+<p>maybe other things are needed as in online AES decryption we need those inputs IV, keysize, secret, Mode</p>
+<img alt="../_images/3q161.png" src="../_images/3q161.png" />
 <p><strong>Q7: What does this malware do?</strong></p>
+<p>Some preparing at main for the AES Encryption and socket connection then the main function at 4015B7 which holds the socket created</p>
+<img alt="../_images/4q11.png" src="../_images/4q11.png" />
+<p>Into 4015B7, we see <code class="docutils literal notranslate"><span class="pre">CreatePipe</span></code> is used to tie together read and
+write ends to a pipe, standard input (stdin) and standard output
+(stdout). The <code class="docutils literal notranslate"><span class="pre">CreateProcess</span></code> method is used to tie the standard streams
+to pipes instead of directly to the sockets. After <code class="docutils literal notranslate"><span class="pre">CreateProcess</span></code> is called, the
+malware will spawn two threads: one for reading from the stdin pipe and
+writing to the socket, and the other for reading the socket and writing to
+the stdout pipe.</p>
+<img alt="../_images/3q171.png" src="../_images/3q171.png" />
+<p>Which creates a reverse shell with the CMD</p>
+<img alt="../_images/3q181.png" src="../_images/3q181.png" />
+<p>It creates a thread within CMD</p>
+<img alt="../_images/4q21.png" src="../_images/4q21.png" />
+<p>After going through it we can gather it is reads, Base64-encode it , then writes it ,so it opens a cmd and any command it recieves or sends is Base64-encoded</p>
+<img alt="../_images/4q31.png" src="../_images/4q31.png" />
+<p>Into the second thread created, we suspect this the actual data grabbed encrypted then sent to the C2</p>
+<img alt="../_images/4q41.png" src="../_images/4q41.png" />
+<p>Same as above reads the buffer does a call then writes likely to the socket</p>
+<img alt="../_images/4q51.png" src="../_images/4q51.png" />
+<p>It uses two of our interesting functions</p>
+<img alt="../_images/4q61.png" src="../_images/4q61.png" />
+<p>Which marked by sigsrch as encryption,(Te1)</p>
+<img alt="../_images/4q71.png" src="../_images/4q71.png" />
 <p><strong>Q8: Create code to decrypt some of the content produced during dynamic
 analysis. What is this content?</strong></p>
 </section>

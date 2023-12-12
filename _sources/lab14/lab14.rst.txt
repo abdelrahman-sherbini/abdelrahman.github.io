@@ -256,7 +256,7 @@ above
 **Q9: What is the purpose of this malware, and what role might it play in the
 attacker’s arsenal?**
 
-above
+likely a dropper, or setting up as it self destructs
 
 snort rules 
 
@@ -269,7 +269,7 @@ snort rules
     alert tcp $HOME_NET any -> $EXTERNAL_NET $HTTP_PORTS (msg:"PM14.2.2 Suspicious
     User-Agent (starts (!<)"; content: "User-Agent\:|20|(!<"; http_header;
     sid:20001422; rev:1;)
-    
+
     alert tcp $HOME_NET any -> $EXTERNAL_NET $HTTP_PORTS (msg:"PM14.2.3 Suspicious
     User-Agent (long B64)"; content:"User-Agent\:|20|"; content:!"|20|"; distance:0;
     within:100; pcre:"/User-Agent:\x20[^\x0d]{0,5}[A-Za-z0-9+\/]{100,}/";

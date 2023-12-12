@@ -241,7 +241,7 @@ with signatures.</p>
 <p>above</p>
 <p><strong>Q9: What is the purpose of this malware, and what role might it play in the
 attacker’s arsenal?</strong></p>
-<p>above</p>
+<p>likely a dropper, or setting up as it self destructs</p>
 <p>snort rules</p>
 <div class="highlight-ruby notranslate"><div class="highlight"><pre><span></span><span class="n">alert</span><span class="w"> </span><span class="n">tcp</span><span class="w"> </span><span class="vg">$HOME_NET</span><span class="w"> </span><span class="n">any</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="vg">$EXTERNAL_NET</span><span class="w"> </span><span class="vg">$HTTP_PORTS</span><span class="w"> </span><span class="p">(</span><span class="ss">msg</span><span class="p">:</span><span class="s2">&quot;PM14.2.1 Suspicious</span>
 <span class="s2">User-Agent (Internet Surf)&quot;</span><span class="p">;</span><span class="w"> </span><span class="ss">content</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;User-Agent\:|20|Internet|20|Surf&quot;</span><span class="p">;</span>

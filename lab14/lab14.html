@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Practical Malware Analysis - Lab 14 &mdash; abdelrahmn walkthrough 1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Practical Malware Analysis - Lab 13" href="../lab13/lab13.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            abdelrahmn walkthrough
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../lab1/lab1.html">Practical Malware Analysis - Lab 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab3/lab3.html">Practical Malware Analysis - Lab 3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab5/lab5.html">Practical Malware Analysis - Lab 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab6/lab6.html">Practical Malware Analysis - Lab 6</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab7/lab7.html">Practical Malware Analysis - Lab 7</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab9/lab9.html">Practical Malware Analysis - Lab 9</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab10/lab10.html">Practical Malware Analysis - Lab 10</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab11/lab11.html">Practical Malware Analysis - Lab 11</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab12/lab12.html">Practical Malware Analysis - Lab 12</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab13/lab13.html">Practical Malware Analysis - Lab 13</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Practical Malware Analysis - Lab 14</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#lab-14-1">Lab 14-1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lab-14-2">Lab 14-2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lab-14-3">Lab 14-3</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">abdelrahmn walkthrough</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Practical Malware Analysis - Lab 14</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/lab14/lab14.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="practical-malware-analysis-lab-14">
+<h1>Practical Malware Analysis - Lab 14<a class="headerlink" href="#practical-malware-analysis-lab-14" title="Permalink to this heading"></a></h1>
+<p>This chapter’s labs focus on identifying the networking components of malware.
+To some degree, these labs build on Chapter 13, since when developing
+network signatures, you’ll often need to deal with encoded content.</p>
+<section id="lab-14-1">
+<h2>Lab 14-1<a class="headerlink" href="#lab-14-1" title="Permalink to this heading"></a></h2>
+<p>Analyze the malware found in file Lab14-01.exe. This program is not harmful
+to your system.</p>
+<p><strong>Q1: Which networking libraries does the malware use, and what are their
+advantages?</strong></p>
+<p>urlmon library, their advantages is when you download a file from the web, Internet Explorer calls the urlmon.dll file to perform its action,
+so it can blend in with normal activity</p>
+<img alt="../_images/1q114.png" src="../_images/1q114.png" />
+<p><strong>Q2: What source elements are used to construct the networking beacon, and
+what conditions would cause the beacon to change?</strong></p>
+<p>Let’s see where it is called</p>
+<img alt="../_images/1q25.png" src="../_images/1q25.png" />
+<p>the buffer variable is the url that it calls to download, which is set with the _sprintf with variable string called <code class="docutils literal notranslate"><span class="pre">str</span></code></p>
+<img alt="../_images/1q35.png" src="../_images/1q35.png" />
+<p>cross reference the function to see what is <code class="docutils literal notranslate"><span class="pre">str</span></code> pushed to it</p>
+<img alt="../_images/1q44.png" src="../_images/1q44.png" />
+<p>we see it was passed to call 4010BB</p>
+<img alt="../_images/1q54.png" src="../_images/1q54.png" />
+<p>into the call we find it’s a Base64 encoding routine</p>
+<img alt="../_images/1q64.png" src="../_images/1q64.png" />
+<p>Out the function to see what is the str encoded, it is set with _sprintf to <code class="docutils literal notranslate"><span class="pre">var10098</span></code></p>
+<img alt="../_images/1q74.png" src="../_images/1q74.png" />
+<p>following where var 10098 is set, it is set with _sprintf to ecx contents</p>
+<img alt="../_images/1q84.png" src="../_images/1q84.png" />
+<p>Finally we see that ECX contains contents of call to <code class="docutils literal notranslate"><span class="pre">GetCurrentHwProfileA</span></code> which “Retrieves information about the current hardware profile for the local computer.”
+can be seen here <code class="docutils literal notranslate"><span class="pre">HKLM\SYSTEM\CurrentControlSet\HardwareProfiles</span></code>
+.. image:: 1q9.png</p>
+<p>So it sends data like a Get request to <code class="docutils literal notranslate"><span class="pre">http://www.practicalmalwareanalysis.com/%s/%c.png</span></code> as s parameter and c parameter the count of string</p>
+<p><strong>Q3: Why might the information embedded in the networking beacon be of
+interest to the attacker?</strong></p>
+<p>With the use of Network Address Translation (NAT) and proxy solutions, which disguise the host making outbound
+requests. All requests look like they are coming from the proxy IP address
+instead. Attackers waiting for requests from malware likewise have difficulty
+identifying which (infected) host is communicating. So It helps the attacker to know which host it is using</p>
+<p><strong>Q4: Does the malware use standard Base64 encoding? If not, how is the
+encoding unusual?</strong></p>
+<p>Revisiting Base64 function all looks normal Base64</p>
+<img alt="../_images/1q64.png" src="../_images/1q64.png" />
+<p>then into the indexing function, the only thing unusual it is using character ‘a’ instead of ‘=’ at padding (when v3 which is the input bytes grouped into 3 ,current group , so in last group when it is only 1 or 2 it uses the pad character)</p>
+<img alt="../_images/1q103.png" src="../_images/1q103.png" />
+<p><strong>5: What is the overall purpose of this malware?</strong></p>
+<p>It grabs host information, then in a loop call the function which sends those information</p>
+<img alt="../_images/1q115.png" src="../_images/1q115.png" />
+<p>And in that function it sends the information with a request to download to specified name, then creates a process to start the download file</p>
+<img alt="../_images/1q122.png" src="../_images/1q122.png" />
+<p><strong>Q6: What elements of the malware’s communication may be effectively
+detected using a network signature?</strong></p>
+<p>As it is using what normally Internet Explorer calls the urlmon.dll. no issues will be in headers, then we can use the <code class="docutils literal notranslate"><span class="pre">HKLM\SYSTEM\CurrentControlSet\HardwareProfiles</span></code> for hardware string plus <code class="docutils literal notranslate"><span class="pre">-</span></code> plus username send as request to host practicalmalwareanalysis.com</p>
+<p><strong>Q7: What mistakes might analysts make in trying to develop a signature for
+this malware?</strong></p>
+<p>Tryinh the malware on same host thinking that it requests same path but it changes depending on the host</p>
+<p><strong>Q8: What set of signatures would detect this malware (and future variants)?</strong></p>
+<p>Running the malware with Fakenet we get which we know is Base64 encoded</p>
+<img alt="../_images/1q142.png" src="../_images/1q142.png" />
+<p>removing the <code class="docutils literal notranslate"><span class="pre">a</span></code> at the end as it’s not known padding we get</p>
+<img alt="../_images/1q152.png" src="../_images/1q152.png" />
+<p>Creating regex to capture this, we 6 is put for each column and t for each dash plus our username then Base64 encoded (which for each 3 bytes outputs 4 bytes)
+<code class="docutils literal notranslate"><span class="pre">/[A-Za-z0-9+\/]{3}6[A-Za-z0-9+\/]{3}6[A-Za-z0-9+\/]{3}6[A-Za-z0-9+\/]{3}6[A-Za-z0-9+\/]{3}6[A-Za-z0-9+\/]{3}t[A-Za-z0-9+\/]*a{0,2}/gm</span></code></p>
+<img alt="../_images/1q162.png" src="../_images/1q162.png" />
+<p>snort rule</p>
+<div class="highlight-ruby notranslate"><div class="highlight"><pre><span></span><span class="n">alert</span><span class="w"> </span><span class="n">tcp</span><span class="w"> </span><span class="vg">$HOME_NET</span><span class="w"> </span><span class="n">any</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="vg">$EXTERNAL_NET</span><span class="w"> </span><span class="vg">$HTTP_PORTS</span><span class="w"> </span><span class="p">(</span><span class="ss">msg</span><span class="p">:</span><span class="s2">&quot;PM14.1.1 Colons and</span>
+<span class="s2">dash&quot;</span><span class="p">;</span><span class="w"> </span><span class="ss">urilen</span><span class="p">:</span><span class="o">&gt;</span><span class="mi">32</span><span class="p">;</span><span class="w"> </span><span class="ss">content</span><span class="p">:</span><span class="s2">&quot;GET|20|/&quot;</span><span class="p">;</span><span class="w"> </span><span class="ss">depth</span><span class="p">:</span><span class="mi">5</span><span class="p">;</span><span class="w"> </span><span class="ss">pcre</span><span class="p">:</span><span class="s2">&quot;/GET</span><span class="se">\x20</span><span class="s2">\/[A-Za-z0-9+\/]</span>
+<span class="s2">{3}6[A-Za-z0-9+\/]{3}6[A-Za-z0-9+\/]{3}6[A-Za-z0-9+\/]{3}6[A-Za-z0-9+\/]{3}6[A-Za-z0-9+\/]</span>
+<span class="s2">{3}t[A-Za-z0-9+\/]*a{0,2}\//&quot;</span><span class="p">;</span><span class="w"> </span><span class="ss">sid</span><span class="p">:</span><span class="mi">20001411</span><span class="p">;</span><span class="w"> </span><span class="ss">rev</span><span class="p">:</span><span class="mi">1</span><span class="p">;)</span>
+</pre></div>
+</div>
+</section>
+<section id="lab-14-2">
+<h2>Lab 14-2<a class="headerlink" href="#lab-14-2" title="Permalink to this heading"></a></h2>
+<p>Analyze the malware found in file Lab14-02.exe. This malware has been configured
+to beacon to a hard-coded loopback address in order to prevent it
+from harming your system, but imagine that it is a hard-coded external
+address.</p>
+<p><strong>Q1: What are the advantages or disadvantages of coding malware to use
+direct IP addresses?</strong></p>
+<p>The attacker may find static IP addresses more difficult to manage than
+domain names. Using DNS allows the attacker to deploy his assets to any
+computer and dynamically redirect his bots by changing only a DNS address.
+| The defender has various options for deploying defenses for both types of infrastructure, but for similar reasons, IP addresses can be more difficult to deal with than domain names. This fact alone could lead an attacker to choose static IP addresses over domains.</p>
+<p><strong>Q2: Which networking libraries does this malware use? What are the advantages
+or disadvantages of using these libraries?</strong></p>
+<p>WinInet.dll</p>
+<img alt="../_images/2q115.png" src="../_images/2q115.png" />
+<p>The malware uses the WinINet libraries. One disadvantage of these libraries
+is that a hard-coded User-Agent needs to be provided, and optional
+headers need to be hard-coded if desired. One advantage of the WinINet
+libraries over the Winsock API, for example, is that some elements, such
+as cookies and caching headers, are provided by the OS.</p>
+<p><a class="reference external" href="https://learn.microsoft.com/en-us/windows/win32/wininet/wininet-vs-winhttp">https://learn.microsoft.com/en-us/windows/win32/wininet/wininet-vs-winhttp</a></p>
+<p><strong>Q3: What is the source of the URL that the malware uses for beaconing?
+What advantages does this source offer?</strong></p>
+<p>OpenUrl is used in two functions</p>
+<img alt="../_images/2q26.png" src="../_images/2q26.png" />
+<p>We see it is passed as a parameter</p>
+<img alt="../_images/2q34.png" src="../_images/2q34.png" />
+<p>tracing back two function calls we find it is loading it from the exe string resource <a class="reference external" href="https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadstringa">https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadstringa</a></p>
+<img alt="../_images/2q44.png" src="../_images/2q44.png" />
+<p>dumping .rsrc then do strings we find this url</p>
+<img alt="../_images/2q53.png" src="../_images/2q53.png" />
+<p>The attacker can use the resource section to deploy multiple backdoors to multiple command-and-control locations
+without needing to recompile the malware, but it will be easily  detectable</p>
+<p><strong>Q4: Which aspect of the HTTP protocol does the malware leverage to
+achieve its objectives?</strong></p>
+<p>Analysis -&gt;</p>
+<p>At the start we it uses create pipe one for read and one for write then passing the write to stdoutput of the process and the read for stdinput
+| So it creates a reverse shell with the command line (passed as arguemnt to create process)</p>
+<img alt="../_images/2q64.png" src="../_images/2q64.png" />
+<p>then it creates two threads with that process</p>
+<img alt="../_images/2q74.png" src="../_images/2q74.png" />
+<p>First thread function call it copies data from pipe with peekNamepipe (to check for new input) copies it then passes it to 401000 routine then outputs
+into routine 401750</p>
+<img alt="../_images/2q84.png" src="../_images/2q84.png" />
+<p>401000 is some encoding routine, 401750 gets the encoded data prepends ‘(!&lt;’ to it that put that in the User-Agent then runs the url</p>
+<img alt="../_images/2q93.png" src="../_images/2q93.png" />
+<p>the encoding routine sounds like Base64 with custom indexing string <code class="docutils literal notranslate"><span class="pre">WXYZlabcd3fghijko12e456789ABCDEFGHIJKL+/MNOPQRSTUVmn0pqrstuvwxyz</span></code></p>
+<img alt="../_images/Screenshot_11.png" src="../_images/Screenshot_11.png" />
+<img alt="../_images/Screenshot_2.png" src="../_images/Screenshot_2.png" />
+<p>The second thread function calls 4015C0 which uses similar 401800 call which use wininet, it is the thread responsible for
+receiving commands then writing it to the pipe</p>
+<img alt="../_images/Screenshot_3.png" src="../_images/Screenshot_3.png" />
+<p>it reads command with User-Agent: <code class="docutils literal notranslate"><span class="pre">Internet</span> <span class="pre">Surf</span></code></p>
+<img alt="../_images/Screenshot_6.png" src="../_images/Screenshot_6.png" />
+<img alt="../_images/Screenshot_7.png" src="../_images/Screenshot_7.png" />
+<p>so the first thread reads pipe then sends data, second thread receives data writes to pipe (commands)</p>
+<p>Running the malware we get the following two requests</p>
+<img alt="../_images/Screenshot_4.png" src="../_images/Screenshot_4.png" />
+<img alt="../_images/Screenshot_5.png" src="../_images/Screenshot_5.png" />
+<p>which seems if no command given to last request it waits for a command though in background</p>
+<p>then in the end it deletes itself when thread fails or exit is passed</p>
+<img alt="../_images/Screenshot_9.png" src="../_images/Screenshot_9.png" />
+<img alt="../_images/Screenshot_10.png" src="../_images/Screenshot_10.png" />
+<img alt="../_images/Screenshot_111.png" src="../_images/Screenshot_111.png" />
+<p><strong>Q5: What kind of information is communicated in the malware’s initial
+beacon?</strong></p>
+<p>My command propmt</p>
+<img alt="../_images/Screenshot_8.png" src="../_images/Screenshot_8.png" />
+<p><strong>Q6: What are some disadvantages in the design of this malware’s communication
+channels?</strong></p>
+<p>While the attacker encodes outgoing information, he doesn’t encode
+the incoming commands. Also, because the server must distinguish
+between the two communication channels via the static elements of the
+User-Agent fields, this server dependency is apparent and can be targeted
+with signatures.</p>
+<p><strong>Q7: Is the malware’s encoding scheme standard?</strong></p>
+<p>Base64 with custom indexing string alphabet</p>
+<p><strong>Q8: How is communication terminated?</strong></p>
+<p>above</p>
+<p><strong>Q9: What is the purpose of this malware, and what role might it play in the
+attacker’s arsenal?</strong></p>
+<p>above</p>
+<p>snort rules</p>
+<div class="highlight-ruby notranslate"><div class="highlight"><pre><span></span><span class="n">alert</span><span class="w"> </span><span class="n">tcp</span><span class="w"> </span><span class="vg">$HOME_NET</span><span class="w"> </span><span class="n">any</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="vg">$EXTERNAL_NET</span><span class="w"> </span><span class="vg">$HTTP_PORTS</span><span class="w"> </span><span class="p">(</span><span class="ss">msg</span><span class="p">:</span><span class="s2">&quot;PM14.2.1 Suspicious</span>
+<span class="s2">User-Agent (Internet Surf)&quot;</span><span class="p">;</span><span class="w"> </span><span class="ss">content</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;User-Agent\:|20|Internet|20|Surf&quot;</span><span class="p">;</span>
+<span class="n">http_header</span><span class="p">;</span><span class="w"> </span><span class="ss">sid</span><span class="p">:</span><span class="mi">20001421</span><span class="p">;</span><span class="w"> </span><span class="ss">rev</span><span class="p">:</span><span class="mi">1</span><span class="p">;)</span>
+
+<span class="n">alert</span><span class="w"> </span><span class="n">tcp</span><span class="w"> </span><span class="vg">$HOME_NET</span><span class="w"> </span><span class="n">any</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="vg">$EXTERNAL_NET</span><span class="w"> </span><span class="vg">$HTTP_PORTS</span><span class="w"> </span><span class="p">(</span><span class="ss">msg</span><span class="p">:</span><span class="s2">&quot;PM14.2.2 Suspicious</span>
+<span class="s2">User-Agent (starts (!&lt;)&quot;</span><span class="p">;</span><span class="w"> </span><span class="ss">content</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;User-Agent\:|20|(!&lt;&quot;</span><span class="p">;</span><span class="w"> </span><span class="n">http_header</span><span class="p">;</span>
+<span class="ss">sid</span><span class="p">:</span><span class="mi">20001422</span><span class="p">;</span><span class="w"> </span><span class="ss">rev</span><span class="p">:</span><span class="mi">1</span><span class="p">;)</span>
+
+<span class="n">alert</span><span class="w"> </span><span class="n">tcp</span><span class="w"> </span><span class="vg">$HOME_NET</span><span class="w"> </span><span class="n">any</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="vg">$EXTERNAL_NET</span><span class="w"> </span><span class="vg">$HTTP_PORTS</span><span class="w"> </span><span class="p">(</span><span class="ss">msg</span><span class="p">:</span><span class="s2">&quot;PM14.2.3 Suspicious</span>
+<span class="s2">User-Agent (long B64)&quot;</span><span class="p">;</span><span class="w"> </span><span class="ss">content</span><span class="p">:</span><span class="s2">&quot;User-Agent\:|20|&quot;</span><span class="p">;</span><span class="w"> </span><span class="ss">content</span><span class="p">:</span><span class="o">!</span><span class="s2">&quot;|20|&quot;</span><span class="p">;</span><span class="w"> </span><span class="ss">distance</span><span class="p">:</span><span class="mi">0</span><span class="p">;</span>
+<span class="ss">within</span><span class="p">:</span><span class="mi">100</span><span class="p">;</span><span class="w"> </span><span class="ss">pcre</span><span class="p">:</span><span class="s2">&quot;/User-Agent:</span><span class="se">\x20</span><span class="s2">[^</span><span class="se">\x0d</span><span class="s2">]{0,5}[A-Za-z0-9+\/]{100,}/&quot;</span><span class="p">;</span>
+<span class="ss">sid</span><span class="p">:</span><span class="mi">20001423</span><span class="p">;</span><span class="w"> </span><span class="ss">rev</span><span class="p">:</span><span class="mi">1</span><span class="p">;)</span>
+</pre></div>
+</div>
+</section>
+<section id="lab-14-3">
+<h2>Lab 14-3<a class="headerlink" href="#lab-14-3" title="Permalink to this heading"></a></h2>
+<p>This lab builds on Lab 14-1. Imagine that this malware is an attempt by
+the attacker to improve his techniques. Analyze the malware found in file
+Lab14-03.exe.</p>
+<p><strong>Q1: What hard-coded elements are used in the initial beacon? What elements,
+if any, would make a good signature?</strong></p>
+<p><strong>Q2: What elements of the initial beacon may not be conducive to a longlasting
+signature?</strong></p>
+<p><strong>3: How does the malware obtain commands? What example from the
+chapter used a similar methodology? What are the advantages of this
+technique?</strong></p>
+<p><strong>4: When the malware receives input, what checks are performed on the
+input to determine whether it is a valid command? How does the
+attacker hide the list of commands the malware is searching for?</strong></p>
+<p><strong>Q5: What type of encoding is used for command arguments? How is it different
+from Base64, and what advantages or disadvantages does it offer?</strong></p>
+<p><strong>Q6: What commands are available to this malware?</strong></p>
+<p><strong>Q7: What is the purpose of this malware?</strong></p>
+<p><strong>8: This chapter introduced the idea of targeting different areas of code
+with independent signatures (where possible) in order to add resiliency
+to network indicators. What are some distinct areas of code or configuration
+data that can be targeted by network signatures?</strong></p>
+<p><strong>Q9: What set of signatures should be used for this malware?</strong></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../lab13/lab13.html" class="btn btn-neutral float-left" title="Practical Malware Analysis - Lab 13" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, abdelrahman khaled.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

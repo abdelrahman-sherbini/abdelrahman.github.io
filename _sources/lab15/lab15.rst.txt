@@ -1,8 +1,8 @@
-Practical Malware Analysis - Lab 14
+Practical Malware Analysis - Lab 15
 ===================================
 This chapter’s labs focus on anti-disassembly techniques
 
-Lab 14-1
+Lab 15-1
 --------
 Analyze the sample found in the file Lab15-01.exe. This is a command-line
 program that takes an argument and prints “Good Job!” if the argument
@@ -46,3 +46,19 @@ Then we can convert to clean psuedocode, It checks first if some argument is pas
 inputting pdq we get the desired output
 
 .. image:: 1q7.png
+
+Lab 15-2
+--------
+Analyze the malware found in the file Lab15-02.exe. Correct all anti-disassembly
+countermeasures before analyzing the binary in order to answer the questions.
+
+**Q1: What URL is initially requested by the program?**
+
+**Q2: How is the User-Agent generated?**
+
+**Q3: What does the program look for in the page it initially requests?**
+
+**Q4: What does the program do with the information it extracts from
+the page?**
+
+

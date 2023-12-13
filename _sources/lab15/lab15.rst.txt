@@ -120,4 +120,86 @@ the page?**
 
 Above
 
+Lab 15-3
+--------
+Analyze the malware found in the file Lab15-03.exe. At first glance, this binary
+appears to be a legitimate tool, but it actually contains more functionality
+than advertised.
+
+**Q1: How is the malicious code initially called?**
+
+At first glance the exe file seems like it enumerates processes 
+
+.. image:: 3q1.png
+
+Then openprocess each process (gets a handle ) and enumerates all threads and modules
+
+.. image:: 3q2.png
+
+.. image:: 3q3.png
+
+There is one routine we didn't see in main checking it then cross-references we find interesting routine 
+
+.. image:: 3q5.png
+
+with anti-disassembly used here 
+
+.. image:: 3q4.png
+
+looking up we see SEH manipulating putting custom exception handling routine into SEH, then forcing error by dividing by zero
+
+.. image:: 3q6.png
+
+the handler function is misinterpreted as data (because of the retn ida prematurly ends disassembly) pressing ``c``, it returns the SEH to normal then does its main purpose 
+
+.. image:: 3q7.png
+
+anti-disassembly here after we clean it by ``d`` then ``c`` at the exact JMP location
+
+.. image:: 3q8.png
+
+Cleaned
+
+.. image:: 3q9.png
+
+call $+5. This instruction simply calls the location immediately following itself, which results in a pointer to
+this memory location being placed on the stack, So 4014E0 is put on the stack
+
+Suspecting this maybe a pointer to some data 
+
+.. image:: 3q10.png
+
+here it is 
+
+.. image:: 3q11.png
+
+which is passed to this function, xoring the data with FF
+
+.. image:: 3q15.png
+
+.. image:: 3q14.png
+
+You can use the tool https://github.com/OALabs/hexcopy- <3 to export only the hex at 403010, or edit -> export ->hex
+
+.. image:: 3q17.png
+
+lets also do 403040 data
+
+.. image:: 3q16.png
+
+
+**Q2: What does the malicious code do?**
+
+it will download a file from http://www.practicalmalwareanalysis.com/tt.html save to spoolsrv.exe and try to run it 
+
+.. image:: 3q13.png
+
+**Q3: What URL does the malware use?**
+
+above 
+
+**Q4: What filename does the malware use?**
+
+above
+
 

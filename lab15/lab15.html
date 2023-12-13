@@ -58,6 +58,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Practical Malware Analysis - Lab 15</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#lab-15-1">Lab 15-1</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lab-15-2">Lab 15-2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lab-15-3">Lab 15-3</a></li>
 </ul>
 </li>
 </ul>
@@ -153,6 +154,50 @@ countermeasures before analyzing the binary in order to answer the questions.</p
 <p><strong>Q4: What does the program do with the information it extracts from
 the page?</strong></p>
 <p>Above</p>
+</section>
+<section id="lab-15-3">
+<h2>Lab 15-3<a class="headerlink" href="#lab-15-3" title="Permalink to this heading"></a></h2>
+<p>Analyze the malware found in the file Lab15-03.exe. At first glance, this binary
+appears to be a legitimate tool, but it actually contains more functionality
+than advertised.</p>
+<p><strong>Q1: How is the malicious code initially called?</strong></p>
+<p>At first glance the exe file seems like it enumerates processes</p>
+<img alt="../_images/3q113.png" src="../_images/3q113.png" />
+<p>Then openprocess each process (gets a handle ) and enumerates all threads and modules</p>
+<img alt="../_images/3q23.png" src="../_images/3q23.png" />
+<img alt="../_images/3q33.png" src="../_images/3q33.png" />
+<p>There is one routine we didn’t see in main checking it then cross-references we find interesting routine</p>
+<img alt="../_images/3q53.png" src="../_images/3q53.png" />
+<p>with anti-disassembly used here</p>
+<img alt="../_images/3q43.png" src="../_images/3q43.png" />
+<p>looking up we see SEH manipulating putting custom exception handling routine into SEH, then forcing error by dividing by zero</p>
+<img alt="../_images/3q63.png" src="../_images/3q63.png" />
+<p>the handler function is misinterpreted as data (because of the retn ida prematurly ends disassembly) pressing <code class="docutils literal notranslate"><span class="pre">c</span></code>, it returns the SEH to normal then does its main purpose</p>
+<img alt="../_images/3q72.png" src="../_images/3q72.png" />
+<p>anti-disassembly here after we clean it by <code class="docutils literal notranslate"><span class="pre">d</span></code> then <code class="docutils literal notranslate"><span class="pre">c</span></code> at the exact JMP location</p>
+<img alt="../_images/3q82.png" src="../_images/3q82.png" />
+<p>Cleaned</p>
+<img alt="../_images/3q92.png" src="../_images/3q92.png" />
+<p>call $+5. This instruction simply calls the location immediately following itself, which results in a pointer to
+this memory location being placed on the stack, So 4014E0 is put on the stack</p>
+<p>Suspecting this maybe a pointer to some data</p>
+<img alt="../_images/3q102.png" src="../_images/3q102.png" />
+<p>here it is</p>
+<img alt="../_images/3q114.png" src="../_images/3q114.png" />
+<p>which is passed to this function, xoring the data with FF</p>
+<img alt="../_images/3q152.png" src="../_images/3q152.png" />
+<img alt="../_images/3q142.png" src="../_images/3q142.png" />
+<p>You can use the tool <a class="reference external" href="https://github.com/OALabs/hexcopy">https://github.com/OALabs/hexcopy</a>- &lt;3 to export only the hex at 403010, or edit -&gt; export -&gt;hex</p>
+<img alt="../_images/3q172.png" src="../_images/3q172.png" />
+<p>lets also do 403040 data</p>
+<img alt="../_images/3q162.png" src="../_images/3q162.png" />
+<p><strong>Q2: What does the malicious code do?</strong></p>
+<p>it will download a file from <a class="reference external" href="http://www.practicalmalwareanalysis.com/tt.html">http://www.practicalmalwareanalysis.com/tt.html</a> save to spoolsrv.exe and try to run it</p>
+<img alt="../_images/3q132.png" src="../_images/3q132.png" />
+<p><strong>Q3: What URL does the malware use?</strong></p>
+<p>above</p>
+<p><strong>Q4: What filename does the malware use?</strong></p>
+<p>above</p>
 </section>
 </section>
 

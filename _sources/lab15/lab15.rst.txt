@@ -54,11 +54,70 @@ countermeasures before analyzing the binary in order to answer the questions.
 
 **Q1: What URL is initially requested by the program?**
 
+Cleaning the anti-disassembly, we see couple of rogue bytes like this cleaning with ``d`` then ``c``
+
+.. image:: 2q1.png
+
+.. image:: 2q2.png
+
+then we see another technique 
+
+.. image:: 2q3.png
+
+Cleaning the EB byte we get 
+
+.. image:: 2q4.png
+
+Then we see another anti-disassembly two jz jnz which just means absolute jump but to make ida disassemble the false branch first 
+
+.. image:: 2q5.png
+
+Cleaned 
+
+.. image:: 2q6.png
+
+anti-disassembly with valid two instruction (book called this impossible assembly)
+
+.. image:: 2q7.png 
+
+Cleaned with just converting to code the jmp call location and NOPing others
+
+.. image:: 2q8.png
+
+After a lot of similar cleaning we get a clean psuedocode, it gets hostname of the local computer then exchanges some characters (ROT1)
+
+.. image:: 2q9.png
+
+Prepares the name, puts it in User-Agent 
+
+.. image:: 2q11.png
+
+then sends it to ``http://www.practicalmalwareanalysis.com/bamboo.html``
+
+.. image:: 2q10.png
+
+Reads the response cuts what is after Bamboo:: and before ::
+
+.. image:: 2q12.png
+
+Calls the string after Bamboo, Then saves the content to ``Account Summary.xls.exe`` then executes it 
+
+.. image:: 2q13.png
+
+.. image:: 2q14.png
+
+
 **Q2: How is the User-Agent generated?**
+
+Above
 
 **Q3: What does the program look for in the page it initially requests?**
 
+Above Bamboo
+
 **Q4: What does the program do with the information it extracts from
 the page?**
+
+Above
 
 

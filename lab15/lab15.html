@@ -120,10 +120,41 @@ We notice in jz it is jumping to 401010+1 so it’s just a rogue byte inserted b
 <p>Analyze the malware found in the file Lab15-02.exe. Correct all anti-disassembly
 countermeasures before analyzing the binary in order to answer the questions.</p>
 <p><strong>Q1: What URL is initially requested by the program?</strong></p>
+<p>Cleaning the anti-disassembly, we see couple of rogue bytes like this cleaning with <code class="docutils literal notranslate"><span class="pre">d</span></code> then <code class="docutils literal notranslate"><span class="pre">c</span></code></p>
+<img alt="../_images/2q116.png" src="../_images/2q116.png" />
+<img alt="../_images/2q27.png" src="../_images/2q27.png" />
+<p>then we see another technique</p>
+<img alt="../_images/2q35.png" src="../_images/2q35.png" />
+<p>Cleaning the EB byte we get</p>
+<img alt="../_images/2q45.png" src="../_images/2q45.png" />
+<p>Then we see another anti-disassembly two jz jnz which just means absolute jump but to make ida disassemble the false branch first</p>
+<img alt="../_images/2q54.png" src="../_images/2q54.png" />
+<p>Cleaned</p>
+<img alt="../_images/2q65.png" src="../_images/2q65.png" />
+<p>anti-disassembly with valid two instruction (book called this impossible assembly)</p>
+<img alt="../_images/2q75.png" src="../_images/2q75.png" />
+<p>Cleaned with just converting to code the jmp call location and NOPing others</p>
+<img alt="../_images/2q85.png" src="../_images/2q85.png" />
+<p>After a lot of similar cleaning we get a clean psuedocode, it gets hostname of the local computer then exchanges some characters (ROT1)</p>
+<img alt="../_images/2q94.png" src="../_images/2q94.png" />
+<p>Prepares the name, puts it in User-Agent</p>
+<img alt="../_images/2q117.png" src="../_images/2q117.png" />
+<p>then sends it to <code class="docutils literal notranslate"><span class="pre">http://www.practicalmalwareanalysis.com/bamboo.html</span></code></p>
+<img alt="../_images/2q102.png" src="../_images/2q102.png" />
+<p>Reads the response cuts what is after Bamboo:: and before</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">image</span><span class="p">::</span> <span class="mi">2</span><span class="n">q12</span><span class="o">.</span><span class="n">png</span>
+</pre></div>
+</div>
+<p>Calls the string after Bamboo, Then saves the content to <code class="docutils literal notranslate"><span class="pre">Account</span> <span class="pre">Summary.xls.exe</span></code> then executes it</p>
+<img alt="../_images/2q132.png" src="../_images/2q132.png" />
+<img alt="../_images/2q141.png" src="../_images/2q141.png" />
 <p><strong>Q2: How is the User-Agent generated?</strong></p>
+<p>Above</p>
 <p><strong>Q3: What does the program look for in the page it initially requests?</strong></p>
+<p>Above Bamboo</p>
 <p><strong>Q4: What does the program do with the information it extracts from
 the page?</strong></p>
+<p>Above</p>
 </section>
 </section>
 

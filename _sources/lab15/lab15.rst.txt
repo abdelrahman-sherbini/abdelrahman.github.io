@@ -1,0 +1,48 @@
+Practical Malware Analysis - Lab 14
+===================================
+This chapter’s labs focus on anti-disassembly techniques
+
+Lab 14-1
+--------
+Analyze the sample found in the file Lab15-01.exe. This is a command-line
+program that takes an argument and prints “Good Job!” if the argument
+matches a secret code.
+
+**Q1: What anti-disassembly technique is used in this binary?**
+
+Opening the malware in ida we notice the red cross-references which are indicators of anti-disassembly  
+
+.. image:: 1q1.png
+
+here is setting zero flag with conditional jump on zero flag ``jz`` so it's just absolute jump but did that way
+for ida to wrongly disassemble what the false branch first which is after the jz instruction.
+We notice in jz it is jumping to 401010+1 so it's just a rogue byte inserted between the two 
+
+.. image:: 1q2.png
+
+**Q2: What rogue opcode is the disassembly tricked into disassembling?**
+
+Pressing ``d`` then ``c`` at 401010+1 , the red xref disappears and the rogue byte is E8 which is the opcode start of call
+
+.. image:: 1q3.png
+
+**Q3: How many times is this technique used?**
+
+4 more times
+
+.. image:: 1q4.png
+
+
+**Q4: What command-line argument will cause the program to print “Good Job!”?**
+
+After some cleaning then hovering all main function pressing ``p`` to convert to function we get this normal function 
+
+.. image:: 1q5.png
+
+Then we can convert to clean psuedocode, It checks first if some argument is passed then proceeds to do some char checks 
+
+.. image:: 1q6.png
+
+inputting pdq we get the desired output
+
+.. image:: 1q7.png

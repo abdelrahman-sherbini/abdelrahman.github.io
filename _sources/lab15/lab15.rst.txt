@@ -96,7 +96,7 @@ then sends it to ``http://www.practicalmalwareanalysis.com/bamboo.html``
 
 .. image:: 2q10.png
 
-Reads the response cuts what is after Bamboo:: and before ::
+Reads the response cuts what is after Bamboo:: and before \:\:
 
 .. image:: 2q12.png
 

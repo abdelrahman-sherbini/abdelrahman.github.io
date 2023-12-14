@@ -20,6 +20,7 @@ Welcome to my PMA walkthrough!
    lab13/lab13
    lab14/lab14
    lab15/lab15
+   lab16/lab16
 
 Indices and tables
 ==================

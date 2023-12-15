@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Practical Malware Analysis - Lab 17 &mdash; abdelrahmn walkthrough 1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Practical Malware Analysis - Lab 16" href="../lab16/lab16.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            abdelrahmn walkthrough
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../lab1/lab1.html">Practical Malware Analysis - Lab 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab3/lab3.html">Practical Malware Analysis - Lab 3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab5/lab5.html">Practical Malware Analysis - Lab 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab6/lab6.html">Practical Malware Analysis - Lab 6</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab7/lab7.html">Practical Malware Analysis - Lab 7</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab9/lab9.html">Practical Malware Analysis - Lab 9</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab10/lab10.html">Practical Malware Analysis - Lab 10</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab11/lab11.html">Practical Malware Analysis - Lab 11</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab12/lab12.html">Practical Malware Analysis - Lab 12</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab13/lab13.html">Practical Malware Analysis - Lab 13</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab14/lab14.html">Practical Malware Analysis - Lab 14</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab15/lab15.html">Practical Malware Analysis - Lab 15</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab16/lab16.html">Practical Malware Analysis - Lab 16</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Practical Malware Analysis - Lab 17</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#lab-17-1">Lab 17-1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lab-17-2">Lab 17-2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lab-17-3">Lab 17-3</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">abdelrahmn walkthrough</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Practical Malware Analysis - Lab 17</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/lab17/lab17.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="practical-malware-analysis-lab-17">
+<h1>Practical Malware Analysis - Lab 17<a class="headerlink" href="#practical-malware-analysis-lab-17" title="Permalink to this heading"></a></h1>
+<p>This chapter’s labs focus on anti-VM techniques</p>
+<p>The script provided to detect anti-VM mentioned in the chapter doesn’t work on ida 7.5+ so here is a refactored one</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">idautils</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">idc</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">idaapi</span>
+
+<span class="n">antiVM</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">head</span> <span class="ow">in</span> <span class="n">Heads</span><span class="p">():</span> <span class="c1">#all instructions in the binary</span>
+    <span class="n">mnem</span> <span class="o">=</span> <span class="n">print_insn_mnem</span><span class="p">(</span><span class="n">head</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">mnem</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;sidt&quot;</span><span class="p">,</span> <span class="s2">&quot;sgdt&quot;</span><span class="p">,</span> <span class="s2">&quot;sldt&quot;</span><span class="p">,</span> <span class="s2">&quot;smsw&quot;</span><span class="p">,</span> <span class="s2">&quot;str&quot;</span><span class="p">,</span> <span class="s2">&quot;in&quot;</span><span class="p">,</span> <span class="s2">&quot;cpuid&quot;</span><span class="p">]:</span>
+        <span class="n">antiVM</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">head</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of potential Anti-VM instructions: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">antiVM</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">addr</span> <span class="ow">in</span> <span class="n">antiVM</span><span class="p">:</span>
+    <span class="n">idaapi</span><span class="o">.</span><span class="n">set_item_color</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span> <span class="mh">0x0000ff</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Anti-VM: </span><span class="si">{</span><span class="nb">hex</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="lab-17-1">
+<h2>Lab 17-1<a class="headerlink" href="#lab-17-1" title="Permalink to this heading"></a></h2>
+<p>Analyze the malware found in Lab17-01.exe inside VMware. This is the same
+malware as Lab07-01.exe, with added anti-VMware techniques.</p>
+<p><strong>Q1: What anti-VM techniques does this malware use?</strong></p>
+<p>Running above script, it found 3 used</p>
+<p>2 in main function</p>
+<img alt="../_images/1q118.png" src="../_images/1q118.png" />
+<img alt="../_images/1q28.png" src="../_images/1q28.png" />
+<p>1 in 401100 routine call</p>
+<img alt="../_images/1q38.png" src="../_images/1q38.png" />
+<p>these registers must contain values valid for the
+underlying host operating system and will diverge from values expected by
+the virtualized (guest) operating system. Since the sidt (register points to idt interrupt descriptor table), sgdt (global dt contains access details like memory access rights), and sldt(local dt) instructions
+can be invoked at any time by user-mode code without being trapped
+and properly virtualized by VMware, they can be used to detect its presence.</p>
+<p><strong>Q2: If you have the commercial version of IDA Pro, run the IDA Python
+script from Listing 17-4 in Chapter 17 (provided here as findAntiVM.py).
+What does it find?</strong></p>
+<p>above</p>
+<p><strong>Q3: What happens when each anti-VM technique succeeds?</strong></p>
+<p>It runs this routine which self-deletes the file</p>
+<img alt="../_images/1q47.png" src="../_images/1q47.png" />
+<p><strong>Q4: Which of these anti-VM techniques work against your virtual machine?</strong></p>
+<p>Using x32dbg to see which branches are taken for each check, and we reach to wait for 2100 year passing all the checks, none worked.</p>
+<img alt="../_images/1q57.png" src="../_images/1q57.png" />
+<p><strong>Q5: Why does each anti-VM technique work or fail?</strong></p>
+<p>Maybe as my VM is on virtualbox plus its multiprocessor because each processor (guest or host) has an IDT assigned to it.</p>
+<p><strong>Q6: How could you disable these anti-VM techniques and get the malware
+to run?</strong></p>
+<p>Either patch the JMP instructions or NOP all checks or use multiprocessor with virtualbox or disable hardware acceleration in vmware</p>
+</section>
+<section id="lab-17-2">
+<h2>Lab 17-2<a class="headerlink" href="#lab-17-2" title="Permalink to this heading"></a></h2>
+<p>Analyze the malware found in the file Lab17-02.dll inside VMware. After
+answering the first question in this lab, try to run the installation exports
+using rundll32.exe and monitor them with a tool like procmon. The following
+is an example command line for executing the DLL:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rundll32</span><span class="o">.</span><span class="n">exe</span> <span class="n">Lab17</span><span class="o">-</span><span class="mf">02.</span><span class="n">dll</span><span class="p">,</span><span class="n">InstallRT</span> <span class="p">(</span><span class="ow">or</span> <span class="n">InstallSA</span><span class="o">/</span><span class="n">InstallSB</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Q1: What are the exports for this DLL?</strong></p>
+<p>Seems like installer of malware</p>
+<img alt="../_images/2q120.png" src="../_images/2q120.png" />
+<p><strong>Q2: What happens after the attempted installation using rundll32.exe?</strong></p>
+<p>writing some files and searching for dll under many locations</p>
+<img alt="../_images/2q29.png" src="../_images/2q29.png" />
+<img alt="../_images/2q37.png" src="../_images/2q37.png" />
+<p>Xinstall.log contains:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">The</span> <span class="n">PID</span> <span class="n">Of</span> <span class="n">Process</span> <span class="s1">&#39;iexplore.exe&#39;</span> <span class="ow">is</span> <span class="s1">&#39;0&#39;</span>
+<span class="n">Process</span> <span class="s1">&#39;iexplore.exe&#39;</span> <span class="n">Not</span> <span class="n">Found</span> <span class="p">,</span><span class="n">Inject</span> <span class="n">Failed</span>
+</pre></div>
+</div>
+<p><strong>Q3: Which files are created and what do they contain?</strong></p>
+<p>it should be run in vmware, so looking at it in ida, A LOT of functions</p>
+<img alt="../_images/2q47.png" src="../_images/2q47.png" />
+<p>So we will work backwards from the export XRefs, in export installRT we find First check is calling atoi (convert string to integer),
+to convert string <code class="docutils literal notranslate"><span class="pre">[This</span> <span class="pre">is</span> <span class="pre">DVM]5</span></code> + 0D which is 5 to integer so atoi will convert it and return 5 then compare if it is zero or not then it will go to series of checks 10006119 and 10006196 to check if this VM or not</p>
+<img alt="../_images/2q56.png" src="../_images/2q56.png" />
+<p>into 10006119 call it just zeroes out the EAX register then returns</p>
+<img alt="../_images/2q67.png" src="../_images/2q67.png" />
+<p>Then it checks if al (lower 16 bit of EAX) is zero then goes to the other check if no then this is VM</p>
+<img alt="../_images/2q77.png" src="../_images/2q77.png" />
+<p>into 10006196, the code is preparing an exception handling with _except_handler3 being the handler and stru_10016438 pushed (likely will be used by the handler), and pushing large fs:0 to point to previous handler</p>
+<img alt="../_images/2q87.png" src="../_images/2q87.png" />
+<p>Then we get this, which the malware first loads the magic number 0x564D5868 (VMXh) into the EAX
+register. Next, it loads the local variable var_1c into EBX, a memory address
+that will return any reply from VMware (old Vmware). ECX is loaded with the value 0xA to get
+the VMware version type. 0x5668 (VX) is loaded into DX, to be used in the
+following in instruction to specify the VMware I/O communication port.
+Upon execution, the in instruction is trapped by the virtual machine and
+emulated to execute it. The in instruction uses parameters of EAX (magic
+value), ECX (operation), and EBX (return information). If the magic value
+matches VMXh and the code is running in a virtual machine.</p>
+<img alt="../_images/2q96.png" src="../_images/2q96.png" />
+<p>It returns the value of cmp to al (if result of comparison equal al is set to 0 else 1)</p>
+<img alt="../_images/2q104.png" src="../_images/2q104.png" />
+<p>Then if the al is set to 0 it goes to this is VM branches</p>
+<img alt="../_images/2q1110.png" src="../_images/2q1110.png" />
+<p><strong>Q4: What method of anti-VM is in use?</strong></p>
+<p>above</p>
+<p><strong>Q5: How could you force the malware to install during runtime?</strong></p>
+<p>force patch The conditional jumps taken to absolute JMP</p>
+<p><strong>Q6: How could you permanently disable the anti-VM technique?</strong></p>
+<p>by making the first atoi call succeed, as all exports use it ,by changing <code class="docutils literal notranslate"><span class="pre">[This</span> <span class="pre">is</span> <span class="pre">DVM]5</span></code> string  with numbers <code class="docutils literal notranslate"><span class="pre">&quot;[This</span> <span class="pre">is</span> <span class="pre">DVM]0&quot;</span></code></p>
+<p><strong>Q7: How does each installation export function work?</strong></p>
+<p>After above checks the installRt then calls sub_1000D3D0 with argument passed to the dll</p>
+<img alt="../_images/2q125.png" src="../_images/2q125.png" />
+<p>first call 10003592 opens Xinstall.log  preparing it for logging then gets the file name with <code class="docutils literal notranslate"><span class="pre">GetModuleFileNameA</span></code> gets the
+system directory with <code class="docutils literal notranslate"><span class="pre">GetSystemDirectoryA</span></code> which all it does is copying the Lab17-02.dll to system directory</p>
+<img alt="../_images/2q133.png" src="../_images/2q133.png" />
+<p>Then logs to Xinstall.log if successful or not</p>
+<img alt="../_images/2q142.png" src="../_images/2q142.png" />
+<p>Then with the dll argument passed it checks if there was something passed or not if not then pass iexplorer.exe to function 10004249 call</p>
+<img alt="../_images/2q151.png" src="../_images/2q151.png" />
+<p>which gets the PID of process passed</p>
+<img alt="../_images/2q162.png" src="../_images/2q162.png" />
+<p>sub_1000372B ensures it is runnnig in higher privilege then calls 1000D10D with two arguments first the PID of process second argument the filename Lab17-02.dll</p>
+<img alt="../_images/2q171.png" src="../_images/2q171.png" />
+<p>1000D10D call is typical dll injection with createRemoteThread call , which injects source (Lab17-02.dll) into destination (supplied process)</p>
+<img alt="../_images/2q181.png" src="../_images/2q181.png" />
+<p>Second export does same anti-VM checks then calls 1000D920</p>
+<img alt="../_images/2q191.png" src="../_images/2q191.png" />
+<p>it is the same as <a class="reference external" href="https://www.ired.team/offensive-security/persistence/persisting-in-svchost.exe-with-a-service-dll-servicemain">https://www.ired.team/offensive-security/persistence/persisting-in-svchost.exe-with-a-service-dll-servicemain</a></p>
+</section>
+<section id="lab-17-3">
+<h2>Lab 17-3<a class="headerlink" href="#lab-17-3" title="Permalink to this heading"></a></h2>
+<p>Analyze the malware Lab17-03.exe inside VMware. This lab is similar to
+Lab12-02.exe, with added anti-VMware techniques.</p>
+<p><strong>Q1: What happens when you run this malware in a virtual machine?</strong></p>
+<p>Opening into ida we see same technique in Q1</p>
+<img alt="../_images/3q117.png" src="../_images/3q117.png" />
+<p>if VM detected it exits</p>
+<p>if technique one fails it goes to another, it calls 4011C0 with <code class="docutils literal notranslate"><span class="pre">SYSTEM\CurrentControlSet\Control\DeviceClasses</span></code> registery</p>
+<img alt="../_images/3q26.png" src="../_images/3q26.png" />
+<p>Enumerating the subkeys searching for string VMware</p>
+<p>we can patch the conditional jumps to avoid detection
+and the rest of Analysis same as Lab12-02.exe</p>
+<p><strong>Q2: How could you get this malware to run and drop its keylogger?</strong></p>
+<p><strong>Q3: Which anti-VM techniques does this malware use?</strong></p>
+<p><strong>Q4: What system changes could you make to permanently avoid the anti-VM
+techniques used by this malware?</strong></p>
+<p><strong>Q5: How could you patch the binary in OllyDbg to force the anti-VM techniques
+to permanently fail?</strong></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../lab16/lab16.html" class="btn btn-neutral float-left" title="Practical Malware Analysis - Lab 16" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, abdelrahman khaled.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

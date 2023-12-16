@@ -61,6 +61,9 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Practical Malware Analysis - Lab 18</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#lab-18-1">Lab 18-1</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lab-18-2">Lab 18-2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lab-18-3">Lab 18-3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lab-18-4">Lab 18-4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lab-18-5">Lab 18-5</a></li>
 </ul>
 </li>
 </ul>
@@ -137,6 +140,103 @@ The files are Lab18-01.exe through Lab18-05.exe.</p>
 </section>
 <section id="lab-18-2">
 <h2>Lab 18-2<a class="headerlink" href="#lab-18-2" title="Permalink to this heading"></a></h2>
+<p>Running the malware in peid we see it is packed with FSG 1.0</p>
+<img alt="../_images/1q153.png" src="../_images/1q153.png" />
+<p>looking at imports</p>
+<img alt="../_images/1q163.png" src="../_images/1q163.png" />
+<p>since i didnt notice a tail jump, i will follow the getprocadress breakpoint technique, setting bp at getprocadress in x32dbg then work backwards to find the OEP (as that function is used for getting addresses of the libraries that will be used), i also set another breakpoint at this pushed memory address</p>
+<img alt="../_images/2q126.png" src="../_images/2q126.png" />
+<img alt="../_images/2q210.png" src="../_images/2q210.png" />
+<p>We hit the hardware read breakpoint</p>
+<img alt="../_images/2q38.png" src="../_images/2q38.png" />
+<p>suspecting this maybe our OEP but no it failed to IAT auto search</p>
+<img alt="../_images/2q48.png" src="../_images/2q48.png" />
+<p>Looks like this isn’t the memory we want, so keep running till we find our break at getprocadress</p>
+<img alt="../_images/2q57.png" src="../_images/2q57.png" />
+<p>Reading the around code we find some pushed data (with MZ the start of exe file) then calling an address suspecting that may be our OEP</p>
+<img alt="../_images/2q1111.png" src="../_images/2q1111.png" />
+<p>we find our Lab07-02.exe but with wrong entry point</p>
+<img alt="../_images/2q127.png" src="../_images/2q127.png" />
+<p>Using ollydbg, we can easily just find OEP by section hop trace over, then dump debugged process</p>
+<img alt="../_images/2q143.png" src="../_images/2q143.png" />
+<p>and we get the same exe</p>
+<img alt="../_images/2q152.png" src="../_images/2q152.png" />
+</section>
+<section id="lab-18-3">
+<h2>Lab 18-3<a class="headerlink" href="#lab-18-3" title="Permalink to this heading"></a></h2>
+<p>In peid it is packed using PECompact</p>
+<img alt="../_images/3q118.png" src="../_images/3q118.png" />
+<p>Imports the libraries i will break GetProcAddress and VirtualAlloc</p>
+<img alt="../_images/3q27.png" src="../_images/3q27.png" />
+<p>opening it in x32dbg, at the start we see pushad</p>
+<img alt="../_images/3q45.png" src="../_images/3q45.png" />
+<p>In the stack, i set bp at 18FF7C at the stack, and 7EFDE000, 76F43368 in memory</p>
+<img alt="../_images/3q35.png" src="../_images/3q35.png" />
+<p>our bp at 18FF7C is hit (with popad)</p>
+<img alt="../_images/3q119.png" src="../_images/3q119.png" />
+<p>Hitting we step over we get this which is likely our OEP (as retn pops what is on stack then jumps to it)</p>
+<img alt="../_images/3q123.png" src="../_images/3q123.png" />
+<p>we can dump it with scylla  but Imports failed to get it</p>
+<img alt="../_images/3q134.png" src="../_images/3q134.png" />
+<p>Going over breakpoint GetProcAddress we can get the imports, found also its place in memory</p>
+<img alt="../_images/3q74.png" src="../_images/3q74.png" />
+<p>and we get the Lab09-02.exe</p>
+<img alt="../_images/3q104.png" src="../_images/3q104.png" />
+</section>
+<section id="lab-18-4">
+<h2>Lab 18-4<a class="headerlink" href="#lab-18-4" title="Permalink to this heading"></a></h2>
+<p>exeinfo shows it is packed with Aspack v2.12</p>
+<img alt="../_images/4q22.png" src="../_images/4q22.png" />
+<p>imports shows quite important information</p>
+<img alt="../_images/4q12.png" src="../_images/4q12.png" />
+<p>I set bp at GetProcAddress as usual, we get hit before entrypoint</p>
+<img alt="../_images/4q32.png" src="../_images/4q32.png" />
+<p>and here it is preparing imports for the packed malware</p>
+<img alt="../_images/4q42.png" src="../_images/4q42.png" />
+<p>and we can see where it is getting its data from the stack</p>
+<img alt="../_images/4q62.png" src="../_images/4q62.png" />
+<p>Then we hit our entrypoint with pushad</p>
+<img alt="../_images/4q72.png" src="../_images/4q72.png" />
+<p>so i set hardware breakpoint on that unusual memory in the stack when it is popped</p>
+<img alt="../_images/4q8.png" src="../_images/4q8.png" />
+<p>we get a hit</p>
+<img alt="../_images/4q9.png" src="../_images/4q9.png" />
+<p>Stepping over we see our tail jump</p>
+<img alt="../_images/4q10.png" src="../_images/4q10.png" />
+<p>Trying scylla here with the jump address but fail</p>
+<img alt="../_images/4q111.png" src="../_images/4q111.png" />
+<p>Viewing it in memory (we could dump it from here)</p>
+<img alt="../_images/4q13.png" src="../_images/4q13.png" />
+<p>Stepping over the retn so we go to our tail jump then try scylla</p>
+<img alt="../_images/4q14.png" src="../_images/4q14.png" />
+<p>dumped, we see the same exe as Lab09-01.exe</p>
+<img alt="../_images/4q15.png" src="../_images/4q15.png" />
+</section>
+<section id="lab-18-5">
+<h2>Lab 18-5<a class="headerlink" href="#lab-18-5" title="Permalink to this heading"></a></h2>
+<p>DIE shows it is packed with UPACK</p>
+<img alt="../_images/5q11.png" src="../_images/5q11.png" />
+<p>PStudio shows zero imports</p>
+<img alt="../_images/5q21.png" src="../_images/5q21.png" />
+<p>We hit the entrypoint with a few pushes</p>
+<img alt="../_images/5q31.png" src="../_images/5q31.png" />
+<p>adding hardware breakpoint at those stack addresses (waiting for pop for the unpacking stub to finish)</p>
+<img alt="../_images/5q41.png" src="../_images/5q41.png" />
+<img alt="../_images/5q51.png" src="../_images/5q51.png" />
+<p>we hit one of breakpoints</p>
+<img alt="../_images/5q61.png" src="../_images/5q61.png" />
+<p>Stepping over we see Something interesting pushing ebx then calling ebp</p>
+<img alt="../_images/5q7.png" src="../_images/5q7.png" />
+<p>Looking at ebx</p>
+<img alt="../_images/5q8.png" src="../_images/5q8.png" />
+<p>calling scylla on that address</p>
+<img alt="../_images/5q9.png" src="../_images/5q9.png" />
+<p>but we get incomplete exe so returning to x32 for next breakpoint</p>
+<img alt="../_images/5q10.png" src="../_images/5q10.png" />
+<p>calling scylla for that memory address</p>
+<img alt="../_images/5q111.png" src="../_images/5q111.png" />
+<p>it is the same as Lab07-01.exe</p>
+<img alt="../_images/5q12.png" src="../_images/5q12.png" />
 </section>
 </section>
 

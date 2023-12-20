@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Princess Locker &mdash; abdelrahmn walkthrough 1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Practical Malware Analysis - Lab 19" href="../lab19/lab19.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            abdelrahmn walkthrough
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../lab1/lab1.html">Practical Malware Analysis - Lab 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab3/lab3.html">Practical Malware Analysis - Lab 3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab5/lab5.html">Practical Malware Analysis - Lab 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab6/lab6.html">Practical Malware Analysis - Lab 6</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab7/lab7.html">Practical Malware Analysis - Lab 7</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab9/lab9.html">Practical Malware Analysis - Lab 9</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab10/lab10.html">Practical Malware Analysis - Lab 10</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab11/lab11.html">Practical Malware Analysis - Lab 11</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab12/lab12.html">Practical Malware Analysis - Lab 12</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab13/lab13.html">Practical Malware Analysis - Lab 13</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab14/lab14.html">Practical Malware Analysis - Lab 14</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab15/lab15.html">Practical Malware Analysis - Lab 15</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab16/lab16.html">Practical Malware Analysis - Lab 16</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab17/lab17.html">Practical Malware Analysis - Lab 17</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab18/lab18.html">Practical Malware Analysis - Lab 18</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab19/lab19.html">Practical Malware Analysis - Lab 19</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Princess Locker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">abdelrahmn walkthrough</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Princess Locker</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/mal1/mal1.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="princess-locker">
+<h1>Princess Locker<a class="headerlink" href="#princess-locker" title="Permalink to this heading"></a></h1>
+<p>sha256:dc7ab2e7ed26554a11da51a184e95b01e685b1a2f99c7fc77d54d5966530bf60</p>
+<p>exeinfo shows it is unpacked(lies) and it is made with c++ with a GUI</p>
+<img alt="../_images/Screenshot_12.png" src="../_images/Screenshot_12.png" />
+<p>it has decent number of imports with antidebugging import so we have to be carefull and import for iterating files marked x by pstudio and virtual protect (which changes permission in memory)</p>
+<img alt="../_images/Screenshot_21.png" src="../_images/Screenshot_21.png" />
+<p>we will set breakpoint on virtualprotect to capture the address it will change permission on , it will be first parameter
+and we can breakpoint on virtualalloc to capture return address on EAX for the memory address</p>
+<img alt="../_images/Screenshot_31.png" src="../_images/Screenshot_31.png" />
+<p>we hit our entrypoint breakpoint, continuing run</p>
+<img alt="../_images/Screenshot_41.png" src="../_images/Screenshot_41.png" />
+<p>we hit our first breakpoint on virtualalloc</p>
+<img alt="../_images/Screenshot_71.png" src="../_images/Screenshot_71.png" />
+<p>stepping into till we get the main virtualalloc</p>
+<img alt="../_images/Screenshot_81.png" src="../_images/Screenshot_81.png" />
+<p>stepping over then get the value in EAX and following it in dump we get this</p>
+<img alt="../_images/Screenshot_91.png" src="../_images/Screenshot_91.png" />
+<p>it may look like garbage data but looking ahead we rdata text .rsrc in the dump so this is our main application, so we set a breakpoint on execution there</p>
+<img alt="../_images/Screenshot_101.png" src="../_images/Screenshot_101.png" />
+<p>then we hit our virtualprotect</p>
+<img alt="../_images/Screenshot_61.png" src="../_images/Screenshot_61.png" />
+<p>following with stepping till we reach the main virtualprotect call</p>
+<img alt="../_images/Screenshot_121.png" src="../_images/Screenshot_121.png" />
+<p>looking at the stack to look at the pushed data (we want the first pop top of the stack which will be the first parameter)</p>
+<img alt="../_images/Screenshot_13.png" src="../_images/Screenshot_13.png" />
+<p>with the third parameter is 0x20 which is execute read (third from top of stack) setting hard breakpoint on execute there</p>
+<img alt="../_images/Screenshot_15.png" src="../_images/Screenshot_15.png" />
+<p>And we hit the hardware breakpoint</p>
+<img alt="../_images/Screenshot_23.png" src="../_images/Screenshot_23.png" />
+<p>Going there at that address we find what looks like to be code starting with call E8 dumping all that to a binary</p>
+<img alt="../_images/Screenshot_14.png" src="../_images/Screenshot_14.png" />
+<p>Opening in hex we know the header is grabage we need to change to a good header, we will replace all before the Machine value as it is in the File header which the OS needs it to load the executable into memory so it won’t be corrupted
+The machine value on 32-bit file is 0x014C which in memory will little endian 4C  01 ,</p>
+<img alt="../_images/Screenshot_16.png" src="../_images/Screenshot_16.png" />
+<p>replacing the garbage header, but notice it is different in size so will need to fix some sections alignment</p>
+<img alt="../_images/Screenshot_17.png" src="../_images/Screenshot_17.png" />
+<img alt="../_images/Screenshot_18.png" src="../_images/Screenshot_18.png" />
+<p>now we can open it in PEbear, we need to fix first the raw address since we dumped it from memory it is equal to the virtual address</p>
+<img alt="../_images/Screenshot_19.png" src="../_images/Screenshot_19.png" />
+<p>Now we need to fix the raw size like start of .rdata at 31000 and .text at 1000 so raw size of .text is 31000-1000=30000</p>
+<img alt="../_images/Screenshot_20.png" src="../_images/Screenshot_20.png" />
+<img alt="../_images/Screenshot_24.png" src="../_images/Screenshot_24.png" />
+<p>now saving the file then trying to fix the misalignment we created earlier in HxD beacause we copied header of different size
+Opening at the start .text in 1000 address</p>
+<img alt="../_images/Screenshot_211.png" src="../_images/Screenshot_211.png" />
+<p>we need to just pad zeroes till it is fixed</p>
+<img alt="../_images/Screenshot_22.png" src="../_images/Screenshot_22.png" />
+<p>trying to open it in ida i get error, after checking we see here size on disk is smaller that size of PE file, we can add zeroes(difference of both sizes) to match both sizes</p>
+<img alt="../_images/Screenshot_25.png" src="../_images/Screenshot_25.png" />
+<img alt="../_images/Screenshot_26.png" src="../_images/Screenshot_26.png" />
+<p>Opening the unpacked in pstudio</p>
+<img alt="../_images/Screenshot_27.png" src="../_images/Screenshot_27.png" />
+<p>Let’s check the unpacked file in ida, first it calls 121900 then the output of that function is set to mutex name</p>
+<img alt="../_images/Screenshot_28.png" src="../_images/Screenshot_28.png" />
+<p>That function is a decrypting routine with convulted functions, we can just see the output in a debugger to check the mutex name created</p>
+<img alt="../_images/Screenshot_29.png" src="../_images/Screenshot_29.png" />
+<p>Mutex name is “lCQhNOCPFC”</p>
+<img alt="../_images/Screenshot_32.png" src="../_images/Screenshot_32.png" />
+<p>If there is mutex created before close the exe</p>
+<img alt="../_images/Screenshot_30.png" src="../_images/Screenshot_30.png" />
+<p>If not then create a mutex and based on call 122B40 it will either continue or not</p>
+<img alt="../_images/Screenshot_311.png" src="../_images/Screenshot_311.png" />
+<p>in 122B40 call it check if some file found in some place (cant see it now in ida) if not found create it</p>
+<img alt="../_images/Screenshot_33.png" src="../_images/Screenshot_33.png" />
+<p>Will open that function in x32 to see what is the file, it is Opening roaming path</p>
+<img alt="../_images/Screenshot_34.png" src="../_images/Screenshot_34.png" />
+<p>So it searches for file name “vnjJCGkc.PyO” under roaming folder it opens that with createfile with Creationdisposition 3</p>
+<img alt="../_images/Screenshot_35.png" src="../_images/Screenshot_35.png" />
+<img alt="../_images/Screenshot_36.png" src="../_images/Screenshot_36.png" />
+<p>returns 1 if file exits which then makes the if condition false so nothing happens  (probably checks if it already infected this machine)</p>
+<img alt="../_images/Screenshot_37.png" src="../_images/Screenshot_37.png" />
+<p>After that it just makes sure to run this call 123780</p>
+<img alt="../_images/Screenshot_38.png" src="../_images/Screenshot_38.png" />
+<p>it iterates in all drives the local and remote</p>
+<img alt="../_images/Screenshot_39.png" src="../_images/Screenshot_39.png" />
+<img alt="../_images/Screenshot_40.png" src="../_images/Screenshot_40.png" />
+<img alt="../_images/Screenshot_411.png" src="../_images/Screenshot_411.png" />
+<p>After that we see routine that created mutex also creates some libraries which will be loaded with loadlibrary</p>
+<img alt="../_images/Screenshot_43.png" src="../_images/Screenshot_43.png" />
+<img alt="../_images/Screenshot_44.png" src="../_images/Screenshot_44.png" />
+<p>then calls 124040</p>
+<img alt="../_images/Screenshot_45.png" src="../_images/Screenshot_45.png" />
+<p>it will iterate over the drive path converting to smaller</p>
+<img alt="../_images/Screenshot_46.png" src="../_images/Screenshot_46.png" />
+<img alt="../_images/Screenshot_47.png" src="../_images/Screenshot_47.png" />
+<p>After it will decrypt some string and put that in a function</p>
+<img alt="../_images/Screenshot_48.png" src="../_images/Screenshot_48.png" />
+<p>It was recycle bin</p>
+<img alt="../_images/Screenshot_49.png" src="../_images/Screenshot_49.png" />
+<p>Then insert the string recycle bin into function call 127E30 which i saw only use is give out value if it is -1 (2’s complement of FFFFFF) then break (from likely encryption)</p>
+<img alt="../_images/Screenshot_50.png" src="../_images/Screenshot_50.png" />
+<p>so it break on some folders it wont encrypt</p>
+<img alt="../_images/Screenshot_51.png" src="../_images/Screenshot_51.png" />
+<p>second values it will break on and don’t encrypt:
+1. system volume information
+2. temporary internet files
+3. program files
+4. program data
+5. program files x86
+6. windows
+7. microsoft
+8. appdata
+9. local settings
+10. recycler
+11. mosache</p>
+<p>now it iterates over drive:\* and encrypts them using findfirstfile and findnextfile</p>
+<img alt="../_images/Screenshot_60.png" src="../_images/Screenshot_60.png" />
+<p>then checks if it is a file or directory if directory it starts all above again if file continue flow</p>
+<img alt="../_images/Screenshot_63.png" src="../_images/Screenshot_63.png" />
+<img alt="../_images/Screenshot_611.png" src="../_images/Screenshot_611.png" />
+<img alt="../_images/Screenshot_62.png" src="../_images/Screenshot_62.png" />
+<p>out the function it loads another hidden library then calls 1278A0</p>
+<img alt="../_images/Screenshot_64.png" src="../_images/Screenshot_64.png" />
+<img alt="../_images/Screenshot_65.png" src="../_images/Screenshot_65.png" />
+<p>in the call 122E00 it first calls getdefaultlcid which Returns the locale identifier for the user default locale then checks it with 1049(Russia) if it checks out then abort the ransomware</p>
+<img alt="../_images/Screenshot_66.png" src="../_images/Screenshot_66.png" />
+<p>then calls a function which take a random number between 21 and 27 and empty array which it will set</p>
+<img alt="../_images/Screenshot_67.png" src="../_images/Screenshot_67.png" />
+<p>in 121D50 it will load encrypted dlls</p>
+<img alt="../_images/Screenshot_68.png" src="../_images/Screenshot_68.png" />
+<p>acquiring advapi then some encrypting functions</p>
+<img alt="../_images/Screenshot_69.png" src="../_images/Screenshot_69.png" />
+<img alt="../_images/Screenshot_70.png" src="../_images/Screenshot_70.png" />
+<img alt="../_images/Screenshot_711.png" src="../_images/Screenshot_711.png" />
+<p>the rest is encryption of files</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../lab19/lab19.html" class="btn btn-neutral float-left" title="Practical Malware Analysis - Lab 19" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, abdelrahman khaled.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

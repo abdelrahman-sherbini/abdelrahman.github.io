@@ -1,0 +1,43 @@
+Practical Malware Analysis - Lab 20
+===================================
+
+Lab 20-1
+--------
+The purpose of this first lab is to demonstrate the usage of the this pointer.
+Analyze the malware in Lab20-01.exe.
+
+**Q1: Does the function at 0x401040 take any parameters?**
+
+
+**Q2: Which URL is used in the call to URLDownloadToFile?**
+
+
+**Q3: What does this program do?**
+
+
+Lab 20-2
+--------
+The purpose of this second lab is to demonstrate virtual functions. Analyze
+the malware in Lab20-02.exe.
+NOTE This program is not dangerous to your computer, but it will try to upload possibly sensitive
+files from your machine.
+
+**Q1. What can you learn from the interesting strings in this program?**
+
+
+
+**Q2. What do the imports tell you about this program?**
+
+**Q3: What is the purpose of the object created at 0x4011D9? Does it have any
+virtual functions?**
+
+**Q4: Which functions could possibly be called by the call [edx] instruction at
+0x401349?**
+
+**Q5: How could you easily set up the server that this malware expects in order
+to fully analyze the malware without connecting it to the Internet?**
+
+**Q6. What is the purpose of this program?**
+
+**Q7: What is the purpose of implementing a virtual function call in this
+program?**

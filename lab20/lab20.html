@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Practical Malware Analysis - Lab 20 &mdash; abdelrahmn walkthrough 1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            abdelrahmn walkthrough
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../lab1/lab1.html">Practical Malware Analysis - Lab 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab3/lab3.html">Practical Malware Analysis - Lab 3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab5/lab5.html">Practical Malware Analysis - Lab 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab6/lab6.html">Practical Malware Analysis - Lab 6</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab7/lab7.html">Practical Malware Analysis - Lab 7</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab9/lab9.html">Practical Malware Analysis - Lab 9</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab10/lab10.html">Practical Malware Analysis - Lab 10</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab11/lab11.html">Practical Malware Analysis - Lab 11</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab12/lab12.html">Practical Malware Analysis - Lab 12</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab13/lab13.html">Practical Malware Analysis - Lab 13</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab14/lab14.html">Practical Malware Analysis - Lab 14</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab15/lab15.html">Practical Malware Analysis - Lab 15</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab16/lab16.html">Practical Malware Analysis - Lab 16</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab17/lab17.html">Practical Malware Analysis - Lab 17</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab18/lab18.html">Practical Malware Analysis - Lab 18</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab19/lab19.html">Practical Malware Analysis - Lab 19</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal1/mal1.html">Princess Locker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">abdelrahmn walkthrough</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Practical Malware Analysis - Lab 20</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/lab20/lab20.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="practical-malware-analysis-lab-20">
+<h1>Practical Malware Analysis - Lab 20<a class="headerlink" href="#practical-malware-analysis-lab-20" title="Permalink to this heading"></a></h1>
+<section id="lab-20-1">
+<h2>Lab 20-1<a class="headerlink" href="#lab-20-1" title="Permalink to this heading"></a></h2>
+<p>The purpose of this first lab is to demonstrate the usage of the this pointer.
+Analyze the malware in Lab20-01.exe.</p>
+<p><strong>Q1: Does the function at 0x401040 take any parameters?</strong></p>
+<p><strong>Q2: Which URL is used in the call to URLDownloadToFile?</strong></p>
+<p><strong>Q3: What does this program do?</strong></p>
+</section>
+<section id="lab-20-2">
+<h2>Lab 20-2<a class="headerlink" href="#lab-20-2" title="Permalink to this heading"></a></h2>
+<p>The purpose of this second lab is to demonstrate virtual functions. Analyze
+the malware in Lab20-02.exe.
+NOTE This program is not dangerous to your computer, but it will try to upload possibly sensitive
+files from your machine.</p>
+<p><strong>Q1. What can you learn from the interesting strings in this program?</strong></p>
+<p><strong>Q2. What do the imports tell you about this program?</strong></p>
+<p><strong>Q3: What is the purpose of the object created at 0x4011D9? Does it have any
+virtual functions?</strong></p>
+<p><strong>Q4: Which functions could possibly be called by the call [edx] instruction at
+0x401349?</strong></p>
+<p><strong>Q5: How could you easily set up the server that this malware expects in order
+to fully analyze the malware without connecting it to the Internet?</strong></p>
+<p><strong>Q6. What is the purpose of this program?</strong></p>
+<p><strong>Q7: What is the purpose of implementing a virtual function call in this
+program?</strong></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, abdelrahman khaled.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

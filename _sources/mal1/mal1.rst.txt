@@ -233,4 +233,13 @@ acquiring advapi then some encrypting functions
 
 .. image:: Screenshot_71.png
 
-the rest is encryption of files
+the rest is encryption of files then creating the encrypted file using AES
+
+.. image:: Screenshot_72.png
+
+and sends some data (base64 related to my machine)
+
+.. image:: Screenshot_73.png
+
+.. image:: Screenshot_74.png
+

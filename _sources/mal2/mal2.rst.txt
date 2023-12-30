@@ -8,7 +8,7 @@ Using PEID, it is using CRC32 a checksome algorithm and crpytographic library
 
 .. image:: Screenshot_2.png
 
-the libraries the malware needed 
+the libraries the malware needed in rust
 
 .. image:: Screenshot_39.png
 
@@ -114,10 +114,12 @@ It grabs my system information like number of processors and architecture likely
 .. image:: Screenshot_36.png
 
 It changes the wallpaper by accessing SystemParametersInfo function with parameter 14
+Then finally it creates the ransome note using WriteFile 
 
 .. image:: Screenshot_37.png
 
 .. image:: Screenshot_38.png
+
 
 
 

@@ -1,0 +1,124 @@
+Blackcat Ransomware 
+===================================
+
+sha256: 847fb7609f53ed334d5affbb07256c21cb5e6f68b1cc14004f5502d714d2a456
+
+
+Using PEID, it is using CRC32 a checksome algorithm and crpytographic library
+
+.. image:: Screenshot_2.png
+
+the libraries the malware needed 
+
+.. image:: Screenshot_39.png
+
+It requires a key to run
+
+.. image:: Screenshot_3.png
+
+in x32dbg, noticed accesstoken is passed to this function and the program closes if i step over it
+
+.. image:: Screenshot_23.png
+
+which in IDA psuedo code looks like this
+
+.. image:: Screenshot_24.png
+
+It has TLS functions 
+
+.. image:: Screenshot_4.png
+
+Going into first TLS callback, it uses TlsGetValue with TlsIndex set to global variable
+
+.. image:: Screenshot_5.png
+
+Finding the TlsAlloc import where it is called as it has to be called to set TlsIndex first ,not in TLS callback
+but passing all TLS callbacks in x32 i get to the entrypoint, and nothing happens on the VM
+
+.. image:: Screenshot_6.png
+
+will reverse backwards a bit to make easier starting with our CryptGenRandom found in PEID (that generates a random number)
+One of places it is called under LABEL 8, here it gets the rand number and just returns 
+
+.. image:: Screenshot_8.png
+
+and that is called depending on value from TLS
+
+.. image:: Screenshot_9.png
+
+then naming the caller of all above to Rand and going to where it is called, we notice the use of SSE instructions for vectorized processing (used in acceleration)
+the encryption used based on this maybe AES also since it uses _mm_loadu_si128 maybe it outputs 128-bit result
+
+.. image:: Screenshot_10.png
+
+naming above function Encrypt_SSE, looking where it is called we see some more encryption related stuff
+
+.. image:: Screenshot_11.png
+
+the function is called within more encryption stuff then all is called with some passed as parameters maybe the block that will be encrypted
+
+.. image:: Screenshot_12.png
+
+.. image:: Screenshot_13.png
+
+Let's check other commonly used function by Ransomware like Reg*, findnextfile, findNextVolume createToolSnapShot, Getsysteminfo , SystemParameters , ControlService , and SC manager and others for networking and system
+First ControlService used in this function
+
+.. image:: Screenshot_14.png
+
+Notice it is recursive function
+
+.. image:: Screenshot_15.png
+
+with enumerating depending services passed to the caller (a1) and then processing information about the services
+
+.. image:: Screenshot_16.png
+
+.. image:: Screenshot_17.png
+
+Then uses the mentinoned above ControlService which Sends a control code to a service. with passed second parameter the code is 1 which is stop
+So it is stopping all depending services 
+
+.. image:: Screenshot_19.png
+
+.. image:: Screenshot_20.png
+
+Then retrieves the current status of the specified services based on the specified information level then returns 1 if all is well 
+
+.. image:: Screenshot_18.png
+
+stepping out of the function, we see it opens the service control manager with all rights whose handle is passed into services_enumed function
+
+.. image:: Screenshot_22.png
+
+.. image:: Screenshot_21.png
+
+It uses openprocesstoken and NTopenProcessToken to do some functions with higherprivilege (if it was started in higher privilege which makes me think there is a privilege escalation)
+
+.. image:: Screenshot_31.png
+
+.. image:: Screenshot_32.png
+
+It also uses FindFirstVolume and findNextVolume loops through all the volume most likely for encryption
+
+.. image:: Screenshot_33.png
+
+.. image:: Screenshot_34.png
+
+We notice it is also using NetShareSum and used for SMB like services and encryptes the shared files as well
+
+.. image:: Screenshot_35.png
+
+It grabs my system information like number of processors and architecture likely for antiVM
+
+.. image:: Screenshot_36.png
+
+It changes the wallpaper by accessing SystemParametersInfo function with parameter 14
+
+.. image:: Screenshot_37.png
+
+.. image:: Screenshot_38.png
+
+
+
+

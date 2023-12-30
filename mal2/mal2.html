@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blackcat Ransomware &mdash; abdelrahmn walkthrough 1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Princess Locker" href="../mal1/mal1.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            abdelrahmn walkthrough
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../lab1/lab1.html">Practical Malware Analysis - Lab 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab3/lab3.html">Practical Malware Analysis - Lab 3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab5/lab5.html">Practical Malware Analysis - Lab 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab6/lab6.html">Practical Malware Analysis - Lab 6</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab7/lab7.html">Practical Malware Analysis - Lab 7</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab9/lab9.html">Practical Malware Analysis - Lab 9</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab10/lab10.html">Practical Malware Analysis - Lab 10</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab11/lab11.html">Practical Malware Analysis - Lab 11</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab12/lab12.html">Practical Malware Analysis - Lab 12</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab13/lab13.html">Practical Malware Analysis - Lab 13</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab14/lab14.html">Practical Malware Analysis - Lab 14</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab15/lab15.html">Practical Malware Analysis - Lab 15</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab16/lab16.html">Practical Malware Analysis - Lab 16</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab17/lab17.html">Practical Malware Analysis - Lab 17</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab18/lab18.html">Practical Malware Analysis - Lab 18</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab19/lab19.html">Practical Malware Analysis - Lab 19</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal1/mal1.html">Princess Locker</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Blackcat Ransomware</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">abdelrahmn walkthrough</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Blackcat Ransomware</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/mal2/mal2.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="blackcat-ransomware">
+<h1>Blackcat Ransomware<a class="headerlink" href="#blackcat-ransomware" title="Permalink to this heading"></a></h1>
+<p>sha256: 847fb7609f53ed334d5affbb07256c21cb5e6f68b1cc14004f5502d714d2a456</p>
+<p>Using PEID, it is using CRC32 a checksome algorithm and crpytographic library</p>
+<img alt="../_images/Screenshot_210.png" src="../_images/Screenshot_210.png" />
+<p>the libraries the malware needed</p>
+<img alt="../_images/Screenshot_391.png" src="../_images/Screenshot_391.png" />
+<p>It requires a key to run</p>
+<img alt="../_images/Screenshot_310.png" src="../_images/Screenshot_310.png" />
+<p>in x32dbg, noticed accesstoken is passed to this function and the program closes if i step over it</p>
+<img alt="../_images/Screenshot_231.png" src="../_images/Screenshot_231.png" />
+<p>which in IDA psuedo code looks like this</p>
+<img alt="../_images/Screenshot_241.png" src="../_images/Screenshot_241.png" />
+<p>It has TLS functions</p>
+<img alt="../_images/Screenshot_42.png" src="../_images/Screenshot_42.png" />
+<p>Going into first TLS callback, it uses TlsGetValue with TlsIndex set to global variable</p>
+<img alt="../_images/Screenshot_52.png" src="../_images/Screenshot_52.png" />
+<p>Finding the TlsAlloc import where it is called as it has to be called to set TlsIndex first ,not in TLS callback
+but passing all TLS callbacks in x32 i get to the entrypoint, and nothing happens on the VM</p>
+<img alt="../_images/Screenshot_610.png" src="../_images/Screenshot_610.png" />
+<p>will reverse backwards a bit to make easier starting with our CryptGenRandom found in PEID (that generates a random number)
+One of places it is called under LABEL 8, here it gets the rand number and just returns</p>
+<img alt="../_images/Screenshot_82.png" src="../_images/Screenshot_82.png" />
+<p>and that is called depending on value from TLS</p>
+<img alt="../_images/Screenshot_92.png" src="../_images/Screenshot_92.png" />
+<p>then naming the caller of all above to Rand and going to where it is called, we notice the use of SSE instructions for vectorized processing (used in acceleration)
+the encryption used based on this maybe AES also since it uses _mm_loadu_si128 maybe it outputs 128-bit result</p>
+<img alt="../_images/Screenshot_102.png" src="../_images/Screenshot_102.png" />
+<p>naming above function Encrypt_SSE, looking where it is called we see some more encryption related stuff</p>
+<img alt="../_images/Screenshot_112.png" src="../_images/Screenshot_112.png" />
+<p>the function is called within more encryption stuff then all is called with some passed as parameters maybe the block that will be encrypted</p>
+<img alt="../_images/Screenshot_122.png" src="../_images/Screenshot_122.png" />
+<img alt="../_images/Screenshot_131.png" src="../_images/Screenshot_131.png" />
+<p>Let’s check other commonly used function by Ransomware like Reg*, findnextfile, findNextVolume createToolSnapShot, Getsysteminfo , SystemParameters , ControlService , and SC manager and others for networking and system
+First ControlService used in this function</p>
+<img alt="../_images/Screenshot_141.png" src="../_images/Screenshot_141.png" />
+<p>Notice it is recursive function</p>
+<img alt="../_images/Screenshot_151.png" src="../_images/Screenshot_151.png" />
+<p>with enumerating depending services passed to the caller (a1) and then processing information about the services</p>
+<img alt="../_images/Screenshot_161.png" src="../_images/Screenshot_161.png" />
+<img alt="../_images/Screenshot_171.png" src="../_images/Screenshot_171.png" />
+<p>Then uses the mentinoned above ControlService which Sends a control code to a service. with passed second parameter the code is 1 which is stop
+So it is stopping all depending services</p>
+<img alt="../_images/Screenshot_191.png" src="../_images/Screenshot_191.png" />
+<img alt="../_images/Screenshot_201.png" src="../_images/Screenshot_201.png" />
+<p>Then retrieves the current status of the specified services based on the specified information level then returns 1 if all is well</p>
+<img alt="../_images/Screenshot_181.png" src="../_images/Screenshot_181.png" />
+<p>stepping out of the function, we see it opens the service control manager with all rights whose handle is passed into services_enumed function</p>
+<img alt="../_images/Screenshot_221.png" src="../_images/Screenshot_221.png" />
+<img alt="../_images/Screenshot_212.png" src="../_images/Screenshot_212.png" />
+<p>It uses openprocesstoken and NTopenProcessToken to do some functions with higherprivilege (if it was started in higher privilege which makes me think there is a privilege escalation)</p>
+<img alt="../_images/Screenshot_312.png" src="../_images/Screenshot_312.png" />
+<img alt="../_images/Screenshot_321.png" src="../_images/Screenshot_321.png" />
+<p>It also uses FindFirstVolume and findNextVolume loops through all the volume most likely for encryption</p>
+<img alt="../_images/Screenshot_331.png" src="../_images/Screenshot_331.png" />
+<img alt="../_images/Screenshot_341.png" src="../_images/Screenshot_341.png" />
+<p>We notice it is also using NetShareSum and used for SMB like services and encryptes the shared files as well</p>
+<img alt="../_images/Screenshot_351.png" src="../_images/Screenshot_351.png" />
+<p>It grabs my system information like number of processors and architecture likely for antiVM</p>
+<img alt="../_images/Screenshot_361.png" src="../_images/Screenshot_361.png" />
+<p>It changes the wallpaper by accessing SystemParametersInfo function with parameter 14</p>
+<img alt="../_images/Screenshot_371.png" src="../_images/Screenshot_371.png" />
+<img alt="../_images/Screenshot_381.png" src="../_images/Screenshot_381.png" />
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../mal1/mal1.html" class="btn btn-neutral float-left" title="Princess Locker" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, abdelrahman khaled.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

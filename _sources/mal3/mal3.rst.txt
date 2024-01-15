@@ -1,0 +1,295 @@
+Agent tesla
+===================================
+
+I got a sample compressed with Zpaq, Original article https://isc.sans.edu/diary/rss/30366
+
+SHA256:1c33eef0d22dc54bb2a41af485070612cd4579529e31b63be2141c4be9183eb6
+
+decompress it with https://peazip.github.io
+
+we find a file named ``Zfaggccwnm.exe`` with 950 MB size 
+
+.. image:: Screenshot_1.png
+
+The file is a .Net executable 
+
+.. image:: Screenshot_2.png
+
+Also Pstudio tells us there is overlay of zeroes starting at 2200 offset
+
+.. image:: Screenshot_3.png
+
+As it is slowing every tool i open the exe with, i will just delete the extra zeroes with HxD
+
+.. image:: Screenshot_4.png
+
+We see base64 is used and some encryption/decryption libraries and there is a url likely will grab that file and decode it 
+https://www.mediafire.com/file/vgvujtm9ke2lj1c/Gnwwcgocwzl.wav/file the file is no longer there
+
+.. image:: Screenshot_5.png
+
+Opening the file in Dnspy it is decompiled badly, i read that it was a bug in Dnspy when dealing with async functions in .Net files
+
+.. image:: Screenshot_6.png
+
+So we will open it in Ilspy, it is much clearer , going into main 
+
+.. image:: Screenshot_7.png
+
+Going into ``Fwefji`` function it loads assembly piusrhg
+``An assembly is a C# code library that contains the compiled classes and structs``
+Then it gets class Wzyys.Rutvtxx and invokes Gwjgucx member in it 
+
+.. image:: Screenshot_8.png
+
+looking at piusrhg, it uses TDES with IV, KEY in base64 to decrypt a stream from Mheurfg()  
+example for TDES https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.tripledes?view=net-8.0
+
+.. image:: Screenshot_9.png
+
+and in Mheurfg, it load the wav file, so the wav file is the main exe file
+
+.. image:: Screenshot_10.png
+
+wav file SHA256:c2c466e178b39577912c9ce989cf8a975c574d5febe15ae11a91bbb985ca8d2e
+using cyberchef https://cyberchef.org/#recipe=Triple_DES_Decrypt(%7B'option':'Base64','string':'CKqBjjdLDj8Kh5nq3QvdzA%3D%3D'%7D,%7B'option':'Base64','string':'hhxBFpSfWfI%3D'%7D,'CBC','Raw','Raw')
+We get the exe file decrypted with IV and KEY we saw above 
+
+.. image:: Screenshot_11.png
+
+it is also a 32 bit .Net file SHA256:04F896084F8CF79A1233DEC43FA215CB1A21641B2EED24CB31F65BD2023F13DC
+
+.. image:: Screenshot_12.png
+
+the file name is Wzyys.dll which was invoked above plus there is a huge resource
+
+.. image:: Screenshot_13.png
+
+Can't read the methods so will pass it to de4dot to clean
+
+.. image:: Screenshot_14.png
+
+now it is much better, also remember in the caller file, it called Wzyys.Rutvtxx class invoking Gwjgucx() member
+
+.. image:: Screenshot_15.png
+
+To invoke the dll and step through the program, we use powershell [Reflection.Assembly]::LoadFile command and invoke the member used with attaching dnspy to powershell
+
+.. image:: Screenshot_16.png
+
+.. image:: Screenshot_17.png
+
+we hit our breakpoint
+
+.. image:: Screenshot_18.png
+
+First invoke Class3.smethod_12 contained antidebugging 
+
+.. image:: Screenshot_19.png
+
+Second invoke Class3.smethod_112 containes some hidden strings, stepping into to see them we find it is ``cmd /c ipconfig /release``
+
+.. image:: Screenshot_21.png
+
+.. image:: Screenshot_22.png
+
+Third invoke Class3.smethod_89(); creates a mutex
+
+.. image:: Screenshot_24.png
+
+Fourth invoke Class3.smethod_105, can't step into it gives me this error 
+
+.. image:: Screenshot_25.png
+
+So will just do it manual, here we see the decompiled function, it uses Class3.smethod_11 to decode some strings for use 
+
+.. image:: Screenshot_26.png
+
+using powershell we get those strings output, it runs ``cmd /c powershell set-mppreference -exclusionpath "currentFilePath"``
+
+.. image:: Screenshot_27.png
+
+Fifth invoke Class3.smethod_18 is just sleep (antiSandbox)
+
+.. image:: Screenshot_28.png
+
+Class3.smethod_72 is another hidden command ``powershell -enc`` with String
+
+.. image:: Screenshot_29.png
+
+.. image:: Screenshot_30.png
+
+Class3.smethod_61 is persistent invoke that puts vbs script in run registry
+
+.. image:: Screenshot_31.png
+
+.. image:: Screenshot_32.png
+
+Class3.smethod_26 prepares for process injection for explorer
+
+.. image:: Screenshot_33.png
+
+.. image:: Screenshot_34.png
+
+Before last invoke renew network adapters ip 
+
+.. image:: Screenshot_35.png
+
+.. image:: Screenshot_36.png
+
+Last invoke Class3.smethod_86 likely will be the main file to be injected
+
+.. image:: Screenshot_37.png
+
+We get a byte array which likely carries our file but obfuscated
+
+.. image:: Screenshot_38.png
+
+That one of those methods will deobfuscate, but the file exited before running them so will just break on those to go directly to them
+
+.. image:: Screenshot_39.png
+
+Ok, so after MANY tries, i resorted to ``hollows_hunter.exe /loop /kill`` to dump the process from memory
+Which was the same result i got later from Dnspy when i reached [[ns8.class18]]::smethod_0, the byte array byte_0 contained the real malware
+
+.. image:: Screenshot_40.png
+
+The new file SHA256:45DC4518FBF43BF4611446159F72CDBC37641707BB924BD2A52644A3AF5BAB76
+and It is also .Net 32 bit
+
+.. image:: Screenshot_41.png
+
+It containes the typical bad libraries keylogger(Used GetforegroundWindow and SetWindowsHook) , Process injection, web request , registry
+
+.. image:: Screenshot_43.png
+
+.. image:: Screenshot_42.png
+
+we also see these which may indicate obfuscation with .NET Reactor
+
+.. image:: Screenshot_44.png
+
+It is obfucated 
+
+.. image:: Screenshot_45.png
+
+we will go from reverse searching for known strings we got from Pstudio like telegram, then analyze where is it used
+
+.. image:: Screenshot_46.png
+
+Used in yrE class with a lot of interesting things around Obfuscated
+
+.. image:: Screenshot_47.png
+
+Using de4dot for deobfuscation 
+
+.. image:: Screenshot_48.png
+
+But it messed it up, made it worse , will try another tool https://github.com/SychicBoy/NETReactorSlayer
+
+.. image:: Screenshot_49.png
+
+going with those options as true, to reduce the mess deobfuscation does as first pass , then just pass the malware again to the tool as final step
+
+.. image:: Screenshot_50.png
+
+Now the configuration is clear 
+
+.. image:: Screenshot_51.png
+
+.. code-block:: python
+
+		public static string PcHwid = "";
+
+		// Token: 0x04000006 RID: 6
+		public static string ThisComputerName = "";
+
+		// Token: 0x04000007 RID: 7
+		public static string AsmFilePath = "";
+
+		// Token: 0x04000008 RID: 8
+		public static string PublicIpAddress = "";
+
+		// Token: 0x04000009 RID: 9
+		public static bool PublicIpAddressGrab = Convert.ToBoolean("false");
+
+		// Token: 0x0400000A RID: 10
+		public static string IpApi = "";
+
+		// Token: 0x0400000B RID: 11
+		public static aOHeeocHjG.WWzUZ lastInputInf = default(aOHeeocHjG.WWzUZ);
+
+		// Token: 0x0400000C RID: 12
+		public static string PublicUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0";
+
+		// Token: 0x0400000D RID: 13
+		public static bool PcState = true;
+
+		// Token: 0x0400000E RID: 14
+		public static string Log_text = "";
+
+		// Token: 0x0400000F RID: 15
+		public static bool EnableKeylogger = Convert.ToBoolean("false");
+
+		// Token: 0x04000010 RID: 16
+		public static bool EnableScreenLogger = Convert.ToBoolean("false");
+
+		// Token: 0x04000011 RID: 17
+		public static bool EnableClipboardLogger = Convert.ToBoolean("false");
+
+		// Token: 0x04000012 RID: 18
+		public static bool EnableTorPanel = Convert.ToBoolean("false");
+
+		// Token: 0x04000013 RID: 19
+		public static bool EnableCookies = Convert.ToBoolean("false");
+
+		// Token: 0x04000014 RID: 20
+		public static bool DeleteBackspace = Convert.ToBoolean("false");
+
+		// Token: 0x04000015 RID: 21
+		public static int TorPid = 0;
+
+		// Token: 0x04000016 RID: 22
+		public static int KeyloggerInterval = Convert.ToInt32("20");
+
+		// Token: 0x04000017 RID: 23
+		public static int ScreenInterval = Convert.ToInt32("20");
+
+		// Token: 0x04000018 RID: 24
+		public static int LogType = Convert.ToInt32("3");
+
+		// Token: 0x04000019 RID: 25
+		public static string TelegramApi = "https://api.telegram.org/bot6770953749:AAH8VciUrbcie_milk_f6OFA50BMSA6XvFQ/";
+
+		// Token: 0x0400001A RID: 26
+		public static string ChatId = "5815655351";
+
+		// Token: 0x0400001B RID: 27
+		public static bool AppAddStartup = Convert.ToBoolean("false");
+
+		// Token: 0x0400001C RID: 28
+		public static bool HideFileStartup = Convert.ToBoolean("false");
+
+		// Token: 0x0400001D RID: 29
+		public static string AppStartupFullPath = "";
+
+		// Token: 0x0400001E RID: 30
+		public static string StartupDirectoryPath = "";
+
+		// Token: 0x0400001F RID: 31
+		public static string StartupEnvName = "appdata";
+
+		// Token: 0x04000020 RID: 32
+		public static string StartupDirectoryName = "MYZPTk";
+
+		// Token: 0x04000021 RID: 33
+		public static string StartupInstallationName = "MYZPTk.exe";
+
+		// Token: 0x04000022 RID: 34
+		public static string StartupRegName = "MYZPTk";
+
+
+
+
+
+

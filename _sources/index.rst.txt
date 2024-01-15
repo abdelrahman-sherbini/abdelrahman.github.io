@@ -26,6 +26,7 @@ Welcome to my PMA walkthrough!
    lab19/lab19
    mal1/mal1
    mal2/mal2
+   mal3/mal3
 
 Indices and tables
 ==================

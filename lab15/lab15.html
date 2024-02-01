@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Practical Malware Analysis - Lab 15 &mdash; abdelrahmn walkthrough 1 documentation</title>
+  <title>Practical Malware Analysis - Lab 15 &mdash; abdelrahman walkthrough 1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -13,14 +13,15 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=29a6c3e3"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Practical Malware Analysis - Lab 16" href="../lab16/lab16.html" />
     <link rel="prev" title="Practical Malware Analysis - Lab 14" href="../lab14/lab14.html" /> 
 </head>
 
@@ -33,7 +34,7 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            abdelrahmn walkthrough
+            abdelrahman walkthrough
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -61,6 +62,14 @@
 <li class="toctree-l2"><a class="reference internal" href="#lab-15-3">Lab 15-3</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../lab16/lab16.html">Practical Malware Analysis - Lab 16</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab17/lab17.html">Practical Malware Analysis - Lab 17</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab18/lab18.html">Practical Malware Analysis - Lab 18</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab19/lab19.html">Practical Malware Analysis - Lab 19</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal1/mal1.html">Princess Locker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal2/mal2.html">Blackcat Ransomware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal3/mal3.html">Agent tesla</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../SignedUrl/text.html">SignedUrl Hub</a></li>
 </ul>
 
         </div>
@@ -69,11 +78,11 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">abdelrahmn walkthrough</a>
+          <a href="../index.html">abdelrahman walkthrough</a>
       </nav>
 
       <div class="wy-nav-content">
-        <div class="rst-content">
+        <div class="rst-content style-external-links">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
@@ -88,58 +97,58 @@
            <div itemprop="articleBody">
              
   <section id="practical-malware-analysis-lab-15">
-<h1>Practical Malware Analysis - Lab 15<a class="headerlink" href="#practical-malware-analysis-lab-15" title="Permalink to this heading"></a></h1>
+<h1>Practical Malware Analysis - Lab 15<a class="headerlink" href="#practical-malware-analysis-lab-15" title="Link to this heading"></a></h1>
 <p>This chapter’s labs focus on anti-disassembly techniques</p>
 <section id="lab-15-1">
-<h2>Lab 15-1<a class="headerlink" href="#lab-15-1" title="Permalink to this heading"></a></h2>
+<h2>Lab 15-1<a class="headerlink" href="#lab-15-1" title="Link to this heading"></a></h2>
 <p>Analyze the sample found in the file Lab15-01.exe. This is a command-line
 program that takes an argument and prints “Good Job!” if the argument
 matches a secret code.</p>
 <p><strong>Q1: What anti-disassembly technique is used in this binary?</strong></p>
 <p>Opening the malware in ida we notice the red cross-references which are indicators of anti-disassembly</p>
-<img alt="../_images/1q116.png" src="../_images/1q116.png" />
+<img alt="../_images/1q110.png" src="../_images/1q110.png" />
 <p>here is setting zero flag with conditional jump on zero flag <code class="docutils literal notranslate"><span class="pre">jz</span></code> so it’s just absolute jump but did that way
 for ida to wrongly disassemble what the false branch first which is after the jz instruction.
 We notice in jz it is jumping to 401010+1 so it’s just a rogue byte inserted between the two</p>
-<img alt="../_images/1q26.png" src="../_images/1q26.png" />
+<img alt="../_images/1q25.png" src="../_images/1q25.png" />
 <p><strong>Q2: What rogue opcode is the disassembly tricked into disassembling?</strong></p>
 <p>Pressing <code class="docutils literal notranslate"><span class="pre">d</span></code> then <code class="docutils literal notranslate"><span class="pre">c</span></code> at 401010+1 , the red xref disappears and the rogue byte is E8 which is the opcode start of call</p>
-<img alt="../_images/1q36.png" src="../_images/1q36.png" />
+<img alt="../_images/1q35.png" src="../_images/1q35.png" />
 <p><strong>Q3: How many times is this technique used?</strong></p>
 <p>4 more times</p>
-<img alt="../_images/1q45.png" src="../_images/1q45.png" />
+<img alt="../_images/1q44.png" src="../_images/1q44.png" />
 <p><strong>Q4: What command-line argument will cause the program to print “Good Job!”?</strong></p>
 <p>After some cleaning then hovering all main function pressing <code class="docutils literal notranslate"><span class="pre">p</span></code> to convert to function we get this normal function</p>
-<img alt="../_images/1q55.png" src="../_images/1q55.png" />
+<img alt="../_images/1q54.png" src="../_images/1q54.png" />
 <p>Then we can convert to clean psuedocode, It checks first if some argument is passed then proceeds to do some char checks</p>
-<img alt="../_images/1q65.png" src="../_images/1q65.png" />
+<img alt="../_images/1q64.png" src="../_images/1q64.png" />
 <p>inputting pdq we get the desired output</p>
-<img alt="../_images/1q75.png" src="../_images/1q75.png" />
+<img alt="../_images/1q74.png" src="../_images/1q74.png" />
 </section>
 <section id="lab-15-2">
-<h2>Lab 15-2<a class="headerlink" href="#lab-15-2" title="Permalink to this heading"></a></h2>
+<h2>Lab 15-2<a class="headerlink" href="#lab-15-2" title="Link to this heading"></a></h2>
 <p>Analyze the malware found in the file Lab15-02.exe. Correct all anti-disassembly
 countermeasures before analyzing the binary in order to answer the questions.</p>
 <p><strong>Q1: What URL is initially requested by the program?</strong></p>
 <p>Cleaning the anti-disassembly, we see couple of rogue bytes like this cleaning with <code class="docutils literal notranslate"><span class="pre">d</span></code> then <code class="docutils literal notranslate"><span class="pre">c</span></code></p>
-<img alt="../_images/2q116.png" src="../_images/2q116.png" />
+<img alt="../_images/2q115.png" src="../_images/2q115.png" />
 <img alt="../_images/2q27.png" src="../_images/2q27.png" />
 <p>then we see another technique</p>
-<img alt="../_images/2q35.png" src="../_images/2q35.png" />
+<img alt="../_images/2q34.png" src="../_images/2q34.png" />
 <p>Cleaning the EB byte we get</p>
-<img alt="../_images/2q45.png" src="../_images/2q45.png" />
+<img alt="../_images/2q44.png" src="../_images/2q44.png" />
 <p>Then we see another anti-disassembly two jz jnz which just means absolute jump but to make ida disassemble the false branch first</p>
-<img alt="../_images/2q54.png" src="../_images/2q54.png" />
+<img alt="../_images/2q53.png" src="../_images/2q53.png" />
 <p>Cleaned</p>
-<img alt="../_images/2q65.png" src="../_images/2q65.png" />
+<img alt="../_images/2q64.png" src="../_images/2q64.png" />
 <p>anti-disassembly with valid two instruction (book called this impossible assembly)</p>
-<img alt="../_images/2q75.png" src="../_images/2q75.png" />
+<img alt="../_images/2q74.png" src="../_images/2q74.png" />
 <p>Cleaned with just converting to code the jmp call location and NOPing others</p>
-<img alt="../_images/2q85.png" src="../_images/2q85.png" />
+<img alt="../_images/2q84.png" src="../_images/2q84.png" />
 <p>After a lot of similar cleaning we get a clean psuedocode, it gets hostname of the local computer then exchanges some characters (ROT1)</p>
 <img alt="../_images/2q94.png" src="../_images/2q94.png" />
 <p>Prepares the name, puts it in User-Agent</p>
-<img alt="../_images/2q117.png" src="../_images/2q117.png" />
+<img alt="../_images/2q116.png" src="../_images/2q116.png" />
 <p>then sends it to <code class="docutils literal notranslate"><span class="pre">http://www.practicalmalwareanalysis.com/bamboo.html</span></code></p>
 <img alt="../_images/2q102.png" src="../_images/2q102.png" />
 <p>Reads the response cuts what is after Bamboo:: and before ::</p>
@@ -156,7 +165,7 @@ the page?</strong></p>
 <p>Above</p>
 </section>
 <section id="lab-15-3">
-<h2>Lab 15-3<a class="headerlink" href="#lab-15-3" title="Permalink to this heading"></a></h2>
+<h2>Lab 15-3<a class="headerlink" href="#lab-15-3" title="Link to this heading"></a></h2>
 <p>Analyze the malware found in the file Lab15-03.exe. At first glance, this binary
 appears to be a legitimate tool, but it actually contains more functionality
 than advertised.</p>
@@ -206,6 +215,7 @@ this memory location being placed on the stack, So 4014E0 is put on the stack</p
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../lab14/lab14.html" class="btn btn-neutral float-left" title="Practical Malware Analysis - Lab 14" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../lab16/lab16.html" class="btn btn-neutral float-right" title="Practical Malware Analysis - Lab 16" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

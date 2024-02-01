@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Practical Malware Analysis - Lab 16 &mdash; abdelrahmn walkthrough 1 documentation</title>
+  <title>Practical Malware Analysis - Lab 16 &mdash; abdelrahman walkthrough 1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -13,14 +13,15 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=29a6c3e3"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Practical Malware Analysis - Lab 17" href="../lab17/lab17.html" />
     <link rel="prev" title="Practical Malware Analysis - Lab 15" href="../lab15/lab15.html" /> 
 </head>
 
@@ -33,7 +34,7 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            abdelrahmn walkthrough
+            abdelrahman walkthrough
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -62,6 +63,13 @@
 <li class="toctree-l2"><a class="reference internal" href="#lab16-03">Lab16-03</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../lab17/lab17.html">Practical Malware Analysis - Lab 17</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab18/lab18.html">Practical Malware Analysis - Lab 18</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab19/lab19.html">Practical Malware Analysis - Lab 19</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal1/mal1.html">Princess Locker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal2/mal2.html">Blackcat Ransomware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal3/mal3.html">Agent tesla</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../SignedUrl/text.html">SignedUrl Hub</a></li>
 </ul>
 
         </div>
@@ -70,11 +78,11 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">abdelrahmn walkthrough</a>
+          <a href="../index.html">abdelrahman walkthrough</a>
       </nav>
 
       <div class="wy-nav-content">
-        <div class="rst-content">
+        <div class="rst-content style-external-links">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
@@ -89,30 +97,30 @@
            <div itemprop="articleBody">
              
   <section id="practical-malware-analysis-lab-16">
-<h1>Practical Malware Analysis - Lab 16<a class="headerlink" href="#practical-malware-analysis-lab-16" title="Permalink to this heading"></a></h1>
+<h1>Practical Malware Analysis - Lab 16<a class="headerlink" href="#practical-malware-analysis-lab-16" title="Link to this heading"></a></h1>
 <p>This chapter’s labs focus on anti-debugging techniques</p>
 <section id="lab-16-1">
-<h2>Lab 16-1<a class="headerlink" href="#lab-16-1" title="Permalink to this heading"></a></h2>
+<h2>Lab 16-1<a class="headerlink" href="#lab-16-1" title="Link to this heading"></a></h2>
 <p>Analyze the malware found in Lab16-01.exe using a debugger. This is the
 same malware as Lab09-01.exe, with added anti-debugging techniques.</p>
 <p><strong>Q1: Which anti-debugging techniques does this malware employ?</strong></p>
 <p>Into IDA first, First check is check BeingDebugged in struct _PEB (PEB is in fs:30h and BeingDebugged is second parameter)</p>
-<img alt="../_images/1q117.png" src="../_images/1q117.png" />
+<img alt="../_images/1q113.png" src="../_images/1q113.png" />
 <p>If it is debugged it will self destruct</p>
-<img alt="../_images/1q27.png" src="../_images/1q27.png" />
+<img alt="../_images/1q26.png" src="../_images/1q26.png" />
 <p>Second check is ProcessHeap(+0x18h) in PEB in The ForceFlags(+0x10h from ProcessHeap) field but for XP</p>
-<img alt="../_images/1q37.png" src="../_images/1q37.png" />
+<img alt="../_images/1q36.png" src="../_images/1q36.png" />
 <p>Third check is NTGlobalFlag in the PEB at offset 0x68. If the value at this location is 0x70, we know
 that we are running in a debugger</p>
-<img alt="../_images/1q46.png" src="../_images/1q46.png" />
+<img alt="../_images/1q45.png" src="../_images/1q45.png" />
 <p>we notice the checks are in function routines also to be careful</p>
-<img alt="../_images/1q56.png" src="../_images/1q56.png" />
+<img alt="../_images/1q55.png" src="../_images/1q55.png" />
 <p><strong>Q2: What happens when each anti-debugging technique succeeds?</strong></p>
 <p>Self-delete</p>
 <p><strong>Q3: How can you get around these anti-debugging techniques?</strong></p>
 <p>using ScyllaHide
 <a class="reference external" href="https://github.com/x64dbg/ScyllaHide/releases">https://github.com/x64dbg/ScyllaHide/releases</a></p>
-<img alt="../_images/1q76.png" src="../_images/1q76.png" />
+<img alt="../_images/1q75.png" src="../_images/1q75.png" />
 <p>Or when debuggng force the jumps to the flow for all the instances of anti-debugging</p>
 <p><strong>Q4: How do you manually change the structures checked during runtime?</strong></p>
 <p>In OllyDbg</p>
@@ -126,44 +134,44 @@ used by this malware?</strong></p>
 <p>ScyllaHide</p>
 </section>
 <section id="lab-16-2">
-<h2>Lab 16-2<a class="headerlink" href="#lab-16-2" title="Permalink to this heading"></a></h2>
+<h2>Lab 16-2<a class="headerlink" href="#lab-16-2" title="Link to this heading"></a></h2>
 <p>Analyze the malware found in Lab16-02.exe using a debugger. The goal of this
 lab is to figure out the correct password. The malware does not drop a malicious
 payload.</p>
 <p><strong>1: What happens when you run Lab16-02.exe from the command line?</strong></p>
 <p>Needs a password</p>
-<img alt="../_images/1q85.png" src="../_images/1q85.png" />
+<img alt="../_images/1q84.png" src="../_images/1q84.png" />
 <p><strong>Q2: What happens when you run Lab16-02.exe and guess the command-line
 parameter?</strong></p>
 <p><code class="docutils literal notranslate"><span class="pre">Incorrect</span> <span class="pre">password,</span> <span class="pre">Try</span> <span class="pre">again.</span></code></p>
 <p><strong>3: What is the command-line password?</strong></p>
 <p>Running floss we find it is <a class="reference external" href="mailto:p&#37;&#52;&#48;ss">p<span>&#64;</span>ss</a></p>
-<img alt="../_images/1q93.png" src="../_images/1q93.png" />
+<img alt="../_images/1q92.png" src="../_images/1q92.png" />
 <p>but it doesn’t work</p>
 <p><strong>Q4: Load Lab16-02.exe into IDA Pro. Where in the main function is strncmp
 found?</strong></p>
 <p>Opening in ida we find this sneaky TLS call</p>
-<img alt="../_images/1q104.png" src="../_images/1q104.png" />
+<img alt="../_images/1q103.png" src="../_images/1q103.png" />
 <p>where if it gets a handle to OllyDbg window via FindWindows it will exit</p>
-<img alt="../_images/2q118.png" src="../_images/2q118.png" />
+<img alt="../_images/2q117.png" src="../_images/2q117.png" />
 <p>And there OutputDebugStringA after the previous check</p>
 <img alt="../_images/2q124.png" src="../_images/2q124.png" />
 <p>the strncmp is in main, typing the offset Str2 gets Incorrect password so the thread created above with StartAddress function may alter the string</p>
 <img alt="../_images/2q28.png" src="../_images/2q28.png" />
 <p>the StartAddress is a decoding routine with anti-debugging to change password if BeingDebugged is 1 in _PEB</p>
-<img alt="../_images/2q119.png" src="../_images/2q119.png" />
+<img alt="../_images/2q118.png" src="../_images/2q118.png" />
 <p>Preparing our debugger with the TLS</p>
-<img alt="../_images/2q36.png" src="../_images/2q36.png" />
+<img alt="../_images/2q35.png" src="../_images/2q35.png" />
 <p>We hit the TLS callback</p>
-<img alt="../_images/2q46.png" src="../_images/2q46.png" />
+<img alt="../_images/2q45.png" src="../_images/2q45.png" />
 <p>Nulling the return of FindWindow</p>
-<img alt="../_images/2q55.png" src="../_images/2q55.png" />
+<img alt="../_images/2q54.png" src="../_images/2q54.png" />
 <p>or using ScyllaHide Hooking FindWindow option and the BeingDebugged set to 0, and we get to entrypoint</p>
-<img alt="../_images/2q66.png" src="../_images/2q66.png" />
+<img alt="../_images/2q65.png" src="../_images/2q65.png" />
 <p>Setting bp at 40123A the strncmp function</p>
-<img alt="../_images/2q76.png" src="../_images/2q76.png" />
+<img alt="../_images/2q75.png" src="../_images/2q75.png" />
 <p>we see the password <a class="reference external" href="mailto:bzrrp&#37;&#52;&#48;ss">bzrrp<span>&#64;</span>ss</a> but it checks the first 4 chars so the password is bzrr</p>
-<img alt="../_images/2q86.png" src="../_images/2q86.png" />
+<img alt="../_images/2q85.png" src="../_images/2q85.png" />
 <img alt="../_images/2q95.png" src="../_images/2q95.png" />
 <p><strong>Q5: What happens when you load this malware into OllyDbg using the
 default settings?</strong></p>
@@ -186,7 +194,7 @@ against them?</strong></p>
 <p>using ScyllaHide or manually force jump for no debugger branch and hook OutputDebugStringA .</p>
 </section>
 <section id="lab16-03">
-<h2>Lab16-03<a class="headerlink" href="#lab16-03" title="Permalink to this heading"></a></h2>
+<h2>Lab16-03<a class="headerlink" href="#lab16-03" title="Link to this heading"></a></h2>
 <p>Analyze the malware in Lab16-03.exe using a debugger. This malware is similar
 to Lab09-02.exe, with certain modifications, including the introduction of
 anti-debugging techniques. If you get stuck, see Lab 9-2.</p>
@@ -266,6 +274,7 @@ edx:”adg.malwareanalsysisbook.com”</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../lab15/lab15.html" class="btn btn-neutral float-left" title="Practical Malware Analysis - Lab 15" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../lab17/lab17.html" class="btn btn-neutral float-right" title="Practical Malware Analysis - Lab 17" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

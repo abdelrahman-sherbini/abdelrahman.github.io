@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Princess Locker &mdash; abdelrahmn walkthrough 1 documentation</title>
+  <title>Princess Locker &mdash; abdelrahman walkthrough 1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -13,14 +13,15 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=29a6c3e3"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Blackcat Ransomware" href="../mal2/mal2.html" />
     <link rel="prev" title="Practical Malware Analysis - Lab 19" href="../lab19/lab19.html" /> 
 </head>
 
@@ -33,7 +34,7 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            abdelrahmn walkthrough
+            abdelrahman walkthrough
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -61,6 +62,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../lab18/lab18.html">Practical Malware Analysis - Lab 18</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../lab19/lab19.html">Practical Malware Analysis - Lab 19</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Princess Locker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal2/mal2.html">Blackcat Ransomware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal3/mal3.html">Agent tesla</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../SignedUrl/text.html">SignedUrl Hub</a></li>
 </ul>
 
         </div>
@@ -69,11 +73,11 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">abdelrahmn walkthrough</a>
+          <a href="../index.html">abdelrahman walkthrough</a>
       </nav>
 
       <div class="wy-nav-content">
-        <div class="rst-content">
+        <div class="rst-content style-external-links">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
@@ -88,40 +92,40 @@
            <div itemprop="articleBody">
              
   <section id="princess-locker">
-<h1>Princess Locker<a class="headerlink" href="#princess-locker" title="Permalink to this heading"></a></h1>
+<h1>Princess Locker<a class="headerlink" href="#princess-locker" title="Link to this heading"></a></h1>
 <p>sha256:dc7ab2e7ed26554a11da51a184e95b01e685b1a2f99c7fc77d54d5966530bf60</p>
 <p>exeinfo shows it is unpacked(lies) and it is made with c++ with a GUI</p>
-<img alt="../_images/Screenshot_12.png" src="../_images/Screenshot_12.png" />
+<img alt="../_images/Screenshot_16.png" src="../_images/Screenshot_16.png" />
 <p>it has decent number of imports with antidebugging import so we have to be carefull and import for iterating files marked x by pstudio and virtual protect (which changes permission in memory)</p>
-<img alt="../_images/Screenshot_21.png" src="../_images/Screenshot_21.png" />
+<img alt="../_images/Screenshot_22.png" src="../_images/Screenshot_22.png" />
 <p>we will set breakpoint on virtualprotect to capture the address it will change permission on , it will be first parameter
 and we can breakpoint on virtualalloc to capture return address on EAX for the memory address</p>
-<img alt="../_images/Screenshot_31.png" src="../_images/Screenshot_31.png" />
+<img alt="../_images/Screenshot_32.png" src="../_images/Screenshot_32.png" />
 <p>we hit our entrypoint breakpoint, continuing run</p>
-<img alt="../_images/Screenshot_41.png" src="../_images/Screenshot_41.png" />
+<img alt="../_images/Screenshot_42.png" src="../_images/Screenshot_42.png" />
 <p>we hit our first breakpoint on virtualalloc</p>
-<img alt="../_images/Screenshot_71.png" src="../_images/Screenshot_71.png" />
+<img alt="../_images/Screenshot_72.png" src="../_images/Screenshot_72.png" />
 <p>stepping into till we get the main virtualalloc</p>
-<img alt="../_images/Screenshot_81.png" src="../_images/Screenshot_81.png" />
+<img alt="../_images/Screenshot_82.png" src="../_images/Screenshot_82.png" />
 <p>stepping over then get the value in EAX and following it in dump we get this</p>
 <img alt="../_images/Screenshot_91.png" src="../_images/Screenshot_91.png" />
 <p>it may look like garbage data but looking ahead we rdata text .rsrc in the dump so this is our main application, so we set a breakpoint on execution there</p>
-<img alt="../_images/Screenshot_101.png" src="../_images/Screenshot_101.png" />
+<img alt="../_images/Screenshot_102.png" src="../_images/Screenshot_102.png" />
 <p>then we hit our virtualprotect</p>
-<img alt="../_images/Screenshot_61.png" src="../_images/Screenshot_61.png" />
+<img alt="../_images/Screenshot_62.png" src="../_images/Screenshot_62.png" />
 <p>following with stepping till we reach the main virtualprotect call</p>
 <img alt="../_images/Screenshot_121.png" src="../_images/Screenshot_121.png" />
 <p>looking at the stack to look at the pushed data (we want the first pop top of the stack which will be the first parameter)</p>
-<img alt="../_images/Screenshot_13.png" src="../_images/Screenshot_13.png" />
+<img alt="../_images/Screenshot_131.png" src="../_images/Screenshot_131.png" />
 <p>with the third parameter is 0x20 which is execute read (third from top of stack) setting hard breakpoint on execute there</p>
-<img alt="../_images/Screenshot_15.png" src="../_images/Screenshot_15.png" />
+<img alt="../_images/Screenshot_151.png" src="../_images/Screenshot_151.png" />
 <p>And we hit the hardware breakpoint</p>
 <img alt="../_images/Screenshot_23.png" src="../_images/Screenshot_23.png" />
 <p>Going there at that address we find what looks like to be code starting with call E8 dumping all that to a binary</p>
-<img alt="../_images/Screenshot_14.png" src="../_images/Screenshot_14.png" />
+<img alt="../_images/Screenshot_141.png" src="../_images/Screenshot_141.png" />
 <p>Opening in hex we know the header is grabage we need to change to a good header, we will replace all before the Machine value as it is in the File header which the OS needs it to load the executable into memory so it won’t be corrupted
 The machine value on 32-bit file is 0x014C which in memory will little endian 4C  01 ,</p>
-<img alt="../_images/Screenshot_16.png" src="../_images/Screenshot_16.png" />
+<img alt="../_images/Screenshot_161.png" src="../_images/Screenshot_161.png" />
 <p>replacing the garbage header, but notice it is different in size so will need to fix some sections alignment</p>
 <img alt="../_images/Screenshot_17.png" src="../_images/Screenshot_17.png" />
 <img alt="../_images/Screenshot_18.png" src="../_images/Screenshot_18.png" />
@@ -134,7 +138,7 @@ The machine value on 32-bit file is 0x014C which in memory will little endian 4C
 Opening at the start .text in 1000 address</p>
 <img alt="../_images/Screenshot_211.png" src="../_images/Screenshot_211.png" />
 <p>we need to just pad zeroes till it is fixed</p>
-<img alt="../_images/Screenshot_22.png" src="../_images/Screenshot_22.png" />
+<img alt="../_images/Screenshot_221.png" src="../_images/Screenshot_221.png" />
 <p>trying to open it in ida i get error, after checking we see here size on disk is smaller that size of PE file, we can add zeroes(difference of both sizes) to match both sizes</p>
 <img alt="../_images/Screenshot_25.png" src="../_images/Screenshot_25.png" />
 <img alt="../_images/Screenshot_26.png" src="../_images/Screenshot_26.png" />
@@ -145,7 +149,7 @@ Opening at the start .text in 1000 address</p>
 <p>That function is a decrypting routine with convulted functions, we can just see the output in a debugger to check the mutex name created</p>
 <img alt="../_images/Screenshot_29.png" src="../_images/Screenshot_29.png" />
 <p>Mutex name is “lCQhNOCPFC”</p>
-<img alt="../_images/Screenshot_32.png" src="../_images/Screenshot_32.png" />
+<img alt="../_images/Screenshot_321.png" src="../_images/Screenshot_321.png" />
 <p>If there is mutex created before close the exe</p>
 <img alt="../_images/Screenshot_30.png" src="../_images/Screenshot_30.png" />
 <p>If not then create a mutex and based on call 122B40 it will either continue or not</p>
@@ -180,7 +184,7 @@ Opening at the start .text in 1000 address</p>
 <p>Then insert the string recycle bin into function call 127E30 which i saw only use is give out value if it is -1 (2’s complement of FFFFFF) then break (from likely encryption)</p>
 <img alt="../_images/Screenshot_50.png" src="../_images/Screenshot_50.png" />
 <p>so it break on some folders it wont encrypt</p>
-<img alt="../_images/Screenshot_51.png" src="../_images/Screenshot_51.png" />
+<img alt="../_images/Screenshot_511.png" src="../_images/Screenshot_511.png" />
 <p>second values it will break on and don’t encrypt:
 1. system volume information
 2. temporary internet files
@@ -198,9 +202,9 @@ Opening at the start .text in 1000 address</p>
 <p>then checks if it is a file or directory if directory it starts all above again if file continue flow</p>
 <img alt="../_images/Screenshot_63.png" src="../_images/Screenshot_63.png" />
 <img alt="../_images/Screenshot_611.png" src="../_images/Screenshot_611.png" />
-<img alt="../_images/Screenshot_62.png" src="../_images/Screenshot_62.png" />
+<img alt="../_images/Screenshot_621.png" src="../_images/Screenshot_621.png" />
 <p>out the function it loads another hidden library then calls 1278A0</p>
-<img alt="../_images/Screenshot_64.png" src="../_images/Screenshot_64.png" />
+<img alt="../_images/Screenshot_641.png" src="../_images/Screenshot_641.png" />
 <img alt="../_images/Screenshot_65.png" src="../_images/Screenshot_65.png" />
 <p>in the call 122E00 it first calls getdefaultlcid which Returns the locale identifier for the user default locale then checks it with 1049(Russia) if it checks out then abort the ransomware</p>
 <img alt="../_images/Screenshot_66.png" src="../_images/Screenshot_66.png" />
@@ -213,7 +217,7 @@ Opening at the start .text in 1000 address</p>
 <img alt="../_images/Screenshot_70.png" src="../_images/Screenshot_70.png" />
 <img alt="../_images/Screenshot_711.png" src="../_images/Screenshot_711.png" />
 <p>the rest is encryption of files then creating the encrypted file using AES</p>
-<img alt="../_images/Screenshot_72.png" src="../_images/Screenshot_72.png" />
+<img alt="../_images/Screenshot_721.png" src="../_images/Screenshot_721.png" />
 <p>and sends some data (base64 related to my machine)</p>
 <img alt="../_images/Screenshot_73.png" src="../_images/Screenshot_73.png" />
 <img alt="../_images/Screenshot_74.png" src="../_images/Screenshot_74.png" />
@@ -224,6 +228,7 @@ Opening at the start .text in 1000 address</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../lab19/lab19.html" class="btn btn-neutral float-left" title="Practical Malware Analysis - Lab 19" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../mal2/mal2.html" class="btn btn-neutral float-right" title="Blackcat Ransomware" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

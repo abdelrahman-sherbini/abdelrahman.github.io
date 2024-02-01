@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Practical Malware Analysis - Lab 6 &mdash; abdelrahmn walkthrough 1 documentation</title>
+  <title>Practical Malware Analysis - Lab 6 &mdash; abdelrahman walkthrough 1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -13,11 +13,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=29a6c3e3"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -34,7 +34,7 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            abdelrahmn walkthrough
+            abdelrahman walkthrough
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -59,6 +59,18 @@
 <li class="toctree-l1"><a class="reference internal" href="../lab9/lab9.html">Practical Malware Analysis - Lab 9</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../lab10/lab10.html">Practical Malware Analysis - Lab 10</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../lab11/lab11.html">Practical Malware Analysis - Lab 11</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab12/lab12.html">Practical Malware Analysis - Lab 12</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab13/lab13.html">Practical Malware Analysis - Lab 13</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab14/lab14.html">Practical Malware Analysis - Lab 14</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab15/lab15.html">Practical Malware Analysis - Lab 15</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab16/lab16.html">Practical Malware Analysis - Lab 16</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab17/lab17.html">Practical Malware Analysis - Lab 17</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab18/lab18.html">Practical Malware Analysis - Lab 18</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab19/lab19.html">Practical Malware Analysis - Lab 19</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal1/mal1.html">Princess Locker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal2/mal2.html">Blackcat Ransomware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal3/mal3.html">Agent tesla</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../SignedUrl/text.html">SignedUrl Hub</a></li>
 </ul>
 
         </div>
@@ -67,11 +79,11 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">abdelrahmn walkthrough</a>
+          <a href="../index.html">abdelrahman walkthrough</a>
       </nav>
 
       <div class="wy-nav-content">
-        <div class="rst-content">
+        <div class="rst-content style-external-links">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
@@ -86,7 +98,7 @@
            <div itemprop="articleBody">
              
   <section id="practical-malware-analysis-lab-6">
-<h1>Practical Malware Analysis - Lab 6<a class="headerlink" href="#practical-malware-analysis-lab-6" title="Permalink to this heading"></a></h1>
+<h1>Practical Malware Analysis - Lab 6<a class="headerlink" href="#practical-malware-analysis-lab-6" title="Link to this heading"></a></h1>
 <p>The goal of the labs for this chapter is to help you to understand the overall
 functionality of a program by analyzing code constructs. Each lab will guide
 you through discovering and analyzing a new code construct. Each lab builds
@@ -95,7 +107,7 @@ with four constructs. Once you’ve finished working through the labs, you
 should be able to more easily recognize these individual constructs when you
 encounter them in malware.</p>
 <section id="lab-6-1">
-<h2>Lab 6-1<a class="headerlink" href="#lab-6-1" title="Permalink to this heading"></a></h2>
+<h2>Lab 6-1<a class="headerlink" href="#lab-6-1" title="Link to this heading"></a></h2>
 <p>In this lab, you will analyze the malware found in the file Lab06-01.exe.</p>
 <p><strong>Q1: What is the major code construct found in the only subroutine called by main?</strong></p>
 <p>In the main function we see a JNZ after compare instruction so it’s most likely if construct</p>
@@ -112,7 +124,7 @@ encounter them in malware.</p>
 <img alt="../_images/q132.png" src="../_images/q132.png" />
 </section>
 <section id="lab-6-2">
-<h2>Lab 6-2<a class="headerlink" href="#lab-6-2" title="Permalink to this heading"></a></h2>
+<h2>Lab 6-2<a class="headerlink" href="#lab-6-2" title="Link to this heading"></a></h2>
 <p>Analyze the malware found in the file Lab06-02.exe.</p>
 <p><strong>Q1: What operation does the first subroutine called by main perform?</strong></p>
 <p>It returns 1 if there is Internet connection and prints success</p>
@@ -143,7 +155,7 @@ then sleeps for 6 seconds</p>
 <img alt="../_images/q26.png" src="../_images/q26.png" />
 </section>
 <section id="lab-6-3">
-<h2>Lab 6-3<a class="headerlink" href="#lab-6-3" title="Permalink to this heading"></a></h2>
+<h2>Lab 6-3<a class="headerlink" href="#lab-6-3" title="Link to this heading"></a></h2>
 <p>In this lab, we’ll analyze the malware found in the file Lab06-03.exe.</p>
 <p><strong>Q1: Compare the calls in main to Lab 6-2 ’s main method. What is the new function called from main?</strong></p>
 <p>subroutine <code class="docutils literal notranslate"><span class="pre">401130</span></code></p>
@@ -180,7 +192,7 @@ then sleeps for 6 seconds</p>
 it does multiple functions</p>
 </section>
 <section id="lab-6-4">
-<h2>Lab 6-4<a class="headerlink" href="#lab-6-4" title="Permalink to this heading"></a></h2>
+<h2>Lab 6-4<a class="headerlink" href="#lab-6-4" title="Link to this heading"></a></h2>
 <p>In this lab, we’ll analyze the malware found in the file Lab06-04.exe.</p>
 <p>the new thing here the call to retrieve command from the pma site after &lt;!– is put in a loop (1440 times)</p>
 <img alt="../_images/q61.png" src="../_images/q61.png" />

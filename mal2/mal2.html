@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Blackcat Ransomware &mdash; abdelrahmn walkthrough 1 documentation</title>
+  <title>Blackcat Ransomware &mdash; abdelrahman walkthrough 1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -13,14 +13,15 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=29a6c3e3"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Agent tesla" href="../mal3/mal3.html" />
     <link rel="prev" title="Princess Locker" href="../mal1/mal1.html" /> 
 </head>
 
@@ -33,7 +34,7 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            abdelrahmn walkthrough
+            abdelrahman walkthrough
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -62,6 +63,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../lab19/lab19.html">Practical Malware Analysis - Lab 19</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../mal1/mal1.html">Princess Locker</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Blackcat Ransomware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal3/mal3.html">Agent tesla</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../SignedUrl/text.html">SignedUrl Hub</a></li>
 </ul>
 
         </div>
@@ -70,11 +73,11 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">abdelrahmn walkthrough</a>
+          <a href="../index.html">abdelrahman walkthrough</a>
       </nav>
 
       <div class="wy-nav-content">
-        <div class="rst-content">
+        <div class="rst-content style-external-links">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
@@ -89,7 +92,7 @@
            <div itemprop="articleBody">
              
   <section id="blackcat-ransomware">
-<h1>Blackcat Ransomware<a class="headerlink" href="#blackcat-ransomware" title="Permalink to this heading"></a></h1>
+<h1>Blackcat Ransomware<a class="headerlink" href="#blackcat-ransomware" title="Link to this heading"></a></h1>
 <p>sha256: 847fb7609f53ed334d5affbb07256c21cb5e6f68b1cc14004f5502d714d2a456</p>
 <p>Using PEID, it is using CRC32 a checksome algorithm and crpytographic library</p>
 <img alt="../_images/Screenshot_210.png" src="../_images/Screenshot_210.png" />
@@ -102,7 +105,7 @@
 <p>which in IDA psuedo code looks like this</p>
 <img alt="../_images/Screenshot_241.png" src="../_images/Screenshot_241.png" />
 <p>It has TLS functions</p>
-<img alt="../_images/Screenshot_42.png" src="../_images/Screenshot_42.png" />
+<img alt="../_images/Screenshot_410.png" src="../_images/Screenshot_410.png" />
 <p>Going into first TLS callback, it uses TlsGetValue with TlsIndex set to global variable</p>
 <img alt="../_images/Screenshot_52.png" src="../_images/Screenshot_52.png" />
 <p>Finding the TlsAlloc import where it is called as it has to be called to set TlsIndex first ,not in TLS callback
@@ -110,24 +113,24 @@ but passing all TLS callbacks in x32 i get to the entrypoint, and nothing happen
 <img alt="../_images/Screenshot_610.png" src="../_images/Screenshot_610.png" />
 <p>will reverse backwards a bit to make easier starting with our CryptGenRandom found in PEID (that generates a random number)
 One of places it is called under LABEL 8, here it gets the rand number and just returns</p>
-<img alt="../_images/Screenshot_82.png" src="../_images/Screenshot_82.png" />
+<img alt="../_images/Screenshot_83.png" src="../_images/Screenshot_83.png" />
 <p>and that is called depending on value from TLS</p>
 <img alt="../_images/Screenshot_92.png" src="../_images/Screenshot_92.png" />
 <p>then naming the caller of all above to Rand and going to where it is called, we notice the use of SSE instructions for vectorized processing (used in acceleration)
 the encryption used based on this maybe AES also since it uses _mm_loadu_si128 maybe it outputs 128-bit result</p>
-<img alt="../_images/Screenshot_102.png" src="../_images/Screenshot_102.png" />
+<img alt="../_images/Screenshot_103.png" src="../_images/Screenshot_103.png" />
 <p>naming above function Encrypt_SSE, looking where it is called we see some more encryption related stuff</p>
 <img alt="../_images/Screenshot_112.png" src="../_images/Screenshot_112.png" />
 <p>the function is called within more encryption stuff then all is called with some passed as parameters maybe the block that will be encrypted</p>
 <img alt="../_images/Screenshot_122.png" src="../_images/Screenshot_122.png" />
-<img alt="../_images/Screenshot_131.png" src="../_images/Screenshot_131.png" />
+<img alt="../_images/Screenshot_132.png" src="../_images/Screenshot_132.png" />
 <p>Let’s check other commonly used function by Ransomware like Reg*, findnextfile, findNextVolume createToolSnapShot, Getsysteminfo , SystemParameters , ControlService , and SC manager and others for networking and system
 First ControlService used in this function</p>
-<img alt="../_images/Screenshot_141.png" src="../_images/Screenshot_141.png" />
+<img alt="../_images/Screenshot_142.png" src="../_images/Screenshot_142.png" />
 <p>Notice it is recursive function</p>
-<img alt="../_images/Screenshot_151.png" src="../_images/Screenshot_151.png" />
+<img alt="../_images/Screenshot_152.png" src="../_images/Screenshot_152.png" />
 <p>with enumerating depending services passed to the caller (a1) and then processing information about the services</p>
-<img alt="../_images/Screenshot_161.png" src="../_images/Screenshot_161.png" />
+<img alt="../_images/Screenshot_162.png" src="../_images/Screenshot_162.png" />
 <img alt="../_images/Screenshot_171.png" src="../_images/Screenshot_171.png" />
 <p>Then uses the mentinoned above ControlService which Sends a control code to a service. with passed second parameter the code is 1 which is stop
 So it is stopping all depending services</p>
@@ -136,11 +139,11 @@ So it is stopping all depending services</p>
 <p>Then retrieves the current status of the specified services based on the specified information level then returns 1 if all is well</p>
 <img alt="../_images/Screenshot_181.png" src="../_images/Screenshot_181.png" />
 <p>stepping out of the function, we see it opens the service control manager with all rights whose handle is passed into services_enumed function</p>
-<img alt="../_images/Screenshot_221.png" src="../_images/Screenshot_221.png" />
+<img alt="../_images/Screenshot_222.png" src="../_images/Screenshot_222.png" />
 <img alt="../_images/Screenshot_212.png" src="../_images/Screenshot_212.png" />
 <p>It uses openprocesstoken and NTopenProcessToken to do some functions with higherprivilege (if it was started in higher privilege which makes me think there is a privilege escalation)</p>
 <img alt="../_images/Screenshot_312.png" src="../_images/Screenshot_312.png" />
-<img alt="../_images/Screenshot_321.png" src="../_images/Screenshot_321.png" />
+<img alt="../_images/Screenshot_322.png" src="../_images/Screenshot_322.png" />
 <p>It also uses FindFirstVolume and findNextVolume loops through all the volume most likely for encryption</p>
 <img alt="../_images/Screenshot_331.png" src="../_images/Screenshot_331.png" />
 <img alt="../_images/Screenshot_341.png" src="../_images/Screenshot_341.png" />
@@ -159,6 +162,7 @@ Then finally it creates the ransome note using WriteFile</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../mal1/mal1.html" class="btn btn-neutral float-left" title="Princess Locker" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../mal3/mal3.html" class="btn btn-neutral float-right" title="Agent tesla" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

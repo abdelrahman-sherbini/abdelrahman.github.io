@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Practical Malware Analysis - Lab 11 &mdash; abdelrahmn walkthrough 1 documentation</title>
+  <title>Practical Malware Analysis - Lab 11 &mdash; abdelrahman walkthrough 1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -13,14 +13,15 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=29a6c3e3"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Practical Malware Analysis - Lab 12" href="../lab12/lab12.html" />
     <link rel="prev" title="Practical Malware Analysis - Lab 10" href="../lab10/lab10.html" /> 
 </head>
 
@@ -33,7 +34,7 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            abdelrahmn walkthrough
+            abdelrahman walkthrough
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -57,6 +58,18 @@
 <li class="toctree-l2"><a class="reference internal" href="#lab-11-3">Lab 11-3</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../lab12/lab12.html">Practical Malware Analysis - Lab 12</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab13/lab13.html">Practical Malware Analysis - Lab 13</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab14/lab14.html">Practical Malware Analysis - Lab 14</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab15/lab15.html">Practical Malware Analysis - Lab 15</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab16/lab16.html">Practical Malware Analysis - Lab 16</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab17/lab17.html">Practical Malware Analysis - Lab 17</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab18/lab18.html">Practical Malware Analysis - Lab 18</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab19/lab19.html">Practical Malware Analysis - Lab 19</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal1/mal1.html">Princess Locker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal2/mal2.html">Blackcat Ransomware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal3/mal3.html">Agent tesla</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../SignedUrl/text.html">SignedUrl Hub</a></li>
 </ul>
 
         </div>
@@ -65,11 +78,11 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">abdelrahmn walkthrough</a>
+          <a href="../index.html">abdelrahman walkthrough</a>
       </nav>
 
       <div class="wy-nav-content">
-        <div class="rst-content">
+        <div class="rst-content style-external-links">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
@@ -84,62 +97,62 @@
            <div itemprop="articleBody">
              
   <section id="practical-malware-analysis-lab-11">
-<h1>Practical Malware Analysis - Lab 11<a class="headerlink" href="#practical-malware-analysis-lab-11" title="Permalink to this heading"></a></h1>
+<h1>Practical Malware Analysis - Lab 11<a class="headerlink" href="#practical-malware-analysis-lab-11" title="Link to this heading"></a></h1>
 <section id="lab-11-1">
-<h2>Lab 11-1<a class="headerlink" href="#lab-11-1" title="Permalink to this heading"></a></h2>
+<h2>Lab 11-1<a class="headerlink" href="#lab-11-1" title="Link to this heading"></a></h2>
 <p>Analyze the malware found in Lab11-01.exe.</p>
 <p><strong>Q1: What does the malware drop to disk?</strong></p>
 <p>Examining the exe in ida it first clears some memory with zeroes (rep stosd with the zero eax ecx(43h) times) then passes module handle to a function</p>
-<img alt="../_images/1q111.png" src="../_images/1q111.png" />
+<img alt="../_images/1q11.png" src="../_images/1q11.png" />
 <p>in the function it searches for a resource (in .rsrc) named <code class="docutils literal notranslate"><span class="pre">TGAD</span></code> of type binary</p>
-<img alt="../_images/1q22.png" src="../_images/1q22.png" />
-<img alt="../_images/1q32.png" src="../_images/1q32.png" />
+<img alt="../_images/1q21.png" src="../_images/1q21.png" />
+<img alt="../_images/1q31.png" src="../_images/1q31.png" />
 <p>Checking in pestudio we find there is an executable in .rsrc so it drops with <code class="docutils literal notranslate"><span class="pre">LoadResource</span></code> call</p>
-<img alt="../_images/1q42.png" src="../_images/1q42.png" />
+<img alt="../_images/1q41.png" src="../_images/1q41.png" />
 <p><strong>Q2: How does the malware achieve persistence?</strong></p>
 <p>Going into function call 40100 in main function (after it does the gina interception)</p>
 <p>It regsets Ginadll value to the binary in .rsrc to registry winlogon which helps in loading them in between Winlogon and the GINA DLL</p>
-<img alt="../_images/1q51.png" src="../_images/1q51.png" />
+<img alt="../_images/1q5.png" src="../_images/1q5.png" />
 <p><strong>Q3: How does the malware steal user credentials?</strong></p>
 <p>extracting the TGAD binary using exeinfo it is a dll</p>
 <p>Using floss we find many functions where user credentials are passed into it like the gina.dll</p>
-<img alt="../_images/1q61.png" src="../_images/1q61.png" />
+<img alt="../_images/1q6.png" src="../_images/1q6.png" />
 <p>it will likely replace the oringinal gina</p>
 <p><strong>Q4: What does the malware do with stolen credentials?</strong></p>
 <p>Most likely it will open this file msutil and write the data to it</p>
-<img alt="../_images/1q71.png" src="../_images/1q71.png" />
+<img alt="../_images/1q7.png" src="../_images/1q7.png" />
 <p><strong>Q5: How can you use this malware to get user credentials from your test environment?</strong></p>
 <p>It doesn’t work on win 7 but likely by just logging in</p>
 </section>
 <section id="lab-11-2">
-<h2>Lab 11-2<a class="headerlink" href="#lab-11-2" title="Permalink to this heading"></a></h2>
+<h2>Lab 11-2<a class="headerlink" href="#lab-11-2" title="Link to this heading"></a></h2>
 <p>Analyze the malware found in Lab11-02.dll. Assume that a suspicious file
 named Lab11-02.ini was also found with this malware.</p>
 <p><strong>Q1: What are the exports for this DLL malware?</strong></p>
-<img alt="../_images/1q81.png" src="../_images/1q81.png" />
+<img alt="../_images/1q8.png" src="../_images/1q8.png" />
 <p><strong>Q2: What happens after you attempt to install this malware using rundll32.exe?</strong></p>
 <p>it copies the dll to many places</p>
-<img alt="../_images/2q11.png" src="../_images/2q11.png" />
+<img alt="../_images/2q1.png" src="../_images/2q1.png" />
 <p>It creates this dll with write permission (opening in ida seems similar to Lab11-02.dll)</p>
-<img alt="../_images/2q21.png" src="../_images/2q21.png" />
+<img alt="../_images/2q2.png" src="../_images/2q2.png" />
 <p>AppInit DLLs are dynamic-link libraries (DLLs) that are loaded into every process that creates a user interface (loads user32.dll) on Microsoft Windows operating systems. The AppInit DLL mechanism is used to load custom code into user-mode processes, allowing for the customization of the user interface and the behavior of Windows-based applications. Attackers who add those DLLs to the registry locations can execute code with elevated privileges, similar to process injection, and provide a solid and constant persistence on the machine.</p>
 <p><code class="docutils literal notranslate"><span class="pre">HKLM\\SOFTWARE\\Microsoft\\Windows</span> <span class="pre">NT\\CurrentVersion\\Windows\\AppInit_Dlls</span></code></p>
 <p><strong>Q3: Where must Lab11-02.ini reside in order for the malware to install properly?</strong></p>
 <p>It returns not found here in procmon so that file must reside there</p>
-<img alt="../_images/2q31.png" src="../_images/2q31.png" />
+<img alt="../_images/2q3.png" src="../_images/2q3.png" />
 <p><strong>Q4: How is this malware installed for persistence?</strong></p>
 <p>Going into imports found regset function, getting cross references and then going to the caller</p>
-<img alt="../_images/2q41.png" src="../_images/2q41.png" />
+<img alt="../_images/2q4.png" src="../_images/2q4.png" />
 <p>We find it regset the dll to appleinit registry under windows registry</p>
-<img alt="../_images/2q51.png" src="../_images/2q51.png" />
+<img alt="../_images/2q5.png" src="../_images/2q5.png" />
 <p><strong>Q5: What user-space rootkit technique does this malware employ?</strong></p>
 <p>Analyzing all functions one stood out with comparing to exe files</p>
-<img alt="../_images/2q61.png" src="../_images/2q61.png" />
+<img alt="../_images/2q6.png" src="../_images/2q6.png" />
 <p>First function call it calls modulefilename with parameter filename which likely is the Lab11-02.dll</p>
-<img alt="../_images/2q71.png" src="../_images/2q71.png" />
+<img alt="../_images/2q7.png" src="../_images/2q7.png" />
 <p>It does memcmp with multiple exe files with the dll which means it checks if the dll is used by any of the exe files then it
 does three calls to three functions</p>
-<img alt="../_images/2q81.png" src="../_images/2q81.png" />
+<img alt="../_images/2q8.png" src="../_images/2q8.png" />
 <p>first call it gets processid of the parameter input to the function plus getting process structure using snapshottool in
 function 100012FE <code class="docutils literal notranslate"><span class="pre">which</span> <span class="pre">Takes</span> <span class="pre">a</span> <span class="pre">snapshot</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">specified</span> <span class="pre">processes,</span> <span class="pre">as</span> <span class="pre">well</span> <span class="pre">as</span> <span class="pre">the</span> <span class="pre">heaps,</span> <span class="pre">modules,</span> <span class="pre">and</span> <span class="pre">threads</span> <span class="pre">used</span> <span class="pre">by</span> <span class="pre">these</span> <span class="pre">processes.</span> <span class="pre">Creates</span> <span class="pre">a</span> <span class="pre">structure</span> <span class="pre">PROCESSENTRY32</span> <span class="pre">puts</span> <span class="pre">the</span> <span class="pre">snapshot</span> <span class="pre">into</span> <span class="pre">it</span></code>
 then stops all threads and third function resumes them</p>
@@ -147,7 +160,7 @@ then stops all threads and third function resumes them</p>
 <p>second call gets send and wsock32.dll which likely loads them</p>
 <img alt="../_images/2q10.png" src="../_images/2q10.png" />
 <p>Here we see the location of wsock32.dll is got by using getprocaddress</p>
-<img alt="../_images/2q111.png" src="../_images/2q111.png" />
+<img alt="../_images/2q11.png" src="../_images/2q11.png" />
 <p>then after that we see function 10001203 is called which contains code about calling virtualprotect to change memory protections with the location of wsock32.dll (send function) allocating memory then writing to it</p>
 <img alt="../_images/2q12.png" src="../_images/2q12.png" />
 <p>the rootkit technique it uses is inline hooking</p>
@@ -174,7 +187,7 @@ else continue the flow</p>
 <p>answered above email processes</p>
 <p><strong>Q8: What is the significance of the .ini file?</strong></p>
 <p>as ini file contains gibberish data and at the start of dllmain it read the file then passes it to function 100010B3 we bp that function at ollydbg</p>
-<img alt="../_images/2q211.png" src="../_images/2q211.png" />
+<img alt="../_images/2q21.png" src="../_images/2q21.png" />
 <p>bp at this  (with help of <a class="reference external" href="https://www.ollydbg.de/Loaddll.htm">https://www.ollydbg.de/Loaddll.htm</a>)</p>
 <img alt="../_images/2q23.png" src="../_images/2q23.png" />
 <p>which contains the decoded email recepient</p>
@@ -183,7 +196,7 @@ else continue the flow</p>
 <p>by sending email with outlook</p>
 </section>
 <section id="lab-11-3">
-<h2>Lab 11-3<a class="headerlink" href="#lab-11-3" title="Permalink to this heading"></a></h2>
+<h2>Lab 11-3<a class="headerlink" href="#lab-11-3" title="Link to this heading"></a></h2>
 <p>Analyze the malware found in Lab11-03.exe and Lab11-03.dll. Make sure that
 both files are in the same directory during analysis.</p>
 <p><strong>Q1: What interesting analysis leads can you discover using basic static analysis?</strong></p>
@@ -245,6 +258,7 @@ The field pointed to by a1 is set to 1
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../lab10/lab10.html" class="btn btn-neutral float-left" title="Practical Malware Analysis - Lab 10" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../lab12/lab12.html" class="btn btn-neutral float-right" title="Practical Malware Analysis - Lab 12" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

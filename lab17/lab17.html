@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Practical Malware Analysis - Lab 17 &mdash; abdelrahmn walkthrough 1 documentation</title>
+  <title>Practical Malware Analysis - Lab 17 &mdash; abdelrahman walkthrough 1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -13,14 +13,15 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=29a6c3e3"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Practical Malware Analysis - Lab 18" href="../lab18/lab18.html" />
     <link rel="prev" title="Practical Malware Analysis - Lab 16" href="../lab16/lab16.html" /> 
 </head>
 
@@ -33,7 +34,7 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            abdelrahmn walkthrough
+            abdelrahman walkthrough
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -63,6 +64,12 @@
 <li class="toctree-l2"><a class="reference internal" href="#lab-17-3">Lab 17-3</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../lab18/lab18.html">Practical Malware Analysis - Lab 18</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab19/lab19.html">Practical Malware Analysis - Lab 19</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal1/mal1.html">Princess Locker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal2/mal2.html">Blackcat Ransomware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal3/mal3.html">Agent tesla</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../SignedUrl/text.html">SignedUrl Hub</a></li>
 </ul>
 
         </div>
@@ -71,11 +78,11 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">abdelrahmn walkthrough</a>
+          <a href="../index.html">abdelrahman walkthrough</a>
       </nav>
 
       <div class="wy-nav-content">
-        <div class="rst-content">
+        <div class="rst-content style-external-links">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
@@ -90,7 +97,7 @@
            <div itemprop="articleBody">
              
   <section id="practical-malware-analysis-lab-17">
-<h1>Practical Malware Analysis - Lab 17<a class="headerlink" href="#practical-malware-analysis-lab-17" title="Permalink to this heading"></a></h1>
+<h1>Practical Malware Analysis - Lab 17<a class="headerlink" href="#practical-malware-analysis-lab-17" title="Link to this heading"></a></h1>
 <p>This chapter’s labs focus on anti-VM techniques</p>
 <p>The script provided to detect anti-VM mentioned in the chapter doesn’t work on ida 7.5+ so here is a refactored one</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">idautils</span> <span class="kn">import</span> <span class="o">*</span>
@@ -113,16 +120,16 @@
 </pre></div>
 </div>
 <section id="lab-17-1">
-<h2>Lab 17-1<a class="headerlink" href="#lab-17-1" title="Permalink to this heading"></a></h2>
+<h2>Lab 17-1<a class="headerlink" href="#lab-17-1" title="Link to this heading"></a></h2>
 <p>Analyze the malware found in Lab17-01.exe inside VMware. This is the same
 malware as Lab07-01.exe, with added anti-VMware techniques.</p>
 <p><strong>Q1: What anti-VM techniques does this malware use?</strong></p>
 <p>Running above script, it found 3 used</p>
 <p>2 in main function</p>
-<img alt="../_images/1q118.png" src="../_images/1q118.png" />
-<img alt="../_images/1q28.png" src="../_images/1q28.png" />
+<img alt="../_images/1q114.png" src="../_images/1q114.png" />
+<img alt="../_images/1q27.png" src="../_images/1q27.png" />
 <p>1 in 401100 routine call</p>
-<img alt="../_images/1q38.png" src="../_images/1q38.png" />
+<img alt="../_images/1q37.png" src="../_images/1q37.png" />
 <p>these registers must contain values valid for the
 underlying host operating system and will diverge from values expected by
 the virtualized (guest) operating system. Since the sidt (register points to idt interrupt descriptor table), sgdt (global dt contains access details like memory access rights), and sldt(local dt) instructions
@@ -134,10 +141,10 @@ What does it find?</strong></p>
 <p>above</p>
 <p><strong>Q3: What happens when each anti-VM technique succeeds?</strong></p>
 <p>It runs this routine which self-deletes the file</p>
-<img alt="../_images/1q47.png" src="../_images/1q47.png" />
+<img alt="../_images/1q46.png" src="../_images/1q46.png" />
 <p><strong>Q4: Which of these anti-VM techniques work against your virtual machine?</strong></p>
 <p>Using x32dbg to see which branches are taken for each check, and we reach to wait for 2100 year passing all the checks, none worked.</p>
-<img alt="../_images/1q57.png" src="../_images/1q57.png" />
+<img alt="../_images/1q56.png" src="../_images/1q56.png" />
 <p><strong>Q5: Why does each anti-VM technique work or fail?</strong></p>
 <p>Maybe as my VM is on virtualbox plus its multiprocessor because each processor (guest or host) has an IDT assigned to it.</p>
 <p><strong>Q6: How could you disable these anti-VM techniques and get the malware
@@ -145,7 +152,7 @@ to run?</strong></p>
 <p>Either patch the JMP instructions or NOP all checks or use multiprocessor with virtualbox or disable hardware acceleration in vmware</p>
 </section>
 <section id="lab-17-2">
-<h2>Lab 17-2<a class="headerlink" href="#lab-17-2" title="Permalink to this heading"></a></h2>
+<h2>Lab 17-2<a class="headerlink" href="#lab-17-2" title="Link to this heading"></a></h2>
 <p>Analyze the malware found in the file Lab17-02.dll inside VMware. After
 answering the first question in this lab, try to run the installation exports
 using rundll32.exe and monitor them with a tool like procmon. The following
@@ -155,11 +162,11 @@ is an example command line for executing the DLL:</p>
 </div>
 <p><strong>Q1: What are the exports for this DLL?</strong></p>
 <p>Seems like installer of malware</p>
-<img alt="../_images/2q120.png" src="../_images/2q120.png" />
+<img alt="../_images/2q119.png" src="../_images/2q119.png" />
 <p><strong>Q2: What happens after the attempted installation using rundll32.exe?</strong></p>
 <p>writing some files and searching for dll under many locations</p>
 <img alt="../_images/2q29.png" src="../_images/2q29.png" />
-<img alt="../_images/2q37.png" src="../_images/2q37.png" />
+<img alt="../_images/2q36.png" src="../_images/2q36.png" />
 <p>Xinstall.log contains:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">The</span> <span class="n">PID</span> <span class="n">Of</span> <span class="n">Process</span> <span class="s1">&#39;iexplore.exe&#39;</span> <span class="ow">is</span> <span class="s1">&#39;0&#39;</span>
 <span class="n">Process</span> <span class="s1">&#39;iexplore.exe&#39;</span> <span class="n">Not</span> <span class="n">Found</span> <span class="p">,</span><span class="n">Inject</span> <span class="n">Failed</span>
@@ -167,16 +174,16 @@ is an example command line for executing the DLL:</p>
 </div>
 <p><strong>Q3: Which files are created and what do they contain?</strong></p>
 <p>it should be run in vmware, so looking at it in ida, A LOT of functions</p>
-<img alt="../_images/2q47.png" src="../_images/2q47.png" />
+<img alt="../_images/2q46.png" src="../_images/2q46.png" />
 <p>So we will work backwards from the export XRefs, in export installRT we find First check is calling atoi (convert string to integer),
 to convert string <code class="docutils literal notranslate"><span class="pre">[This</span> <span class="pre">is</span> <span class="pre">DVM]5</span></code> + 0D which is 5 to integer so atoi will convert it and return 5 then compare if it is zero or not then it will go to series of checks 10006119 and 10006196 to check if this VM or not</p>
-<img alt="../_images/2q56.png" src="../_images/2q56.png" />
+<img alt="../_images/2q55.png" src="../_images/2q55.png" />
 <p>into 10006119 call it just zeroes out the EAX register then returns</p>
-<img alt="../_images/2q67.png" src="../_images/2q67.png" />
+<img alt="../_images/2q66.png" src="../_images/2q66.png" />
 <p>Then it checks if al (lower 16 bit of EAX) is zero then goes to the other check if no then this is VM</p>
-<img alt="../_images/2q77.png" src="../_images/2q77.png" />
+<img alt="../_images/2q76.png" src="../_images/2q76.png" />
 <p>into 10006196, the code is preparing an exception handling with _except_handler3 being the handler and stru_10016438 pushed (likely will be used by the handler), and pushing large fs:0 to point to previous handler</p>
-<img alt="../_images/2q87.png" src="../_images/2q87.png" />
+<img alt="../_images/2q86.png" src="../_images/2q86.png" />
 <p>Then we get this, which the malware first loads the magic number 0x564D5868 (VMXh) into the EAX
 register. Next, it loads the local variable var_1c into EBX, a memory address
 that will return any reply from VMware (old Vmware). ECX is loaded with the value 0xA to get
@@ -218,7 +225,7 @@ system directory with <code class="docutils literal notranslate"><span class="pr
 <p>it is the same as <a class="reference external" href="https://www.ired.team/offensive-security/persistence/persisting-in-svchost.exe-with-a-service-dll-servicemain">https://www.ired.team/offensive-security/persistence/persisting-in-svchost.exe-with-a-service-dll-servicemain</a></p>
 </section>
 <section id="lab-17-3">
-<h2>Lab 17-3<a class="headerlink" href="#lab-17-3" title="Permalink to this heading"></a></h2>
+<h2>Lab 17-3<a class="headerlink" href="#lab-17-3" title="Link to this heading"></a></h2>
 <p>Analyze the malware Lab17-03.exe inside VMware. This lab is similar to
 Lab12-02.exe, with added anti-VMware techniques.</p>
 <p><strong>Q1: What happens when you run this malware in a virtual machine?</strong></p>
@@ -244,6 +251,7 @@ to permanently fail?</strong></p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../lab16/lab16.html" class="btn btn-neutral float-left" title="Practical Malware Analysis - Lab 16" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../lab18/lab18.html" class="btn btn-neutral float-right" title="Practical Malware Analysis - Lab 18" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

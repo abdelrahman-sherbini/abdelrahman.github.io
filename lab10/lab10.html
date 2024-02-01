@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Practical Malware Analysis - Lab 10 &mdash; abdelrahmn walkthrough 1 documentation</title>
+  <title>Practical Malware Analysis - Lab 10 &mdash; abdelrahman walkthrough 1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -13,11 +13,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=29a6c3e3"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -34,7 +34,7 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            abdelrahmn walkthrough
+            abdelrahman walkthrough
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -58,6 +58,18 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../lab11/lab11.html">Practical Malware Analysis - Lab 11</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab12/lab12.html">Practical Malware Analysis - Lab 12</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab13/lab13.html">Practical Malware Analysis - Lab 13</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab14/lab14.html">Practical Malware Analysis - Lab 14</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab15/lab15.html">Practical Malware Analysis - Lab 15</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab16/lab16.html">Practical Malware Analysis - Lab 16</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab17/lab17.html">Practical Malware Analysis - Lab 17</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab18/lab18.html">Practical Malware Analysis - Lab 18</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab19/lab19.html">Practical Malware Analysis - Lab 19</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal1/mal1.html">Princess Locker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal2/mal2.html">Blackcat Ransomware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal3/mal3.html">Agent tesla</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../SignedUrl/text.html">SignedUrl Hub</a></li>
 </ul>
 
         </div>
@@ -66,11 +78,11 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">abdelrahmn walkthrough</a>
+          <a href="../index.html">abdelrahman walkthrough</a>
       </nav>
 
       <div class="wy-nav-content">
-        <div class="rst-content">
+        <div class="rst-content style-external-links">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
@@ -85,9 +97,9 @@
            <div itemprop="articleBody">
              
   <section id="practical-malware-analysis-lab-10">
-<h1>Practical Malware Analysis - Lab 10<a class="headerlink" href="#practical-malware-analysis-lab-10" title="Permalink to this heading"></a></h1>
+<h1>Practical Malware Analysis - Lab 10<a class="headerlink" href="#practical-malware-analysis-lab-10" title="Link to this heading"></a></h1>
 <section id="lab-10-1">
-<h2>Lab 10-1<a class="headerlink" href="#lab-10-1" title="Permalink to this heading"></a></h2>
+<h2>Lab 10-1<a class="headerlink" href="#lab-10-1" title="Link to this heading"></a></h2>
 <p>This lab includes both a driver and an executable. You can run the executable
 from anywhere, but in order for the program to work properly, the
 driver must be placed in the C:WindowsSystem32 directory where it was originally
@@ -100,26 +112,26 @@ driver is Lab10-01.sys.</p>
 with WinDbg to see what is executed in the kernel as a result of the call to ControlService?</strong></p>
 <p>opening exe file into ida we see it creates a service named <code class="docutils literal notranslate"><span class="pre">Lab10-01</span></code> using the file <code class="docutils literal notranslate"><span class="pre">C:\\Windows\\System32\\Lab10-01.sys</span></code>
 with 0x01 service type which is <code class="docutils literal notranslate"><span class="pre">SERVICE_KERNEL_DRIVER</span> <span class="pre">0x00000001</span></code></p>
-<img alt="../_images/1q110.png" src="../_images/1q110.png" />
+<img alt="../_images/1q1.png" src="../_images/1q1.png" />
 <p>the logic here when the create service returns non zero to eax means it failed meaning it couldnt create the service because it is already created so
 it opens the service with the same name <code class="docutils literal notranslate"><span class="pre">Lab10-01</span></code></p>
-<img alt="../_images/1q21.png" src="../_images/1q21.png" />
+<img alt="../_images/1q2.png" src="../_images/1q2.png" />
 <p>Then it starts the service and after successful opening it calls ControlService with dwcontrol argument set to 0x01 <code class="docutils literal notranslate"><span class="pre">SERVICE_CONTROL_STOP</span> <span class="pre">0x00000001</span></code></p>
-<img alt="../_images/1q31.png" src="../_images/1q31.png" />
+<img alt="../_images/1q3.png" src="../_images/1q3.png" />
 <p>So it starts the kernel driver then stops it, we need to put a breakpoint there at ControlService for the driver to be still in memory to be examined</p>
-<img alt="../_images/1q41.png" src="../_images/1q41.png" />
+<img alt="../_images/1q4.png" src="../_images/1q4.png" />
 <p><strong>Q3: What does this program do?</strong></p>
 <p>Going into WinDbg in the host machine, hitting break we know the service name started is Lab10-01</p>
 </section>
 <section id="lab-10-2">
-<h2>Lab 10-2<a class="headerlink" href="#lab-10-2" title="Permalink to this heading"></a></h2>
+<h2>Lab 10-2<a class="headerlink" href="#lab-10-2" title="Link to this heading"></a></h2>
 <p>The file for this lab is Lab10-02.exe.</p>
 <p><strong>Q1: Does this program create any files? If so, what are they?</strong></p>
 <p><strong>Q2: Does this program have a kernel component?</strong></p>
 <p><strong>Q3: What does this program do?</strong></p>
 </section>
 <section id="lab-10-3">
-<h2>Lab 10-3<a class="headerlink" href="#lab-10-3" title="Permalink to this heading"></a></h2>
+<h2>Lab 10-3<a class="headerlink" href="#lab-10-3" title="Link to this heading"></a></h2>
 <p>This lab includes a driver and an executable. You can run the executable
 from anywhere, but in order for the program to work properly, the driver
 must be placed in the C:WindowsSystem32 directory where it was originally

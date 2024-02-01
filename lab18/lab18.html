@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Practical Malware Analysis - Lab 18 &mdash; abdelrahmn walkthrough 1 documentation</title>
+  <title>Practical Malware Analysis - Lab 18 &mdash; abdelrahman walkthrough 1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -13,14 +13,15 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=29a6c3e3"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Practical Malware Analysis - Lab 19" href="../lab19/lab19.html" />
     <link rel="prev" title="Practical Malware Analysis - Lab 17" href="../lab17/lab17.html" /> 
 </head>
 
@@ -33,7 +34,7 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            abdelrahmn walkthrough
+            abdelrahman walkthrough
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -66,6 +67,11 @@
 <li class="toctree-l2"><a class="reference internal" href="#lab-18-5">Lab 18-5</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../lab19/lab19.html">Practical Malware Analysis - Lab 19</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal1/mal1.html">Princess Locker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal2/mal2.html">Blackcat Ransomware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal3/mal3.html">Agent tesla</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../SignedUrl/text.html">SignedUrl Hub</a></li>
 </ul>
 
         </div>
@@ -74,11 +80,11 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">abdelrahmn walkthrough</a>
+          <a href="../index.html">abdelrahman walkthrough</a>
       </nav>
 
       <div class="wy-nav-content">
-        <div class="rst-content">
+        <div class="rst-content style-external-links">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
@@ -93,7 +99,7 @@
            <div itemprop="articleBody">
              
   <section id="practical-malware-analysis-lab-18">
-<h1>Practical Malware Analysis - Lab 18<a class="headerlink" href="#practical-malware-analysis-lab-18" title="Permalink to this heading"></a></h1>
+<h1>Practical Malware Analysis - Lab 18<a class="headerlink" href="#practical-malware-analysis-lab-18" title="Link to this heading"></a></h1>
 <p>Your goal for the labs in this chapter is simply to unpack the code for further
 analysis. For each lab, you should try to unpack the code so that other static
 analysis techniques can be used. While you may be able to find an automated
@@ -105,65 +111,65 @@ Each lab is a packed version of a lab from a previous chapter. Your task in
 each case is to unpack the lab and identify the chapter in which it appeared.
 The files are Lab18-01.exe through Lab18-05.exe.</p>
 <section id="lab-18-1">
-<h2>Lab 18-1<a class="headerlink" href="#lab-18-1" title="Permalink to this heading"></a></h2>
+<h2>Lab 18-1<a class="headerlink" href="#lab-18-1" title="Link to this heading"></a></h2>
 <p>Openning it in exeinfo we see it is packed with UPX so we could unpack it with</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">UPX</span> <span class="o">-</span><span class="n">d</span> <span class="n">file</span><span class="o">.</span><span class="n">exe</span>
 </pre></div>
 </div>
-<img alt="../_images/1q119.png" src="../_images/1q119.png" />
+<img alt="../_images/1q115.png" src="../_images/1q115.png" />
 <p>but i will unpack it manually, Open it in IDA we get this</p>
-<img alt="../_images/1q29.png" src="../_images/1q29.png" />
+<img alt="../_images/1q28.png" src="../_images/1q28.png" />
 <p>It has very few libraries (as it is packed) with one standing out urlmon and since it is using VirtualAlloc we can use it for hardware read breakpoint for the place in memory it will write the malware to</p>
-<img alt="../_images/1q58.png" src="../_images/1q58.png" />
+<img alt="../_images/1q57.png" src="../_images/1q57.png" />
 <p>the urlmon is used in a packed section</p>
-<img alt="../_images/1q66.png" src="../_images/1q66.png" />
+<img alt="../_images/1q65.png" src="../_images/1q65.png" />
 <p>The graph view of the unpacking stub is dreadful, i will look for the tail jumps</p>
-<img alt="../_images/1q39.png" src="../_images/1q39.png" />
+<img alt="../_images/1q38.png" src="../_images/1q38.png" />
 <p>Something interesting a jump for location over 0x8000 away, also before it some weird instructions (like cmp esp,eax), so this is likely our tail jump opening in x32dbg to test it</p>
-<img alt="../_images/1q48.png" src="../_images/1q48.png" />
+<img alt="../_images/1q47.png" src="../_images/1q47.png" />
 <p>The unpacking stub started with pushad, looking at the stack see interesting memory address setting another hardware read breakpoint there (first on the stack click read memory in dump then in dump set the breakpoint)</p>
-<img alt="../_images/1q77.png" src="../_images/1q77.png" />
+<img alt="../_images/1q76.png" src="../_images/1q76.png" />
 <p>We arrive near out suspected tail jump</p>
-<img alt="../_images/1q94.png" src="../_images/1q94.png" />
+<img alt="../_images/1q93.png" src="../_images/1q93.png" />
 <p>and here is the memory dump,(notice at stack there is MZ which is the start of exe file)</p>
-<img alt="../_images/1q86.png" src="../_images/1q86.png" />
+<img alt="../_images/1q85.png" src="../_images/1q85.png" />
 <p>opening scylla plugin in x32dbg then type memory that will be jumped to as our OEP and then click on IAT Autosearch (to autosearch for IAT import address table)</p>
-<img alt="../_images/1q105.png" src="../_images/1q105.png" />
+<img alt="../_images/1q104.png" src="../_images/1q104.png" />
 <p>clicking yes, it was successful</p>
-<img alt="../_images/1q1110.png" src="../_images/1q1110.png" />
+<img alt="../_images/1q116.png" src="../_images/1q116.png" />
 <p>Then click Get imports then clicking Dump</p>
 <img alt="../_images/1q123.png" src="../_images/1q123.png" />
 <p>we find our malware functional with full imports</p>
-<img alt="../_images/1q132.png" src="../_images/1q132.png" />
+<img alt="../_images/1q131.png" src="../_images/1q131.png" />
 <p>the malware is the same as Lab14-01.exe</p>
-<img alt="../_images/1q143.png" src="../_images/1q143.png" />
+<img alt="../_images/1q142.png" src="../_images/1q142.png" />
 </section>
 <section id="lab-18-2">
-<h2>Lab 18-2<a class="headerlink" href="#lab-18-2" title="Permalink to this heading"></a></h2>
+<h2>Lab 18-2<a class="headerlink" href="#lab-18-2" title="Link to this heading"></a></h2>
 <p>Running the malware in peid we see it is packed with FSG 1.0</p>
-<img alt="../_images/1q153.png" src="../_images/1q153.png" />
+<img alt="../_images/1q152.png" src="../_images/1q152.png" />
 <p>looking at imports</p>
-<img alt="../_images/1q163.png" src="../_images/1q163.png" />
+<img alt="../_images/1q162.png" src="../_images/1q162.png" />
 <p>since i didnt notice a tail jump, i will follow the getprocadress breakpoint technique, setting bp at getprocadress in x32dbg then work backwards to find the OEP (as that function is used for getting addresses of the libraries that will be used), i also set another breakpoint at this pushed memory address</p>
-<img alt="../_images/2q126.png" src="../_images/2q126.png" />
+<img alt="../_images/2q120.png" src="../_images/2q120.png" />
 <img alt="../_images/2q210.png" src="../_images/2q210.png" />
 <p>We hit the hardware read breakpoint</p>
-<img alt="../_images/2q38.png" src="../_images/2q38.png" />
+<img alt="../_images/2q37.png" src="../_images/2q37.png" />
 <p>suspecting this maybe our OEP but no it failed to IAT auto search</p>
-<img alt="../_images/2q48.png" src="../_images/2q48.png" />
+<img alt="../_images/2q47.png" src="../_images/2q47.png" />
 <p>Looks like this isn’t the memory we want, so keep running till we find our break at getprocadress</p>
-<img alt="../_images/2q57.png" src="../_images/2q57.png" />
+<img alt="../_images/2q56.png" src="../_images/2q56.png" />
 <p>Reading the around code we find some pushed data (with MZ the start of exe file) then calling an address suspecting that may be our OEP</p>
 <img alt="../_images/2q1111.png" src="../_images/2q1111.png" />
 <p>we find our Lab07-02.exe but with wrong entry point</p>
-<img alt="../_images/2q127.png" src="../_images/2q127.png" />
+<img alt="../_images/2q126.png" src="../_images/2q126.png" />
 <p>Using ollydbg, we can easily just find OEP by section hop trace over, then dump debugged process</p>
 <img alt="../_images/2q143.png" src="../_images/2q143.png" />
 <p>and we get the same exe</p>
 <img alt="../_images/2q152.png" src="../_images/2q152.png" />
 </section>
 <section id="lab-18-3">
-<h2>Lab 18-3<a class="headerlink" href="#lab-18-3" title="Permalink to this heading"></a></h2>
+<h2>Lab 18-3<a class="headerlink" href="#lab-18-3" title="Link to this heading"></a></h2>
 <p>In peid it is packed using PECompact</p>
 <img alt="../_images/3q118.png" src="../_images/3q118.png" />
 <p>Imports the libraries i will break GetProcAddress and VirtualAlloc</p>
@@ -184,7 +190,7 @@ The files are Lab18-01.exe through Lab18-05.exe.</p>
 <img alt="../_images/3q104.png" src="../_images/3q104.png" />
 </section>
 <section id="lab-18-4">
-<h2>Lab 18-4<a class="headerlink" href="#lab-18-4" title="Permalink to this heading"></a></h2>
+<h2>Lab 18-4<a class="headerlink" href="#lab-18-4" title="Link to this heading"></a></h2>
 <p>exeinfo shows it is packed with Aspack v2.12</p>
 <img alt="../_images/4q22.png" src="../_images/4q22.png" />
 <p>imports shows quite important information</p>
@@ -213,7 +219,7 @@ The files are Lab18-01.exe through Lab18-05.exe.</p>
 <img alt="../_images/4q15.png" src="../_images/4q15.png" />
 </section>
 <section id="lab-18-5">
-<h2>Lab 18-5<a class="headerlink" href="#lab-18-5" title="Permalink to this heading"></a></h2>
+<h2>Lab 18-5<a class="headerlink" href="#lab-18-5" title="Link to this heading"></a></h2>
 <p>DIE shows it is packed with UPACK</p>
 <img alt="../_images/5q11.png" src="../_images/5q11.png" />
 <p>PStudio shows zero imports</p>
@@ -245,6 +251,7 @@ The files are Lab18-01.exe through Lab18-05.exe.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../lab17/lab17.html" class="btn btn-neutral float-left" title="Practical Malware Analysis - Lab 17" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../lab19/lab19.html" class="btn btn-neutral float-right" title="Practical Malware Analysis - Lab 19" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

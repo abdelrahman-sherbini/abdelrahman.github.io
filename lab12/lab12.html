@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Practical Malware Analysis - Lab 12 &mdash; abdelrahmn walkthrough 1 documentation</title>
+  <title>Practical Malware Analysis - Lab 12 &mdash; abdelrahman walkthrough 1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -13,14 +13,15 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=29a6c3e3"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Practical Malware Analysis - Lab 13" href="../lab13/lab13.html" />
     <link rel="prev" title="Practical Malware Analysis - Lab 11" href="../lab11/lab11.html" /> 
 </head>
 
@@ -33,7 +34,7 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            abdelrahmn walkthrough
+            abdelrahman walkthrough
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -59,6 +60,17 @@
 <li class="toctree-l2"><a class="reference internal" href="#lab-12-4">Lab 12-4</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../lab13/lab13.html">Practical Malware Analysis - Lab 13</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab14/lab14.html">Practical Malware Analysis - Lab 14</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab15/lab15.html">Practical Malware Analysis - Lab 15</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab16/lab16.html">Practical Malware Analysis - Lab 16</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab17/lab17.html">Practical Malware Analysis - Lab 17</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab18/lab18.html">Practical Malware Analysis - Lab 18</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab19/lab19.html">Practical Malware Analysis - Lab 19</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal1/mal1.html">Princess Locker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal2/mal2.html">Blackcat Ransomware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal3/mal3.html">Agent tesla</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../SignedUrl/text.html">SignedUrl Hub</a></li>
 </ul>
 
         </div>
@@ -67,11 +79,11 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">abdelrahmn walkthrough</a>
+          <a href="../index.html">abdelrahman walkthrough</a>
       </nav>
 
       <div class="wy-nav-content">
-        <div class="rst-content">
+        <div class="rst-content style-external-links">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
@@ -86,40 +98,40 @@
            <div itemprop="articleBody">
              
   <section id="practical-malware-analysis-lab-12">
-<h1>Practical Malware Analysis - Lab 12<a class="headerlink" href="#practical-malware-analysis-lab-12" title="Permalink to this heading"></a></h1>
+<h1>Practical Malware Analysis - Lab 12<a class="headerlink" href="#practical-malware-analysis-lab-12" title="Link to this heading"></a></h1>
 <section id="lab-12-1">
-<h2>Lab 12-1<a class="headerlink" href="#lab-12-1" title="Permalink to this heading"></a></h2>
+<h2>Lab 12-1<a class="headerlink" href="#lab-12-1" title="Link to this heading"></a></h2>
 <p>Analyze the malware found in the file Lab12-01.exe and Lab12-01.dll. Make
 sure that these files are in the same directory when performing the analysis.</p>
 <p><strong>Q1: What happens when you run the malware executable?</strong></p>
 <p>On procmon we don’t get much but noticed a lot of file mapping into memory maybe it will modify some process in memory</p>
-<img alt="../_images/1q23.png" src="../_images/1q23.png" />
+<img alt="../_images/1q22.png" src="../_images/1q22.png" />
 <p><strong>Q2: What process is being injected?</strong></p>
 <p>lets pull the exe into ida, in imports we see CreateRemoteThread and the required functions for it, we could say it uses dll
 injection into remote thread</p>
-<img alt="../_images/1q33.png" src="../_images/1q33.png" />
+<img alt="../_images/1q32.png" src="../_images/1q32.png" />
 <p>Look at the functions list we find only one function then the main function
 in sub_401000 we see all its doing is converting PID to a process name then comparing it to explorer.exe to return 1
 so we can say its injecting explorer (Almost same <code class="docutils literal notranslate"><span class="pre">PrintProcessNameAndID</span></code> function in (MSDN)[<a class="reference external" href="https://learn.microsoft.com/en-us/windows/win32/psapi/enumerating-all-processes">https://learn.microsoft.com/en-us/windows/win32/psapi/enumerating-all-processes</a>] )</p>
-<img alt="../_images/1q52.png" src="../_images/1q52.png" />
+<img alt="../_images/1q51.png" src="../_images/1q51.png" />
 <p><strong>Q3: How can you make the malware stop the pop-ups?</strong></p>
 <p>By restarting explorer.exe like cmd command <code class="docutils literal notranslate"><span class="pre">wmic</span> <span class="pre">process</span> <span class="pre">where</span> <span class="pre">name=&quot;explorer.exe&quot;</span> <span class="pre">call</span> <span class="pre">terminate</span></code></p>
 <p><strong>Q4: How does this malware operate?</strong></p>
 <p>lets go over the exe, in first part its importing psapi.dll functions:EnumProcessModules, EnumProcesses,GetModuleBaseNameA (they do as their name suggests)
 then it sets <code class="docutils literal notranslate"><span class="pre">Buffer</span></code> to Lab12-01.dll location</p>
-<img alt="../_images/1q62.png" src="../_images/1q62.png" />
+<img alt="../_images/1q61.png" src="../_images/1q61.png" />
 <p>Second part enumerating-all-processes then saving list of process identifiers in dwprocessid, and saving number of processes in v7 (v14 &gt;&gt;&gt;2-&gt;v14 / 2^2  where 4 bytes is size of DWORD ,its calculating all bytes returns over size of single process)
 then it is passing all process identifiers (pid) to 40100 function we said above to check if there is explorer, when found it gets a handle to explorer</p>
-<img alt="../_images/1q72.png" src="../_images/1q72.png" />
+<img alt="../_images/1q71.png" src="../_images/1q71.png" />
 <p>Now the overhead is done, the main part here, first it allocates space in explorer process memory then writing Lab12-01.dll to it
 then calling CreateRemoteThread with all prepared parameters (handle to loadlibrary +handle to explorer +the base address where Lab12-01.dll where written to ,to load it )</p>
-<img alt="../_images/1q82.png" src="../_images/1q82.png" />
+<img alt="../_images/1q81.png" src="../_images/1q81.png" />
 <p>in the dll simple program in a loop to create a thread with open messagebox</p>
-<img alt="../_images/1q91.png" src="../_images/1q91.png" />
-<img alt="../_images/1q101.png" src="../_images/1q101.png" />
+<img alt="../_images/1q9.png" src="../_images/1q9.png" />
+<img alt="../_images/1q10.png" src="../_images/1q10.png" />
 </section>
 <section id="lab-12-2">
-<h2>Lab 12-2<a class="headerlink" href="#lab-12-2" title="Permalink to this heading"></a></h2>
+<h2>Lab 12-2<a class="headerlink" href="#lab-12-2" title="Link to this heading"></a></h2>
 <p>Analyze the malware found in the file Lab12-02.exe.</p>
 <p><strong>Q1: What is the purpose of this program?</strong></p>
 <p>In the imports we see it is importing to write something to another process memory</p>
@@ -128,12 +140,12 @@ then calling CreateRemoteThread with all prepared parameters (handle to loadlibr
 <img alt="../_images/2q110.png" src="../_images/2q110.png" />
 <p>at main we see it first passes ApplicationName and string containing <code class="docutils literal notranslate"><span class="pre">\\svchost.exe</span></code> and calls 40149D
 Then pass a handle to the calling (exe) process and calls 40132C</p>
-<img alt="../_images/2q32.png" src="../_images/2q32.png" />
+<img alt="../_images/2q31.png" src="../_images/2q31.png" />
 <div class="line-block">
 <div class="line">we will first check 40149D routine</div>
 <div class="line">Looks like it just concatenates the systemdirectory to \svchost output to -&gt; ApplicationName</div>
 </div>
-<img alt="../_images/2q42.png" src="../_images/2q42.png" />
+<img alt="../_images/2q41.png" src="../_images/2q41.png" />
 <div class="line-block">
 <div class="line">going to the second call 40132C</div>
 </div>
@@ -141,12 +153,12 @@ Then pass a handle to the calling (exe) process and calls 40132C</p>
 and checks if first character or second character doesnt equal to <code class="docutils literal notranslate"><span class="pre">MZ</span></code> (which is start of exe file)
 then calls 401000 routine maybe it will decode what is in the resource</p>
 <p>Yup it xors the resource file with 65</p>
-<img alt="../_images/2q62.png" src="../_images/2q62.png" />
+<img alt="../_images/2q61.png" src="../_images/2q61.png" />
 <p>then all the routine returns pointer to the start of allocated memory which contains the decoded resource</p>
-<img alt="../_images/2q72.png" src="../_images/2q72.png" />
+<img alt="../_images/2q71.png" src="../_images/2q71.png" />
 <p>It then calls 4010EA with parameters decoded resource (lpBuffer) and svchost (lpApplicationName)
 | after the call it zeroes the ApplicationName and virtualfrees the decoded resource</p>
-<img alt="../_images/2q82.png" src="../_images/2q82.png" />
+<img alt="../_images/2q81.png" src="../_images/2q81.png" />
 <p>into 4010EA, it does some checks then starts process with name of module to be executed svchost.exe</p>
 <img alt="../_images/2q91.png" src="../_images/2q91.png" />
 <p>notice it created the process in suspended state with creationflag set to 0x4 means it used to load a process into memory and suspend it at the entrypoint.</p>
@@ -157,7 +169,7 @@ and using ZwUnmapViewOfSection to release all memory pointed to by a section pas
 <p>then Once the process is created, the next step is to replace the victim process’s
 memory with the malicious executable and uses <code class="docutils literal notranslate"><span class="pre">WriteProcessMemory</span></code> to write each of
 the malware sections to the victim process space</p>
-<img alt="../_images/2q112.png" src="../_images/2q112.png" />
+<img alt="../_images/2q111.png" src="../_images/2q111.png" />
 <p>In the final step, the malware restores the victim process environment so
 that the malicious code can run by calling <code class="docutils literal notranslate"><span class="pre">SetThreadContext</span></code> to set the entry
 point to point to the malicious code. Finally, ResumeThread is called to initiate
@@ -175,7 +187,7 @@ the malware, which has now replaced the victim process.</p>
 <p>answered above by encoding routine</p>
 </section>
 <section id="lab-12-3">
-<h2>Lab 12-3<a class="headerlink" href="#lab-12-3" title="Permalink to this heading"></a></h2>
+<h2>Lab 12-3<a class="headerlink" href="#lab-12-3" title="Link to this heading"></a></h2>
 <p>Analyze the malware extracted during the analysis of Lab 12-2, or use the file
 Lab12-03.exe.</p>
 <p><strong>Q1: What is the purpose of this malicious payload?</strong></p>
@@ -203,7 +215,7 @@ call chain gets the message and that the system continues to run properly. (also
 <img alt="../_images/3q111.png" src="../_images/3q111.png" />
 </section>
 <section id="lab-12-4">
-<h2>Lab 12-4<a class="headerlink" href="#lab-12-4" title="Permalink to this heading"></a></h2>
+<h2>Lab 12-4<a class="headerlink" href="#lab-12-4" title="Link to this heading"></a></h2>
 <p>Analyze the malware found in the file Lab12-04.exe.</p>
 <p><strong>Q1: What does the code at 0x401000 accomplish?</strong></p>
 <p>It get parameter PID, it opens process associated with that pid then calls two functions (global variable ) 40312C and 403128</p>
@@ -249,6 +261,7 @@ it executes first the legit one then the malicious one</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../lab11/lab11.html" class="btn btn-neutral float-left" title="Practical Malware Analysis - Lab 11" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../lab13/lab13.html" class="btn btn-neutral float-right" title="Practical Malware Analysis - Lab 13" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

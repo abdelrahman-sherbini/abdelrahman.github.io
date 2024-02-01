@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Practical Malware Analysis - Lab 3 &mdash; abdelrahmn walkthrough 1 documentation</title>
+  <title>Practical Malware Analysis - Lab 3 &mdash; abdelrahman walkthrough 1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -13,11 +13,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=29a6c3e3"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -34,7 +34,7 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            abdelrahmn walkthrough
+            abdelrahman walkthrough
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -59,6 +59,18 @@
 <li class="toctree-l1"><a class="reference internal" href="../lab9/lab9.html">Practical Malware Analysis - Lab 9</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../lab10/lab10.html">Practical Malware Analysis - Lab 10</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../lab11/lab11.html">Practical Malware Analysis - Lab 11</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab12/lab12.html">Practical Malware Analysis - Lab 12</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab13/lab13.html">Practical Malware Analysis - Lab 13</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab14/lab14.html">Practical Malware Analysis - Lab 14</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab15/lab15.html">Practical Malware Analysis - Lab 15</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab16/lab16.html">Practical Malware Analysis - Lab 16</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab17/lab17.html">Practical Malware Analysis - Lab 17</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab18/lab18.html">Practical Malware Analysis - Lab 18</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab19/lab19.html">Practical Malware Analysis - Lab 19</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal1/mal1.html">Princess Locker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal2/mal2.html">Blackcat Ransomware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal3/mal3.html">Agent tesla</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../SignedUrl/text.html">SignedUrl Hub</a></li>
 </ul>
 
         </div>
@@ -67,11 +79,11 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">abdelrahmn walkthrough</a>
+          <a href="../index.html">abdelrahman walkthrough</a>
       </nav>
 
       <div class="wy-nav-content">
-        <div class="rst-content">
+        <div class="rst-content style-external-links">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
@@ -86,7 +98,7 @@
            <div itemprop="articleBody">
              
   <section id="practical-malware-analysis-lab-3">
-<h1>Practical Malware Analysis - Lab 3<a class="headerlink" href="#practical-malware-analysis-lab-3" title="Permalink to this heading"></a></h1>
+<h1>Practical Malware Analysis - Lab 3<a class="headerlink" href="#practical-malware-analysis-lab-3" title="Link to this heading"></a></h1>
 <div class="line-block">
 <div class="line">First my setup for this lab is two VMs Win7 and linux connected together with Internal network</div>
 <div class="line">Setup INetSim on linux VM</div>
@@ -100,7 +112,7 @@
 <li><p>Setting up ApateDNS pointing to my linux VM</p></li>
 </ul>
 <section id="lab-3-1">
-<h2>Lab 3-1<a class="headerlink" href="#lab-3-1" title="Permalink to this heading"></a></h2>
+<h2>Lab 3-1<a class="headerlink" href="#lab-3-1" title="Link to this heading"></a></h2>
 <p>Analyze the malware found in the file <em>Lab03-01.exe</em> using basic dynamic analysis tools.</p>
 <p><strong>Q1: What are this malware’s imports and strings?</strong></p>
 <p>Using PeBear we get only <code class="docutils literal notranslate"><span class="pre">exitprocess</span></code> import from <code class="docutils literal notranslate"><span class="pre">kernel32.dl</span></code> (packed?)</p>
@@ -111,7 +123,7 @@
 <p><strong>Q3: Are there any useful network-based signatures for this malware? If so, what are they?</strong></p>
 </section>
 <section id="lab-3-2">
-<h2>Lab 3-2<a class="headerlink" href="#lab-3-2" title="Permalink to this heading"></a></h2>
+<h2>Lab 3-2<a class="headerlink" href="#lab-3-2" title="Link to this heading"></a></h2>
 <p>Analyze the malware found in the file <em>Lab03-02.dll</em> using basic dynamic analysis tools.</p>
 <p><strong>Q1: How can you get this malware to install itself?</strong></p>
 <p>By utiltizing rundll32.exe</p>
@@ -125,7 +137,7 @@
 <p><strong>Q6: Are there any useful network-based signatures for this malware?</strong></p>
 </section>
 <section id="lab-3-3">
-<h2>Lab 3-3<a class="headerlink" href="#lab-3-3" title="Permalink to this heading"></a></h2>
+<h2>Lab 3-3<a class="headerlink" href="#lab-3-3" title="Link to this heading"></a></h2>
 <p>Execute the malware found in the file <em>Lab03-03.exe</em> while monitoring it using basic dynamic analysis tools in a safe environment.</p>
 <p><strong>Q1: What do you notice when monitoring this malware with Process Explorer?</strong></p>
 <p><strong>Q2: Can you identify any live memory modifications?</strong></p>
@@ -133,7 +145,7 @@
 <p><strong>Q4: What is the purpose of this program?</strong></p>
 </section>
 <section id="lab-3-4">
-<h2>Lab 3-4<a class="headerlink" href="#lab-3-4" title="Permalink to this heading"></a></h2>
+<h2>Lab 3-4<a class="headerlink" href="#lab-3-4" title="Link to this heading"></a></h2>
 <p>Analyze the malware found in the <em>file Lab03-04.exe</em> using basic dynamic analysis tools. (This program is analyzed further in the Chapter 9 labs.)</p>
 <p><strong>Q1: What happens when you run this file?</strong></p>
 <p>It deletes itself, in procmon searching for ProcessCreate for any processes created we notice it calls cmd to delete the exe</p>

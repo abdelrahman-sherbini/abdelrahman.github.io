@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Practical Malware Analysis - Lab 14 &mdash; abdelrahmn walkthrough 1 documentation</title>
+  <title>Practical Malware Analysis - Lab 14 &mdash; abdelrahman walkthrough 1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -13,14 +13,15 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=29a6c3e3"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Practical Malware Analysis - Lab 15" href="../lab15/lab15.html" />
     <link rel="prev" title="Practical Malware Analysis - Lab 13" href="../lab13/lab13.html" /> 
 </head>
 
@@ -33,7 +34,7 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            abdelrahmn walkthrough
+            abdelrahman walkthrough
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -60,6 +61,15 @@
 <li class="toctree-l2"><a class="reference internal" href="#lab-14-3">Lab 14-3</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../lab15/lab15.html">Practical Malware Analysis - Lab 15</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab16/lab16.html">Practical Malware Analysis - Lab 16</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab17/lab17.html">Practical Malware Analysis - Lab 17</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab18/lab18.html">Practical Malware Analysis - Lab 18</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab19/lab19.html">Practical Malware Analysis - Lab 19</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal1/mal1.html">Princess Locker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal2/mal2.html">Blackcat Ransomware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal3/mal3.html">Agent tesla</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../SignedUrl/text.html">SignedUrl Hub</a></li>
 </ul>
 
         </div>
@@ -68,11 +78,11 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">abdelrahmn walkthrough</a>
+          <a href="../index.html">abdelrahman walkthrough</a>
       </nav>
 
       <div class="wy-nav-content">
-        <div class="rst-content">
+        <div class="rst-content style-external-links">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
@@ -87,35 +97,35 @@
            <div itemprop="articleBody">
              
   <section id="practical-malware-analysis-lab-14">
-<h1>Practical Malware Analysis - Lab 14<a class="headerlink" href="#practical-malware-analysis-lab-14" title="Permalink to this heading"></a></h1>
+<h1>Practical Malware Analysis - Lab 14<a class="headerlink" href="#practical-malware-analysis-lab-14" title="Link to this heading"></a></h1>
 <p>This chapter’s labs focus on identifying the networking components of malware.
 To some degree, these labs build on Chapter 13, since when developing
 network signatures, you’ll often need to deal with encoded content.</p>
 <section id="lab-14-1">
-<h2>Lab 14-1<a class="headerlink" href="#lab-14-1" title="Permalink to this heading"></a></h2>
+<h2>Lab 14-1<a class="headerlink" href="#lab-14-1" title="Link to this heading"></a></h2>
 <p>Analyze the malware found in file Lab14-01.exe. This program is not harmful
 to your system.</p>
 <p><strong>Q1: Which networking libraries does the malware use, and what are their
 advantages?</strong></p>
 <p>urlmon library, their advantages is when you download a file from the web, Internet Explorer calls the urlmon.dll file to perform its action,
 so it can blend in with normal activity</p>
-<img alt="../_images/1q114.png" src="../_images/1q114.png" />
+<img alt="../_images/1q19.png" src="../_images/1q19.png" />
 <p><strong>Q2: What source elements are used to construct the networking beacon, and
 what conditions would cause the beacon to change?</strong></p>
 <p>Let’s see where it is called</p>
-<img alt="../_images/1q25.png" src="../_images/1q25.png" />
+<img alt="../_images/1q24.png" src="../_images/1q24.png" />
 <p>the buffer variable is the url that it calls to download, which is set with the _sprintf with variable string called <code class="docutils literal notranslate"><span class="pre">str</span></code></p>
-<img alt="../_images/1q35.png" src="../_images/1q35.png" />
+<img alt="../_images/1q34.png" src="../_images/1q34.png" />
 <p>cross reference the function to see what is <code class="docutils literal notranslate"><span class="pre">str</span></code> pushed to it</p>
-<img alt="../_images/1q44.png" src="../_images/1q44.png" />
+<img alt="../_images/1q43.png" src="../_images/1q43.png" />
 <p>we see it was passed to call 4010BB</p>
-<img alt="../_images/1q54.png" src="../_images/1q54.png" />
+<img alt="../_images/1q53.png" src="../_images/1q53.png" />
 <p>into the call we find it’s a Base64 encoding routine</p>
-<img alt="../_images/1q64.png" src="../_images/1q64.png" />
+<img alt="../_images/1q63.png" src="../_images/1q63.png" />
 <p>Out the function to see what is the str encoded, it is set with _sprintf to <code class="docutils literal notranslate"><span class="pre">var10098</span></code></p>
-<img alt="../_images/1q74.png" src="../_images/1q74.png" />
+<img alt="../_images/1q73.png" src="../_images/1q73.png" />
 <p>following where var 10098 is set, it is set with _sprintf to ecx contents</p>
-<img alt="../_images/1q84.png" src="../_images/1q84.png" />
+<img alt="../_images/1q83.png" src="../_images/1q83.png" />
 <p>Finally we see that ECX contains contents of call to <code class="docutils literal notranslate"><span class="pre">GetCurrentHwProfileA</span></code> which “Retrieves information about the current hardware profile for the local computer.”
 can be seen here <code class="docutils literal notranslate"><span class="pre">HKLM\SYSTEM\CurrentControlSet\HardwareProfiles</span></code>
 .. image:: 1q9.png</p>
@@ -129,12 +139,12 @@ identifying which (infected) host is communicating. So It helps the attacker to 
 <p><strong>Q4: Does the malware use standard Base64 encoding? If not, how is the
 encoding unusual?</strong></p>
 <p>Revisiting Base64 function all looks normal Base64</p>
-<img alt="../_images/1q64.png" src="../_images/1q64.png" />
+<img alt="../_images/1q63.png" src="../_images/1q63.png" />
 <p>then into the indexing function, the only thing unusual it is using character ‘a’ instead of ‘=’ at padding (when v3 which is the input bytes grouped into 3 ,current group , so in last group when it is only 1 or 2 it uses the pad character)</p>
-<img alt="../_images/1q103.png" src="../_images/1q103.png" />
+<img alt="../_images/1q102.png" src="../_images/1q102.png" />
 <p><strong>5: What is the overall purpose of this malware?</strong></p>
 <p>It grabs host information, then in a loop call the function which sends those information</p>
-<img alt="../_images/1q115.png" src="../_images/1q115.png" />
+<img alt="../_images/1q112.png" src="../_images/1q112.png" />
 <p>And in that function it sends the information with a request to download to specified name, then creates a process to start the download file</p>
 <img alt="../_images/1q122.png" src="../_images/1q122.png" />
 <p><strong>Q6: What elements of the malware’s communication may be effectively
@@ -145,12 +155,12 @@ this malware?</strong></p>
 <p>Tryinh the malware on same host thinking that it requests same path but it changes depending on the host</p>
 <p><strong>Q8: What set of signatures would detect this malware (and future variants)?</strong></p>
 <p>Running the malware with Fakenet we get which we know is Base64 encoded</p>
-<img alt="../_images/1q142.png" src="../_images/1q142.png" />
+<img alt="../_images/1q141.png" src="../_images/1q141.png" />
 <p>removing the <code class="docutils literal notranslate"><span class="pre">a</span></code> at the end as it’s not known padding we get</p>
-<img alt="../_images/1q152.png" src="../_images/1q152.png" />
+<img alt="../_images/1q151.png" src="../_images/1q151.png" />
 <p>Creating regex to capture this, we 6 is put for each column and t for each dash plus our username then Base64 encoded (which for each 3 bytes outputs 4 bytes)
 <code class="docutils literal notranslate"><span class="pre">/[A-Za-z0-9+\/]{3}6[A-Za-z0-9+\/]{3}6[A-Za-z0-9+\/]{3}6[A-Za-z0-9+\/]{3}6[A-Za-z0-9+\/]{3}6[A-Za-z0-9+\/]{3}t[A-Za-z0-9+\/]*a{0,2}/gm</span></code></p>
-<img alt="../_images/1q162.png" src="../_images/1q162.png" />
+<img alt="../_images/1q161.png" src="../_images/1q161.png" />
 <p>snort rule</p>
 <div class="highlight-ruby notranslate"><div class="highlight"><pre><span></span><span class="n">alert</span><span class="w"> </span><span class="n">tcp</span><span class="w"> </span><span class="vg">$HOME_NET</span><span class="w"> </span><span class="n">any</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="vg">$EXTERNAL_NET</span><span class="w"> </span><span class="vg">$HTTP_PORTS</span><span class="w"> </span><span class="p">(</span><span class="ss">msg</span><span class="p">:</span><span class="s2">&quot;PM14.1.1 Colons and</span>
 <span class="s2">dash&quot;</span><span class="p">;</span><span class="w"> </span><span class="ss">urilen</span><span class="p">:</span><span class="o">&gt;</span><span class="mi">32</span><span class="p">;</span><span class="w"> </span><span class="ss">content</span><span class="p">:</span><span class="s2">&quot;GET|20|/&quot;</span><span class="p">;</span><span class="w"> </span><span class="ss">depth</span><span class="p">:</span><span class="mi">5</span><span class="p">;</span><span class="w"> </span><span class="ss">pcre</span><span class="p">:</span><span class="s2">&quot;/GET</span><span class="se">\x20</span><span class="s2">\/[A-Za-z0-9+\/]</span>
@@ -160,7 +170,7 @@ this malware?</strong></p>
 </div>
 </section>
 <section id="lab-14-2">
-<h2>Lab 14-2<a class="headerlink" href="#lab-14-2" title="Permalink to this heading"></a></h2>
+<h2>Lab 14-2<a class="headerlink" href="#lab-14-2" title="Link to this heading"></a></h2>
 <p>Analyze the malware found in file Lab14-02.exe. This malware has been configured
 to beacon to a hard-coded loopback address in order to prevent it
 from harming your system, but imagine that it is a hard-coded external
@@ -174,7 +184,7 @@ computer and dynamically redirect his bots by changing only a DNS address.
 <p><strong>Q2: Which networking libraries does this malware use? What are the advantages
 or disadvantages of using these libraries?</strong></p>
 <p>WinInet.dll</p>
-<img alt="../_images/2q115.png" src="../_images/2q115.png" />
+<img alt="../_images/2q114.png" src="../_images/2q114.png" />
 <p>The malware uses the WinINet libraries. One disadvantage of these libraries
 is that a hard-coded User-Agent needs to be provided, and optional
 headers need to be hard-coded if desired. One advantage of the WinINet
@@ -186,11 +196,11 @@ What advantages does this source offer?</strong></p>
 <p>OpenUrl is used in two functions</p>
 <img alt="../_images/2q26.png" src="../_images/2q26.png" />
 <p>We see it is passed as a parameter</p>
-<img alt="../_images/2q34.png" src="../_images/2q34.png" />
+<img alt="../_images/2q33.png" src="../_images/2q33.png" />
 <p>tracing back two function calls we find it is loading it from the exe string resource <a class="reference external" href="https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadstringa">https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadstringa</a></p>
-<img alt="../_images/2q44.png" src="../_images/2q44.png" />
+<img alt="../_images/2q43.png" src="../_images/2q43.png" />
 <p>dumping .rsrc then do strings we find this url</p>
-<img alt="../_images/2q53.png" src="../_images/2q53.png" />
+<img alt="../_images/2q52.png" src="../_images/2q52.png" />
 <p>The attacker can use the resource section to deploy multiple backdoors to multiple command-and-control locations
 without needing to recompile the malware, but it will be easily  detectable</p>
 <p><strong>Q4: Which aspect of the HTTP protocol does the malware leverage to
@@ -198,36 +208,36 @@ achieve its objectives?</strong></p>
 <p>Analysis -&gt;</p>
 <p>At the start we it uses create pipe one for read and one for write then passing the write to stdoutput of the process and the read for stdinput
 | So it creates a reverse shell with the command line (passed as arguemnt to create process)</p>
-<img alt="../_images/2q64.png" src="../_images/2q64.png" />
+<img alt="../_images/2q63.png" src="../_images/2q63.png" />
 <p>then it creates two threads with that process</p>
-<img alt="../_images/2q74.png" src="../_images/2q74.png" />
+<img alt="../_images/2q73.png" src="../_images/2q73.png" />
 <p>First thread function call it copies data from pipe with peekNamepipe (to check for new input) copies it then passes it to 401000 routine then outputs
 into routine 401750</p>
-<img alt="../_images/2q84.png" src="../_images/2q84.png" />
+<img alt="../_images/2q83.png" src="../_images/2q83.png" />
 <p>401000 is some encoding routine, 401750 gets the encoded data prepends ‘(!&lt;’ to it that put that in the User-Agent then runs the url</p>
 <img alt="../_images/2q93.png" src="../_images/2q93.png" />
 <p>the encoding routine sounds like Base64 with custom indexing string <code class="docutils literal notranslate"><span class="pre">WXYZlabcd3fghijko12e456789ABCDEFGHIJKL+/MNOPQRSTUVmn0pqrstuvwxyz</span></code></p>
-<img alt="../_images/Screenshot_11.png" src="../_images/Screenshot_11.png" />
-<img alt="../_images/Screenshot_2.png" src="../_images/Screenshot_2.png" />
+<img alt="../_images/Screenshot_15.png" src="../_images/Screenshot_15.png" />
+<img alt="../_images/Screenshot_21.png" src="../_images/Screenshot_21.png" />
 <p>The second thread function calls 4015C0 which uses similar 401800 call which use wininet, it is the thread responsible for
 receiving commands then writing it to the pipe</p>
-<img alt="../_images/Screenshot_3.png" src="../_images/Screenshot_3.png" />
+<img alt="../_images/Screenshot_31.png" src="../_images/Screenshot_31.png" />
 <p>it reads command with User-Agent: <code class="docutils literal notranslate"><span class="pre">Internet</span> <span class="pre">Surf</span></code></p>
-<img alt="../_images/Screenshot_6.png" src="../_images/Screenshot_6.png" />
-<img alt="../_images/Screenshot_7.png" src="../_images/Screenshot_7.png" />
+<img alt="../_images/Screenshot_61.png" src="../_images/Screenshot_61.png" />
+<img alt="../_images/Screenshot_71.png" src="../_images/Screenshot_71.png" />
 <p>so the first thread reads pipe then sends data, second thread receives data writes to pipe (commands)</p>
 <p>Running the malware we get the following two requests</p>
-<img alt="../_images/Screenshot_4.png" src="../_images/Screenshot_4.png" />
-<img alt="../_images/Screenshot_5.png" src="../_images/Screenshot_5.png" />
+<img alt="../_images/Screenshot_41.png" src="../_images/Screenshot_41.png" />
+<img alt="../_images/Screenshot_51.png" src="../_images/Screenshot_51.png" />
 <p>which seems if no command given to last request it waits for a command though in background</p>
 <p>then in the end it deletes itself when thread fails or exit is passed</p>
 <img alt="../_images/Screenshot_9.png" src="../_images/Screenshot_9.png" />
-<img alt="../_images/Screenshot_10.png" src="../_images/Screenshot_10.png" />
+<img alt="../_images/Screenshot_101.png" src="../_images/Screenshot_101.png" />
 <img alt="../_images/Screenshot_111.png" src="../_images/Screenshot_111.png" />
 <p><strong>Q5: What kind of information is communicated in the malware’s initial
 beacon?</strong></p>
 <p>My command propmt</p>
-<img alt="../_images/Screenshot_8.png" src="../_images/Screenshot_8.png" />
+<img alt="../_images/Screenshot_81.png" src="../_images/Screenshot_81.png" />
 <p><strong>Q6: What are some disadvantages in the design of this malware’s communication
 channels?</strong></p>
 <p>While the attacker encodes outgoing information, he doesn’t encode
@@ -259,7 +269,7 @@ attacker’s arsenal?</strong></p>
 </div>
 </section>
 <section id="lab-14-3">
-<h2>Lab 14-3<a class="headerlink" href="#lab-14-3" title="Permalink to this heading"></a></h2>
+<h2>Lab 14-3<a class="headerlink" href="#lab-14-3" title="Link to this heading"></a></h2>
 <p>This lab builds on Lab 14-1. Imagine that this malware is an attempt by
 the attacker to improve his techniques. Analyze the malware found in file
 Lab14-03.exe.</p>
@@ -290,6 +300,7 @@ data that can be targeted by network signatures?</strong></p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../lab13/lab13.html" class="btn btn-neutral float-left" title="Practical Malware Analysis - Lab 13" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../lab15/lab15.html" class="btn btn-neutral float-right" title="Practical Malware Analysis - Lab 15" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

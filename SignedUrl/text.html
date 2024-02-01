@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SignedUrl Hub &mdash; abdelrahmn walkthrough 1 documentation</title>
+  <title>SignedUrl Hub &mdash; abdelrahman walkthrough 1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -13,11 +13,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=29a6c3e3"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -33,7 +33,7 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            abdelrahmn walkthrough
+            abdelrahman walkthrough
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -72,11 +72,11 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">abdelrahmn walkthrough</a>
+          <a href="../index.html">abdelrahman walkthrough</a>
       </nav>
 
       <div class="wy-nav-content">
-        <div class="rst-content">
+        <div class="rst-content style-external-links">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
@@ -91,11 +91,11 @@
            <div itemprop="articleBody">
              
   <section id="signedurl-hub">
-<h1>SignedUrl Hub<a class="headerlink" href="#signedurl-hub" title="Permalink to this heading"></a></h1>
+<h1>SignedUrl Hub<a class="headerlink" href="#signedurl-hub" title="Link to this heading"></a></h1>
 <p>The challenge is a mimic from this report <a class="reference external" href="https://buer.haus/2024/01/16/reversing-and-tooling-a-signed-request-hash-in-obfuscated-javascript/">https://buer.haus/2024/01/16/reversing-and-tooling-a-signed-request-hash-in-obfuscated-javascript/</a></p>
 <p>We got a simple webApp which our goal is to get article ID 3 to get the flag</p>
 <p>we got only two articles 1,2</p>
-<img alt="../_images/Screenshot_114.png" src="../_images/Screenshot_114.png" />
+<img alt="../_images/Screenshot_1.png" src="../_images/Screenshot_1.png" />
 <p>and the request to get an article is below</p>
 <div class="highlight-html notranslate"><div class="highlight"><pre><span></span>GET /api/article?id=2 HTTP/1.1
 Host: k34m4yau.ctfio.com
@@ -123,19 +123,19 @@ Content-Length: 58
 </pre></div>
 </div>
 <p>we go to the js files, there are only two files sha1.js which is from <a class="reference external" href="https://github.com/emn178/js-sha1">https://github.com/emn178/js-sha1</a> and main.js</p>
-<img alt="../_images/Screenshot_215.png" src="../_images/Screenshot_215.png" />
+<img alt="../_images/Screenshot_2.png" src="../_images/Screenshot_2.png" />
 <p>the main.js is obfuscated and there is a list of strings and indexer function _0x13dd which replaces bits of code to hide code intent</p>
-<img alt="../_images/Screenshot_315.png" src="../_images/Screenshot_315.png" />
+<img alt="../_images/Screenshot_3.png" src="../_images/Screenshot_3.png" />
 <p>we search for “sign” to see where it is set, and set a breakpoint there</p>
-<img alt="../_images/Screenshot_413.png" src="../_images/Screenshot_413.png" />
+<img alt="../_images/Screenshot_4.png" src="../_images/Screenshot_4.png" />
 <div class="line-block">
 <div class="line">the  ` const _0x17f0a4 = _0x13dd;` is the indexer used in obfuscation</div>
 <div class="line">Lets deobfuscate the code here by using the console</div>
 <div class="line">First the “method” parameter has _0x17f0a4(319) which is “GET”</div>
 </div>
-<img alt="../_images/Screenshot_54.png" src="../_images/Screenshot_54.png" />
+<img alt="../_images/Screenshot_5.png" src="../_images/Screenshot_5.png" />
 <p>in the samy way, the timastamp parameter which is set in  let _0x383605 = Date[‘now’]() [_0x17f0a4(377)]();</p>
-<img alt="../_images/Screenshot_613.png" src="../_images/Screenshot_613.png" />
+<img alt="../_images/Screenshot_6.png" src="../_images/Screenshot_6.png" />
 <div class="line-block">
 <div class="line">and user_id is hardcoded 1234 and the last thing is signature which is set in _0x356503(_0x17f0a4(338) + _0x876803, _0x383605, _0x17f0a4(335))</div>
 <div class="line">decoded with indexer _0x17f0a4 to   _0x356503(“/api/article?id=”  + _0x876803, _0x383605, 1234)</div>
@@ -143,7 +143,7 @@ Content-Length: 58
 <div class="line">and _0x876803 is what is put in the id parameter</div>
 <div class="line">Now we have all the parameter, lets step into _0x356503 function, we get the sha1 function</div>
 </div>
-<img alt="../_images/Screenshot_76.png" src="../_images/Screenshot_76.png" />
+<img alt="../_images/Screenshot_7.png" src="../_images/Screenshot_7.png" />
 <div class="line-block">
 <div class="line">so it runs sha1 with the provided parameters and returns the output to be set as “Sign” header</div>
 <div class="line">that’s the main function we need for the change in the request to be valid</div>
@@ -157,15 +157,15 @@ Content-Length: 58
 </pre></div>
 </div>
 <p>_0x4cd499(351) is “pE5CRmAhC8fvaWy6u58tKDTEKCZyTKLA”, _0x43ee81 is the timeStamp , _0x36740f is the path in the url plus id paramter, _0x3b5808 is 1234 (user_id)</p>
-<img alt="../_images/Screenshot_84.png" src="../_images/Screenshot_84.png" />
+<img alt="../_images/Screenshot_8.png" src="../_images/Screenshot_8.png" />
 <p>which is joined with newline in between and passed to sha1</p>
 <p>Now after understanding the JS, we can just use sha1 in console to print our desired “sign” header with this command with 1705851236094 the timeStamp in the request, and /api/article?id=3 is out path</p>
 <div class="highlight-html notranslate"><div class="highlight"><pre><span></span>test = sha1([&quot;pE5CRmAhC8fvaWy6u58tKDTEKCZyTKLA&quot;, &quot;1705851236094&quot;, &quot;/api/article?id=3&quot;, &quot;1234&quot;].join(&quot;\n&quot;));
 </pre></div>
 </div>
-<img alt="../_images/Screenshot_104.png" src="../_images/Screenshot_104.png" />
+<img alt="../_images/Screenshot_10.png" src="../_images/Screenshot_10.png" />
 <p>And we pass the sign check, but the article is not found</p>
-<img alt="../_images/Screenshot_115.png" src="../_images/Screenshot_115.png" />
+<img alt="../_images/Screenshot_11.png" src="../_images/Screenshot_11.png" />
 <p>The idea seems like an sql problem, and if we need to pass it to sqlmap (because it was blindsql injection), we would need to automate our sign header with each request made</p>
 <p>So i made node server which will just set header Sign based on the request timeStamp, path, idParamter, and user_id = “1234”</p>
 <div class="highlight-nodejsrepl notranslate"><div class="highlight"><pre><span></span><span class="kd">const</span><span class="w"> </span><span class="nx">express</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;express&#39;</span><span class="p">);</span>
@@ -301,12 +301,12 @@ Content-Length: 58
 <p>So diagram be like this, from <a class="reference external" href="https://buer.haus/2024/01/16/reversing-and-tooling-a-signed-request-hash-in-obfuscated-javascript/">https://buer.haus/2024/01/16/reversing-and-tooling-a-signed-request-hash-in-obfuscated-javascript/</a></p>
 <img alt="../_images/diagram2-1024x741.png" src="../_images/diagram2-1024x741.png" />
 <p>Then load my plugin into burp</p>
-<img alt="../_images/Screenshot_124.png" src="../_images/Screenshot_124.png" />
+<img alt="../_images/Screenshot_12.png" src="../_images/Screenshot_12.png" />
 <p>Now i dont need to worry about the sign header, every change i make is automatically updated</p>
-<img alt="../_images/Screenshot_133.png" src="../_images/Screenshot_133.png" />
+<img alt="../_images/Screenshot_13.png" src="../_images/Screenshot_13.png" />
 <p>Now all that’s left is sqlmap with proxy to burp <cite>sqlmap -r sreq –proxy http://127.0.0.1:8080 -p “id”</cite></p>
 <p>and i dump the contents columns <code class="docutils literal notranslate"><span class="pre">sqlmap</span> <span class="pre">-r</span> <span class="pre">sreq</span> <span class="pre">--proxy</span> <span class="pre">http://127.0.0.1:8080</span> <span class="pre">-p</span> <span class="pre">&quot;id&quot;</span> <span class="pre">--dump</span> <span class="pre">-C</span> <span class="pre">contents</span> <span class="pre">-T</span> <span class="pre">article</span> <span class="pre">-D</span> <span class="pre">news</span> <span class="pre">--level=5</span> <span class="pre">--risk=3</span></code> and i find the flag</p>
-<img alt="../_images/Screenshot_641.png" src="../_images/Screenshot_641.png" />
+<img alt="../_images/Screenshot_64.png" src="../_images/Screenshot_64.png" />
 </section>
 
 

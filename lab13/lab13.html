@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Practical Malware Analysis - Lab 13 &mdash; abdelrahmn walkthrough 1 documentation</title>
+  <title>Practical Malware Analysis - Lab 13 &mdash; abdelrahman walkthrough 1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -13,14 +13,15 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=29a6c3e3"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Practical Malware Analysis - Lab 14" href="../lab14/lab14.html" />
     <link rel="prev" title="Practical Malware Analysis - Lab 12" href="../lab12/lab12.html" /> 
 </head>
 
@@ -33,7 +34,7 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            abdelrahmn walkthrough
+            abdelrahman walkthrough
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -59,6 +60,16 @@
 <li class="toctree-l2"><a class="reference internal" href="#lab-13-3">Lab 13-3</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../lab14/lab14.html">Practical Malware Analysis - Lab 14</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab15/lab15.html">Practical Malware Analysis - Lab 15</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab16/lab16.html">Practical Malware Analysis - Lab 16</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab17/lab17.html">Practical Malware Analysis - Lab 17</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab18/lab18.html">Practical Malware Analysis - Lab 18</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab19/lab19.html">Practical Malware Analysis - Lab 19</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal1/mal1.html">Princess Locker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal2/mal2.html">Blackcat Ransomware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal3/mal3.html">Agent tesla</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../SignedUrl/text.html">SignedUrl Hub</a></li>
 </ul>
 
         </div>
@@ -67,11 +78,11 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">abdelrahmn walkthrough</a>
+          <a href="../index.html">abdelrahman walkthrough</a>
       </nav>
 
       <div class="wy-nav-content">
-        <div class="rst-content">
+        <div class="rst-content style-external-links">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
@@ -86,82 +97,82 @@
            <div itemprop="articleBody">
              
   <section id="practical-malware-analysis-lab-13">
-<h1>Practical Malware Analysis - Lab 13<a class="headerlink" href="#practical-malware-analysis-lab-13" title="Permalink to this heading"></a></h1>
+<h1>Practical Malware Analysis - Lab 13<a class="headerlink" href="#practical-malware-analysis-lab-13" title="Link to this heading"></a></h1>
 <section id="lab-13-1">
-<h2>Lab 13-1<a class="headerlink" href="#lab-13-1" title="Permalink to this heading"></a></h2>
+<h2>Lab 13-1<a class="headerlink" href="#lab-13-1" title="Link to this heading"></a></h2>
 <p>Analyze the malware found in the file Lab13-01.exe.</p>
 <p><strong>Q1: Compare the strings in the malware (from the output of the strings command)
 with the information available via dynamic analysis. Based on this
 comparison, which elements might be encoded?</strong></p>
 <p>we see the Base64 stream 64 byte which indicates it may use Base64</p>
-<img alt="../_images/1q24.png" src="../_images/1q24.png" />
+<img alt="../_images/1q23.png" src="../_images/1q23.png" />
 <p>libraries to load resource maybe something is hiding the .rsrc section plus memory manipulation labraries like virtualalloc to allocate mem0ry in another process
 plus using internet we need to watch traffic at dynamic analysis ((with fakenet))</p>
-<img alt="../_images/1q112.png" src="../_images/1q112.png" />
-<img alt="../_images/1q34.png" src="../_images/1q34.png" />
+<img alt="../_images/1q12.png" src="../_images/1q12.png" />
+<img alt="../_images/1q33.png" src="../_images/1q33.png" />
 <p>running the malware we see two interesting keys from <a class="reference external" href="https://www.allthingsdfir.com/tracing-malicious-downloads/">https://www.allthingsdfir.com/tracing-malicious-downloads/</a>
 we can say the malware tried to download something from the internet</p>
-<img alt="../_images/1q43.png" src="../_images/1q43.png" />
+<img alt="../_images/1q42.png" src="../_images/1q42.png" />
 <p>maybe it will modify wow64cpu.dll in memory as it create a mapping for it</p>
-<img alt="../_images/Screenshot_1.png" src="../_images/Screenshot_1.png" />
+<img alt="../_images/Screenshot_14.png" src="../_images/Screenshot_14.png" />
 <p>didn’t find this file</p>
-<img alt="../_images/1q53.png" src="../_images/1q53.png" />
+<img alt="../_images/1q52.png" src="../_images/1q52.png" />
 <p>checking fakenet we requests to Practicalmalwareanalysis.com with path Base64 decoded <code class="docutils literal notranslate"><span class="pre">a2xhc2gtUEM=</span></code> which is my PC-Name
 also a request to pastebin page which is removed network</p>
-<img alt="../_images/1q63.png" src="../_images/1q63.png" />
+<img alt="../_images/1q62.png" src="../_images/1q62.png" />
 <p><strong>Q2: Use IDA Pro to look for potential encoding by searching for the string
 xor. What type of encoding do you find?</strong></p>
 <p>overview of the main fucntion it first call 401300 then initiate WSA for winsock.dll then calls 4011C9 and based on the return it will loop endlessly or finish
 we can infer that 401300 will gather data and encode then 4011C9 will call a request to the internet and if successful it will end the loop</p>
-<img alt="../_images/1q73.png" src="../_images/1q73.png" />
+<img alt="../_images/1q72.png" src="../_images/1q72.png" />
 <p>now by searching xor instruction we find xor with constant</p>
-<img alt="../_images/1q83.png" src="../_images/1q83.png" />
+<img alt="../_images/1q82.png" src="../_images/1q82.png" />
 <p>it is encoding an array and outputing in same array with simple xor 3Bh</p>
-<img alt="../_images/1q92.png" src="../_images/1q92.png" />
+<img alt="../_images/1q91.png" src="../_images/1q91.png" />
 <p><strong>Q3: What is the key used for encoding and what content does it encode?</strong></p>
 <p>key 3Bh and the array encoded is passed as arguemnt cross reference the function to see what is input
 | We see the resource is one being pushed</p>
-<img alt="../_images/1q102.png" src="../_images/1q102.png" />
+<img alt="../_images/1q101.png" src="../_images/1q101.png" />
 <p><strong>Q4: Use the static tools FindCrypt2, Krypto ANALyzer (KANAL), and the
 IDA Entropy Plugin to identify any other encoding mechanisms. What
 do you find?</strong></p>
 <p>As noticed from the floss output using KANAL from PEID we see Base64 is used (based on Base64 default table)</p>
-<img alt="../_images/1q113.png" src="../_images/1q113.png" />
+<img alt="../_images/1q111.png" src="../_images/1q111.png" />
 <p><strong>Q5: What type of encoding is used for a portion of the network traffic sent by
 the malware?</strong></p>
 <p>the Base64 table used here which seems like the function for indexing which char from the table corresponds to the encoded Base64</p>
 <img alt="../_images/1q121.png" src="../_images/1q121.png" />
 <p>cross reference 401000 routine above we find it is used here with str variable the one being encoded
 as v7 variable contains the string code which is input onto 401000 fucntion (as the first loop put the string into v7 in groups of three then pads with 0)</p>
-<img alt="../_images/1q131.png" src="../_images/1q131.png" />
+<img alt="../_images/1q13.png" src="../_images/1q13.png" />
 <p>it is sending the host name into the encoding function above</p>
-<img alt="../_images/1q141.png" src="../_images/1q141.png" />
+<img alt="../_images/1q14.png" src="../_images/1q14.png" />
 <p>then sends that data over the url and recieves the response if first character is o return true</p>
-<img alt="../_images/1q151.png" src="../_images/1q151.png" />
+<img alt="../_images/1q15.png" src="../_images/1q15.png" />
 <p><strong>Q6: Where is the Base64 function in the disassembly?</strong></p>
 <p>sub_4010B1(Destination, (int)v8);</p>
 <p><strong>Q7: What is the maximum length of the Base64-encoded data that is sent?
 What is encoded?</strong></p>
 <p>the Base64 used here we see it is grouping in 3 the input data then indexing then grouping in 4 the output data
 so for every 3 input we get 4 output and if input not divisble by 3 we pad 0 till it is</p>
-<img alt="../_images/1q161.png" src="../_images/1q161.png" />
+<img alt="../_images/1q16.png" src="../_images/1q16.png" />
 <p>then here it only copies 12 chars strncpy to input of encoding Base64 function which is divisble by 3
 so we can max length (12/3) *4 = 16 byte</p>
-<img alt="../_images/1q171.png" src="../_images/1q171.png" />
+<img alt="../_images/1q17.png" src="../_images/1q17.png" />
 <p><strong>Q8: In this malware, would you ever see the padding characters (= or ==) in
 the Base64-encoded data?</strong></p>
 <p>maybe if the host is not divisble by 3 so the routine above adds 0 to the input but it the host name has to be less than 12 characters</p>
 <p><strong>Q9: What does this malware do?</strong></p>
 <p>get the hostname Base64 encode send it to host in a loop till the response of the host first character is o</p>
-<img alt="../_images/1q181.png" src="../_images/1q181.png" />
-<img alt="../_images/1q151.png" src="../_images/1q151.png" />
+<img alt="../_images/1q18.png" src="../_images/1q18.png" />
+<img alt="../_images/1q15.png" src="../_images/1q15.png" />
 </section>
 <section id="lab-13-2">
-<h2>Lab 13-2<a class="headerlink" href="#lab-13-2" title="Permalink to this heading"></a></h2>
+<h2>Lab 13-2<a class="headerlink" href="#lab-13-2" title="Link to this heading"></a></h2>
 <p>Analyze the malware found in the file Lab13-02.exe.</p>
 <p><strong>Q1: Using dynamic analysis, determine what this malware creates.</strong></p>
 <p>Lots of files created with seemingly encoded data all same size</p>
-<img alt="../_images/2q113.png" src="../_images/2q113.png" />
+<img alt="../_images/2q112.png" src="../_images/2q112.png" />
 <p><strong>Q2: Use static techniques such as an xor search, FindCrypt2, KANAL, and the
 IDA Entropy Plugin to look for potential encoding. What do you find?</strong></p>
 <p>nothing found in KANAL, searching for xor we find a function using a lot of xor going there
@@ -169,30 +180,30 @@ it sounds like the encoding function we looking for</p>
 <img alt="../_images/2q24.png" src="../_images/2q24.png" />
 <p><strong>Q3: Based on your answer to question 1, which imported function would be a
 good prospect for finding the encoding functions?</strong></p>
-<img alt="../_images/2q33.png" src="../_images/2q33.png" />
+<img alt="../_images/2q32.png" src="../_images/2q32.png" />
 <p>then we can follow back from there to find what is written but i will start from main as it seems a simple application</p>
 <p><strong>Q4: Where is the encoding function in the disassembly?</strong></p>
 <p>we will start from main it sleeps then call a function then sleeps in a infinite loop</p>
-<img alt="../_images/2q43.png" src="../_images/2q43.png" />
+<img alt="../_images/2q42.png" src="../_images/2q42.png" />
 <div class="line-block">
 <div class="line">Into that function, first we see at the end, arguemnts pushed to the fucntion 401000 filename, numberOfByeToWrite and buffer</div>
 </div>
 <div class="line-block">
 <div class="line">so 401000 is the one to create files</div>
 </div>
-<img alt="../_images/2q52.png" src="../_images/2q52.png" />
+<img alt="../_images/2q51.png" src="../_images/2q51.png" />
 <p>the first function seems to calls The GetDC function `` retrieves a handle to a device context (DC) for the client area of a specified window which is the desktop window``
 creates a bitmap for it, stores it inside structure (take a screenshot)</p>
-<img alt="../_images/2q63.png" src="../_images/2q63.png" />
+<img alt="../_images/2q62.png" src="../_images/2q62.png" />
 <p>in the second function, it recieves the structure which is calling the function encoding from question 2</p>
-<img alt="../_images/2q73.png" src="../_images/2q73.png" />
+<img alt="../_images/2q72.png" src="../_images/2q72.png" />
 <p><strong>Q5: Trace from the encoding function to the source of the encoded content.
 What is the content?</strong></p>
 <p>answered above, bitmap of desktop window</p>
 <p><strong>Q6: Can you find the algorithm used for encoding? If not, how can you
 decode the content?</strong></p>
 <p>it is kinda hard to know</p>
-<img alt="../_images/2q83.png" src="../_images/2q83.png" />
+<img alt="../_images/2q82.png" src="../_images/2q82.png" />
 <p>but since we expecting it to be xor based we will using ollydbg  by following same example in the chapter
 | We set a breakpoint before the encoding function call at 401880 and before the writefile function call 4018B8
 | then replace the data in the stack in encoding function with one of the files dumped</p>
@@ -200,7 +211,7 @@ decode the content?</strong></p>
 <p>we’ve hit the encoder function, then follow in dump the top of the stack</p>
 <img alt="../_images/2q131.png" src="../_images/2q131.png" />
 <p>Opening one of the files in 010 editor and dump all hex values</p>
-<img alt="../_images/2q114.png" src="../_images/2q114.png" />
+<img alt="../_images/2q113.png" src="../_images/2q113.png" />
 <p>pasting our hex in the mem0ry block</p>
 <img alt="../_images/2q122.png" src="../_images/2q122.png" />
 <p>complete the execution till new file created add .bmp extension as the file starts with bm magic bytes
@@ -230,7 +241,7 @@ encoded files?</strong></p>
 </div>
 </section>
 <section id="lab-13-3">
-<h2>Lab 13-3<a class="headerlink" href="#lab-13-3" title="Permalink to this heading"></a></h2>
+<h2>Lab 13-3<a class="headerlink" href="#lab-13-3" title="Link to this heading"></a></h2>
 <p>Analyze the malware found in the file Lab13-03.exe.</p>
 <p><strong>Q1: Compare the output of strings with the information available via
 dynamic analysis. Based on this comparison, which elements might
@@ -313,6 +324,7 @@ the stdout pipe.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../lab12/lab12.html" class="btn btn-neutral float-left" title="Practical Malware Analysis - Lab 12" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../lab14/lab14.html" class="btn btn-neutral float-right" title="Practical Malware Analysis - Lab 14" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

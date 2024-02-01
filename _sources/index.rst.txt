@@ -3,10 +3,11 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to my PMA walkthrough! LinkedIn:https://www.linkedin.com/in/abdelrahman-abouelsherbini-051582241/
+Welcome to my blog! LinkedIn:https://www.linkedin.com/in/abdelrahman-abouelsherbini-051582241/
 =========================================================================================================
 
 .. toctree::
+   :maxdepth: 1
 
    lab1/lab1
    lab3/lab3
@@ -27,7 +28,8 @@ Welcome to my PMA walkthrough! LinkedIn:https://www.linkedin.com/in/abdelrahman-
    mal1/mal1
    mal2/mal2
    mal3/mal3
-   SignedUrl/text.rst
+   SignedUrl/text
+   mal4/mal4
 
 Indices and tables
 ==================

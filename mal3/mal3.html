@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Agent tesla &mdash; abdelrahmn walkthrough 1 documentation</title>
+  <title>Agent tesla &mdash; abdelrahman walkthrough 1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -13,14 +13,15 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=29a6c3e3"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="SignedUrl Hub" href="../SignedUrl/text.html" />
     <link rel="prev" title="Blackcat Ransomware" href="../mal2/mal2.html" /> 
 </head>
 
@@ -33,7 +34,7 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            abdelrahmn walkthrough
+            abdelrahman walkthrough
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -63,6 +64,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../mal1/mal1.html">Princess Locker</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../mal2/mal2.html">Blackcat Ransomware</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Agent tesla</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../SignedUrl/text.html">SignedUrl Hub</a></li>
 </ul>
 
         </div>
@@ -71,11 +73,11 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">abdelrahmn walkthrough</a>
+          <a href="../index.html">abdelrahman walkthrough</a>
       </nav>
 
       <div class="wy-nav-content">
-        <div class="rst-content">
+        <div class="rst-content style-external-links">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
@@ -90,7 +92,7 @@
            <div itemprop="articleBody">
              
   <section id="agent-tesla">
-<h1>Agent tesla<a class="headerlink" href="#agent-tesla" title="Permalink to this heading"></a></h1>
+<h1>Agent tesla<a class="headerlink" href="#agent-tesla" title="Link to this heading"></a></h1>
 <p>I got a sample compressed with Zpaq, Original article <a class="reference external" href="https://isc.sans.edu/diary/rss/30366">https://isc.sans.edu/diary/rss/30366</a></p>
 <p>SHA256:1c33eef0d22dc54bb2a41af485070612cd4579529e31b63be2141c4be9183eb6</p>
 <p>decompress it with <a class="reference external" href="https://peazip.github.io">https://peazip.github.io</a></p>
@@ -101,7 +103,7 @@
 <p>Also Pstudio tells us there is overlay of zeroes starting at 2200 offset</p>
 <img alt="../_images/Screenshot_313.png" src="../_images/Screenshot_313.png" />
 <p>As it is slowing every tool i open the exe with, i will just delete the extra zeroes with HxD</p>
-<img alt="../_images/Screenshot_410.png" src="../_images/Screenshot_410.png" />
+<img alt="../_images/Screenshot_412.png" src="../_images/Screenshot_412.png" />
 <p>We see base64 is used and some encryption/decryption libraries and there is a url likely will grab that file and decode it
 <a class="reference external" href="https://www.mediafire.com/file/vgvujtm9ke2lj1c/Gnwwcgocwzl.wav/file">https://www.mediafire.com/file/vgvujtm9ke2lj1c/Gnwwcgocwzl.wav/file</a> the file is no longer there</p>
 <img alt="../_images/Screenshot_53.png" src="../_images/Screenshot_53.png" />
@@ -112,12 +114,12 @@
 <p>Going into <code class="docutils literal notranslate"><span class="pre">Fwefji</span></code> function it loads assembly piusrhg
 <code class="docutils literal notranslate"><span class="pre">An</span> <span class="pre">assembly</span> <span class="pre">is</span> <span class="pre">a</span> <span class="pre">C#</span> <span class="pre">code</span> <span class="pre">library</span> <span class="pre">that</span> <span class="pre">contains</span> <span class="pre">the</span> <span class="pre">compiled</span> <span class="pre">classes</span> <span class="pre">and</span> <span class="pre">structs</span></code>
 Then it gets class Wzyys.Rutvtxx and invokes Gwjgucx member in it</p>
-<img alt="../_images/Screenshot_83.png" src="../_images/Screenshot_83.png" />
+<img alt="../_images/Screenshot_84.png" src="../_images/Screenshot_84.png" />
 <p>looking at piusrhg, it uses TDES with IV, KEY in base64 to decrypt a stream from Mheurfg()
 example for TDES <a class="reference external" href="https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.tripledes?view=net-8.0">https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.tripledes?view=net-8.0</a></p>
 <img alt="../_images/Screenshot_93.png" src="../_images/Screenshot_93.png" />
 <p>and in Mheurfg, it load the wav file, so the wav file is the main exe file</p>
-<img alt="../_images/Screenshot_103.png" src="../_images/Screenshot_103.png" />
+<img alt="../_images/Screenshot_104.png" src="../_images/Screenshot_104.png" />
 <p>wav file SHA256:c2c466e178b39577912c9ce989cf8a975c574d5febe15ae11a91bbb985ca8d2e
 using cyberchef https://cyberchef.org/#recipe=Triple_DES_Decrypt(%7B’option’:’Base64’,’string’:’CKqBjjdLDj8Kh5nq3QvdzA%3D%3D’%7D,%7B’option’:’Base64’,’string’:’hhxBFpSfWfI%3D’%7D,’CBC’,’Raw’,’Raw’)
 We get the exe file decrypted with IV and KEY we saw above</p>
@@ -125,13 +127,13 @@ We get the exe file decrypted with IV and KEY we saw above</p>
 <p>it is also a 32 bit .Net file SHA256:04F896084F8CF79A1233DEC43FA215CB1A21641B2EED24CB31F65BD2023F13DC</p>
 <img alt="../_images/Screenshot_123.png" src="../_images/Screenshot_123.png" />
 <p>the file name is Wzyys.dll which was invoked above plus there is a huge resource</p>
-<img alt="../_images/Screenshot_132.png" src="../_images/Screenshot_132.png" />
+<img alt="../_images/Screenshot_133.png" src="../_images/Screenshot_133.png" />
 <p>Can’t read the methods so will pass it to de4dot to clean</p>
-<img alt="../_images/Screenshot_142.png" src="../_images/Screenshot_142.png" />
+<img alt="../_images/Screenshot_143.png" src="../_images/Screenshot_143.png" />
 <p>now it is much better, also remember in the caller file, it called Wzyys.Rutvtxx class invoking Gwjgucx() member</p>
-<img alt="../_images/Screenshot_152.png" src="../_images/Screenshot_152.png" />
+<img alt="../_images/Screenshot_153.png" src="../_images/Screenshot_153.png" />
 <p>To invoke the dll and step through the program, we use powershell [Reflection.Assembly]::LoadFile command and invoke the member used with attaching dnspy to powershell</p>
-<img alt="../_images/Screenshot_162.png" src="../_images/Screenshot_162.png" />
+<img alt="../_images/Screenshot_163.png" src="../_images/Screenshot_163.png" />
 <img alt="../_images/Screenshot_172.png" src="../_images/Screenshot_172.png" />
 <p>we hit our breakpoint</p>
 <img alt="../_images/Screenshot_182.png" src="../_images/Screenshot_182.png" />
@@ -139,7 +141,7 @@ We get the exe file decrypted with IV and KEY we saw above</p>
 <img alt="../_images/Screenshot_192.png" src="../_images/Screenshot_192.png" />
 <p>Second invoke Class3.smethod_112 containes some hidden strings, stepping into to see them we find it is <code class="docutils literal notranslate"><span class="pre">cmd</span> <span class="pre">/c</span> <span class="pre">ipconfig</span> <span class="pre">/release</span></code></p>
 <img alt="../_images/Screenshot_214.png" src="../_images/Screenshot_214.png" />
-<img alt="../_images/Screenshot_222.png" src="../_images/Screenshot_222.png" />
+<img alt="../_images/Screenshot_223.png" src="../_images/Screenshot_223.png" />
 <p>Third invoke Class3.smethod_89(); creates a mutex</p>
 <img alt="../_images/Screenshot_242.png" src="../_images/Screenshot_242.png" />
 <p>Fourth invoke Class3.smethod_105, can’t step into it gives me this error</p>
@@ -155,7 +157,7 @@ We get the exe file decrypted with IV and KEY we saw above</p>
 <img alt="../_images/Screenshot_301.png" src="../_images/Screenshot_301.png" />
 <p>Class3.smethod_61 is persistent invoke that puts vbs script in run registry</p>
 <img alt="../_images/Screenshot_314.png" src="../_images/Screenshot_314.png" />
-<img alt="../_images/Screenshot_322.png" src="../_images/Screenshot_322.png" />
+<img alt="../_images/Screenshot_323.png" src="../_images/Screenshot_323.png" />
 <p>Class3.smethod_26 prepares for process injection for explorer</p>
 <img alt="../_images/Screenshot_332.png" src="../_images/Screenshot_332.png" />
 <img alt="../_images/Screenshot_342.png" src="../_images/Screenshot_342.png" />
@@ -173,7 +175,7 @@ Which was the same result i got later from Dnspy when i reached [[ns8.class18]]:
 <img alt="../_images/Screenshot_401.png" src="../_images/Screenshot_401.png" />
 <p>The new file SHA256:45DC4518FBF43BF4611446159F72CDBC37641707BB924BD2A52644A3AF5BAB76
 and It is also .Net 32 bit</p>
-<img alt="../_images/Screenshot_412.png" src="../_images/Screenshot_412.png" />
+<img alt="../_images/Screenshot_413.png" src="../_images/Screenshot_413.png" />
 <p>It containes the typical bad libraries keylogger(Used GetforegroundWindow and SetWindowsHook) , Process injection, web request , registry</p>
 <img alt="../_images/Screenshot_431.png" src="../_images/Screenshot_431.png" />
 <img alt="../_images/Screenshot_421.png" src="../_images/Screenshot_421.png" />
@@ -192,7 +194,7 @@ and It is also .Net 32 bit</p>
 <p>going with those options as true, to reduce the mess deobfuscation does as first pass , then just pass the malware again to the tool as final step</p>
 <img alt="../_images/Screenshot_501.png" src="../_images/Screenshot_501.png" />
 <p>Now the configuration is clear</p>
-<img alt="../_images/Screenshot_511.png" src="../_images/Screenshot_511.png" />
+<img alt="../_images/Screenshot_512.png" src="../_images/Screenshot_512.png" />
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">public</span> <span class="n">static</span> <span class="n">string</span> <span class="n">PcHwid</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
 
 <span class="o">//</span> <span class="n">Token</span><span class="p">:</span> <span class="mh">0x04000006</span> <span class="n">RID</span><span class="p">:</span> <span class="mi">6</span>
@@ -290,6 +292,7 @@ and It is also .Net 32 bit</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../mal2/mal2.html" class="btn btn-neutral float-left" title="Blackcat Ransomware" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../SignedUrl/text.html" class="btn btn-neutral float-right" title="SignedUrl Hub" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

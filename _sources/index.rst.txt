@@ -26,10 +26,10 @@ Welcome to my blog! LinkedIn:https://www.linkedin.com/in/abdelrahman-abouelsherb
    lab18/lab18
    lab19/lab19
    mal1/mal1
-   mal2/blackcat
-   mal3/AgenTesla
+   mal2/mal2
+   mal3/mal3
    SignedUrl/text
-   mal4/vidar
+   mal4/mal4
 
 Indices and tables
 ==================

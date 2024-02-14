@@ -1,0 +1,177 @@
+0xLaugh Rev Challenges
+===================================
+
+nano
+-----
+
+nano is an elf 64bit file so we will use linux with ida in analyzing it 
+
+It comes with simple antidisassembly as discussed in PMA lab15 we can replace the bytes from 134E to 1352 with NOPs 
+replace 74 03 75 01 E8 with 90's
+
+.. image:: Screenshot_1.png
+
+.. code-block:: python3
+
+    fixed= open("nano", "rb").read().replace(b"\x74\x03\x75\x01\xe8", b"\x90\x90\x90\x90\x90")
+    open("cleaned_nano","wb").write(fixed)
+
+first is a cheesy check function 
+
+.. image:: Screenshot_2.png
+
+it is XOR and we are given key and flag and if we xor we get the flag?
+
+.. image:: Screenshot_4.png
+
+No we get watch a rickroll video 
+
+.. image:: Screenshot_5.png
+
+Looking again at ida we see it attempts to read from address zero with gives SIGSEGV (segmentation fault)
+
+.. image:: Screenshot_6.png
+
+Which we get when we run gdb-peda with breaking at check function `break check`
+
+.. image:: Screenshot_7.png
+
+Looking at ida, note that the check happens in a child process 
+
+.. image:: Screenshot_8.png
+
+And the parent process catches that exception using waitpid status loc, if there is error break and if child exited with specific status do the following
+The status is WTERMSIG(status) which checks SEGSEGV from `here <https://linux.die.net/man/2/waitpid>`_ 
+
+.. image:: Screenshot_9.png
+
+it calculates some values (note pid[1] is just zero) the calls a ptrace syscall which has ability to trace a pid and get registers and set registers 
+
+.. image:: Screenshot_10.png
+
+.. image:: Screenshot_11.png
+
+following same or'ed value in ptrace calls we see the value is set r12
+
+.. image:: Screenshot_12.png
+
+.. image:: Screenshot_13.png
+
+Which is the register that contains our KEY, so we write a python script to replicate the replacing of KEY bytes then xor it with the FLAG
+
+.. code-block:: python3
+
+    import pwn
+
+    key=""
+    flag = "0C 5C 60 20 69 63 64 0F 4F 1E 33 3A 68 2A 7C D9 D5 D0 C9 E7 C3 F0 BC AB 9B D7 98 8B AF B0 F8 47 49 16 49 68"
+
+    for i in range(1,37):
+
+        v9 = (i>>5)|(8*i)^0xCA
+        v9 ^=0xFE
+        v9 &=0xFF #to constrain for 8 bit
+        key =key +format(int(str(hex(v9))[2:],16),"02X") + " "
+    print(pwn.xor(bytes.fromhex(key),bytes.fromhex(flag)))
+
+.. image:: Screenshot_15.png
+
+easy login
+----------
+
+We are given two files, both are elf 64bit 
+
+.. image:: Screenshot_16.png
+
+in the easy login binary we get user pass token 
+
+.. image:: Screenshot_17.png
+
+so we check the other binary
+
+.. image:: Screenshot_18.png
+
+| In ida we see set our goal to get final `Correct tokan!`
+| So first we see the first token part (v4) and fixed byte array is passed to sub 1159 which changes it 
+| Then check token parts to if ( v4 == 4068142527 && v5 == 3976246892 )
+
+.. image:: Screenshot_19.png
+
+inside the function is bunch of calcs then set in our first token part, so we reverse the process with final value being if ( v4 == 4068142527 && v5 == 3976246892 )
+
+.. image:: Screenshot_20.png
+
+.. code-block:: c++
+
+    #include <stdio.h>
+
+    unsigned int reverse_sub_6519F8FD0159(unsigned int *a1, unsigned int *a2) {
+        unsigned int v4 = 3337565984;
+        int i;
+
+        printf("%u",a1[1]);
+        for (i = 31; i >= 0; --i) {
+            a1[1] -= ((*a1 >> 5) + a2[3]) ^ (*a1 + v4) ^ (16 * *a1 + a2[2]);
+            v4 += 1640531527;
+            *a1 -= (a1[1] + v4) ^ (16 * a1[1] + *a2) ^ ((a1[1] >> 5) + a2[1]);
+        }
+
+        return *a1;
+    }
+
+    int main() {
+        unsigned int v4 = 3337565984;
+        unsigned int v5 = 0xED00B66C;  
+
+        unsigned int a1 = 0xF27AEDBF;
+        unsigned int a2[] = {19088743, 2309737967, 4275878552, 1985229328};
+
+        v4 = reverse_sub_6519F8FD0159(&a1, a2);
+
+        puts("Token generation result:");
+        printf("%u_%u\n", v4 , v5 ); 
+
+        return 0;
+    }
+
+| Now we got the token we still need the user and pass, back to easy login binary
+| we get this code, where the user isn't used, and the pass and token are passed to function then onto second function which base64
+
+.. image:: Screenshot_21.png
+
+Which is then compared to `pDG/SbSehGM2l16sRzFmxRDZNCti2PNXzY9Z`
+
+.. image:: Screenshot_23.png
+
+.. image:: Screenshot_22.png
+
+opening the first function used we see it is a typical RC4
+To recognize RC4 use tools like capa ,sigsrch or its pattern as following:-
+
+| There’s usually 3 loops
+| 2x 0x100 iterations: one filling the buffer with values from 0 to ff
+| One going over the array swapping values
+| And a 3rd producing the keystream
+| It is a very recognisable pattern
+
+.. image:: Screenshot_24.png
+
+.. image:: Screenshot_25.png
+
+then we use the token as rc4 key and we get the flag
+
+.. image:: Screenshot_26.png
+
+
+
+
+
+
+
+
+
+
+
+
+
+

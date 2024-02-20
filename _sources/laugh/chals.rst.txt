@@ -1,5 +1,5 @@
 0xLaugh Rev Challenges
-===================================
+=======================
 
 nano
 -----
@@ -41,7 +41,7 @@ Looking at ida, note that the check happens in a child process
 .. image:: Screenshot_8.png
 
 And the parent process catches that exception using waitpid status loc, if there is error break and if child exited with specific status do the following
-The status is WTERMSIG(status) which checks SEGSEGV from `here <https://linux.die.net/man/2/waitpid>`_ 
+The status is WTERMSIG(status) which checks SEGSEGV from `check2 <https://linux.die.net/man/2/waitpid>`_ 
 
 .. image:: Screenshot_9.png
 
@@ -161,6 +161,199 @@ To recognize RC4 use tools like capa ,sigsrch or its pattern as following:-
 then we use the token as rc4 key and we get the flag
 
 .. image:: Screenshot_26.png
+
+.. image:: Screenshot_27.png
+
+dance
+------
+
+It also has antidisassembly so we will use same code 
+
+.. code-block:: python3
+
+    fixed= open("dance", "rb").read().replace(b"\x74\x03\x75\x01\xe8", b"\x90\x90\x90\x90\x90")
+    open("cleaned_dance","wb").write(fixed)
+
+it will pass our argument (flag) to function sub_13C7 to a child process with the parent ready to handle exception with ptrace, another nanomite
+
+.. image:: Screenshot_29.png
+
+there is a lot of functions, so running capa we find crc32 is used at 2511
+
+.. image:: Screenshot_30.png
+
+.. image:: Screenshot_31.png
+
+going into 13C7 we first need to fix ptrace argument to know where it set regs using ida enum
+
+.. image:: Screenshot_32.png
+
+and where it is setting registers
+
+.. image:: Screenshot_33.png
+
+| another fork, in the child starts with ptrace traceme we can expect exception handling here 
+| So what happens here is , it creates a file descriptor then passes "Hello, that is one key for you.." and `nice_move_:)` to sub_23FA which then passed to sub_246D through v3
+
+.. image:: Screenshot_34.png
+
+Going into sub_246D, its chacha! (i used chatgpt here to recoginze the algorithm xD)
+
+.. image:: Screenshot_35.png
+
+googling its implementation `check <https://github.com/Cool-Cole/ChaCha/blob/main/src/main.c>`_ 
+
+| we see it is first initialized with key 2nd arg , nonce 3rd arg
+
+.. code-block:: c
+    
+    ChaChaInitialize(&chaInfo, key, nonce, &counter, NUMROUNDS);
+
+Then call the encryption/decryption
+
+.. code-block:: c
+
+    ChaChaEncrypt(&chaInfo, plainBufferLen, buffer);
+
+and we got the clear picture 
+
+.. image:: Screenshot_36.png
+
+Going to 50C0 address and getting the data
+
+.. image:: Screenshot_37.png
+
+and we get an elf file
+
+.. image:: Screenshot_38.png
+
+the elf file contains a lot of cc (int 3 ) which will cause sigtrap and that where the ptrace comes in from the parent
+
+.. image:: Screenshot_39.png
+
+back to the parent, we get this beutiful code where it waits for the exception cc to happen
+
+.. image:: Screenshot_40.png
+
+lets dissect it, first check v19 & v18 and function sub_1255 with passed third argument bunch of cc
+
+.. image:: Screenshot_42.png
+
+| checking sub_1255, we see it uses PTRACE_POKEDATA which from `check_here <https://man7.org/linux/man-pages/man2/ptrace.2.html>`_ `Copy the word data to the address addr in the tracee's memory.` 
+| So in the loop it starts from address a2 which is v18 that was passed till a4 which is v19 and writes bunch of CC's 
+
+.. image:: Screenshot_43.png
+
+| we can infer that this is a write to pid function that write data from given address to another address, it is overwriting the previous address with CC's
+| it is antidebugging technique so we can't dump the written data it is overwriting instructions as it goes
+
+.. image:: Screenshot_44.png
+
+Then it calls ptrace with GETREGS then calls crc32 
+
+.. image:: Screenshot_45.png
+
+| we need to calculate what is gotten with ptrace, so the ptrace GETREGS call last argument is a registery structure
+
+.. code-block:: c
+
+    ptrace(PTRACE_GETREGS, child, NULL, &regs);
+
+| we get its address relative to stack in assembly 
+
+.. image:: Screenshot_46.png
+
+| The RVA to rbp of registry structure is  544, then after the call to ptrace it get rbp-416
+| the differene is 544-416=128, and each value is 8 byte (64 bit), 128/8 =16,  so it got the registery at offset 16
+| to get what resides at that offset run .. code-block:: c
+    
+    cat /usr/include/x86_64-linux-gnu/sys/reg.h
+
+and we get the rip registery
+
+.. image:: Screenshot_47.png
+
+| Now we can get the full picture, it gets the rip where the exception happened masks it with 0xFFF, runs crc32 to it 
+| Then the index starting from 0 , the loop will search for the correct index, then write data using that index offset from 88A0 , with size (last argument) into where the rip points to 
+
+.. image:: Screenshot_48.png
+
+set 88A0 type to `unsigned __int8[16512]` to fix the indexing, also fixing my mistake of curr_address to size 
+
+.. image:: Screenshot_49.png
+
+| To understand the 88A0 structure, if we set some_index to zero from `v14 != *(_DWORD *)&byte_88A0[24 * some_index]` ,
+| we get that v14 (crc32(rip)) is first element in 88A0 structure, and we get its size is 4 bytes from this `writeToPID(pid, rip_reg - 1, &byte_88A0[24 * some_index + 5], byte_88A0[24 * some_index + 4]);` As next element is after 4 bytes then after 5 bytes
+| so The size to be written is at after 4 bytes and to be written is after 5 bytes
+
+.. image:: Screenshot_50.png
+
+so 41 57 is an instruction which is push r15
+
+.. image:: Screenshot_51.png
+
+we got all data we need, we just need to write code to get this 88A0 fixes the order of instructions and replace those with the CC's in the elf file we got
+
+.. code-block:: python3
+
+    import struct
+    import io
+    from zlib import crc32
+    from pwn import u64, p32
+
+
+    file= open("cleaned_dance", "rb")
+    file.seek(0x78a0)
+    crc_table = {}
+    table_88a0 = {}
+
+    for i in range(0xfff+1):
+            crc_table[crc32(p32(i))] = i
+            #>>> p32(5)
+            # b'\x05\x00\x00\x00'
+
+
+
+    while 1:
+        
+
+        # "<" indicates little-endian byte order. This means the least significant byte is stored first in memory.
+        # I represents an unsigned integer of 4 bytes.
+        # B represents an unsigned char of 1 byte.
+        # 19B represents 19 unsigned chars (each of 1 byte)
+        # intotal 24 where each part is 24 bytes &byte_88A0[24 * some_index + 5]
+        code =struct.unpack("<IB19B",file.read(24)) 
+        # print(code)
+        crc = code[0]
+        size = code[1]
+        insn = bytes(code[2:])  
+        
+        if crc == 0 and size ==0:
+            break
+        
+        table_88a0[crc_table[crc]] = insn[:size]
+        
+    elffile=open("out.elf","rb").read() #from cyberchef
+    elf_fp = io.BytesIO(elffile)
+    for addr,insns in table_88a0.items():
+        elf_fp.seek(0x1000+addr)
+        elf_fp.write(insns)
+    open("out2.elf","wb").write(elf_fp.getvalue())
+
+
+Then we see the flag is passed to the generated binary with calling the function dance_with_me 
+
+.. image:: Screenshot_52.png
+
+opening the new binary in ida to dance_with_me function we see another chacha used 
+
+.. image:: Screenshot_53.png
+
+Decrypting wih chacha in cyberchef
+
+https://gchq.github.io/CyberChef/#recipe=From_Hex('Auto'/disabled)ChaCha(%7B'option':'Hex','string':'6C7BB1EE0A4C479DEDD75BBCD243DD401DB277B8356E594BF86326D7E250EDDB'%7D,%7B'option':'Hex','string':'96BFEBCA8E7CFBBCD972A853'%7D,0,'20','Hex','Hex')From_Hex('Auto')&input=QjdFMDVERTg2NkFFQUU2QUQ5MEYzQTU3NTdDQkI3N0JGRTQ2OUEwQUY4MkZGODYzNUM1RUJDOEJGNjc0RjU2NjYxOTdGMTExQzU2OTZDRDVEQkREMjAyNDM2OEE2QzJG
+
+.. image:: Screenshot_54.png
 
 
 

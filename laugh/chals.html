@@ -68,6 +68,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">0xLaugh Rev Challenges</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#nano">nano</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#easy-login">easy login</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dance">dance</a></li>
 </ul>
 </li>
 </ul>
@@ -121,7 +122,7 @@ replace 74 03 75 01 E8 with 90’s</p>
 <p>Looking at ida, note that the check happens in a child process</p>
 <img alt="../_images/Screenshot_86.png" src="../_images/Screenshot_86.png" />
 <p>And the parent process catches that exception using waitpid status loc, if there is error break and if child exited with specific status do the following
-The status is WTERMSIG(status) which checks SEGSEGV from <a class="reference external" href="https://linux.die.net/man/2/waitpid">here</a></p>
+The status is WTERMSIG(status) which checks SEGSEGV from <a class="reference external" href="https://linux.die.net/man/2/waitpid">check2</a></p>
 <img alt="../_images/Screenshot_95.png" src="../_images/Screenshot_95.png" />
 <p>it calculates some values (note pid[1] is just zero) the calls a ptrace syscall which has ability to trace a pid and get registers and set registers</p>
 <img alt="../_images/Screenshot_106.png" src="../_images/Screenshot_106.png" />
@@ -215,6 +216,154 @@ To recognize RC4 use tools like capa ,sigsrch or its pattern as following:-</p>
 <img alt="../_images/Screenshot_253.png" src="../_images/Screenshot_253.png" />
 <p>then we use the token as rc4 key and we get the flag</p>
 <img alt="../_images/Screenshot_263.png" src="../_images/Screenshot_263.png" />
+<img alt="../_images/Screenshot_273.png" src="../_images/Screenshot_273.png" />
+</section>
+<section id="dance">
+<h2>dance<a class="headerlink" href="#dance" title="Link to this heading"></a></h2>
+<p>It also has antidisassembly so we will use same code</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">fixed</span><span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;dance&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x74\x03\x75\x01\xe8</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x90\x90\x90\x90\x90</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">open</span><span class="p">(</span><span class="s2">&quot;cleaned_dance&quot;</span><span class="p">,</span><span class="s2">&quot;wb&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fixed</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>it will pass our argument (flag) to function sub_13C7 to a child process with the parent ready to handle exception with ptrace, another nanomite</p>
+<img alt="../_images/Screenshot_293.png" src="../_images/Screenshot_293.png" />
+<p>there is a lot of functions, so running capa we find crc32 is used at 2511</p>
+<img alt="../_images/Screenshot_303.png" src="../_images/Screenshot_303.png" />
+<img alt="../_images/Screenshot_317.png" src="../_images/Screenshot_317.png" />
+<p>going into 13C7 we first need to fix ptrace argument to know where it set regs using ida enum</p>
+<img alt="../_images/Screenshot_325.png" src="../_images/Screenshot_325.png" />
+<p>and where it is setting registers</p>
+<img alt="../_images/Screenshot_334.png" src="../_images/Screenshot_334.png" />
+<div class="line-block">
+<div class="line">another fork, in the child starts with ptrace traceme we can expect exception handling here</div>
+<div class="line">So what happens here is , it creates a file descriptor then passes “Hello, that is one key for you..” and <cite>nice_move_:)</cite> to sub_23FA which then passed to sub_246D through v3</div>
+</div>
+<img alt="../_images/Screenshot_344.png" src="../_images/Screenshot_344.png" />
+<p>Going into sub_246D, its chacha! (i used chatgpt here to recoginze the algorithm xD)</p>
+<img alt="../_images/Screenshot_354.png" src="../_images/Screenshot_354.png" />
+<p>googling its implementation <a class="reference external" href="https://github.com/Cool-Cole/ChaCha/blob/main/src/main.c">check</a></p>
+<div class="line-block">
+<div class="line">we see it is first initialized with key 2nd arg , nonce 3rd arg</div>
+</div>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">ChaChaInitialize</span><span class="p">(</span><span class="o">&amp;</span><span class="n">chaInfo</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">nonce</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">counter</span><span class="p">,</span><span class="w"> </span><span class="n">NUMROUNDS</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Then call the encryption/decryption</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">ChaChaEncrypt</span><span class="p">(</span><span class="o">&amp;</span><span class="n">chaInfo</span><span class="p">,</span><span class="w"> </span><span class="n">plainBufferLen</span><span class="p">,</span><span class="w"> </span><span class="n">buffer</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>and we got the clear picture</p>
+<img alt="../_images/Screenshot_364.png" src="../_images/Screenshot_364.png" />
+<p>Going to 50C0 address and getting the data</p>
+<img alt="../_images/Screenshot_374.png" src="../_images/Screenshot_374.png" />
+<p>and we get an elf file</p>
+<img alt="../_images/Screenshot_384.png" src="../_images/Screenshot_384.png" />
+<p>the elf file contains a lot of cc (int 3 ) which will cause sigtrap and that where the ptrace comes in from the parent</p>
+<img alt="../_images/Screenshot_394.png" src="../_images/Screenshot_394.png" />
+<p>back to the parent, we get this beutiful code where it waits for the exception cc to happen</p>
+<img alt="../_images/Screenshot_403.png" src="../_images/Screenshot_403.png" />
+<p>lets dissect it, first check v19 &amp; v18 and function sub_1255 with passed third argument bunch of cc</p>
+<img alt="../_images/Screenshot_423.png" src="../_images/Screenshot_423.png" />
+<div class="line-block">
+<div class="line">checking sub_1255, we see it uses PTRACE_POKEDATA which from <a class="reference external" href="https://man7.org/linux/man-pages/man2/ptrace.2.html">check_here</a> <cite>Copy the word data to the address addr in the tracee’s memory.</cite></div>
+<div class="line">So in the loop it starts from address a2 which is v18 that was passed till a4 which is v19 and writes bunch of CC’s</div>
+</div>
+<img alt="../_images/Screenshot_433.png" src="../_images/Screenshot_433.png" />
+<div class="line-block">
+<div class="line">we can infer that this is a write to pid function that write data from given address to another address, it is overwriting the previous address with CC’s</div>
+<div class="line">it is antidebugging technique so we can’t dump the written data it is overwriting instructions as it goes</div>
+</div>
+<img alt="../_images/Screenshot_443.png" src="../_images/Screenshot_443.png" />
+<p>Then it calls ptrace with GETREGS then calls crc32</p>
+<img alt="../_images/Screenshot_453.png" src="../_images/Screenshot_453.png" />
+<div class="line-block">
+<div class="line">we need to calculate what is gotten with ptrace, so the ptrace GETREGS call last argument is a registery structure</div>
+</div>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">ptrace</span><span class="p">(</span><span class="n">PTRACE_GETREGS</span><span class="p">,</span><span class="w"> </span><span class="n">child</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">regs</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">we get its address relative to stack in assembly</div>
+</div>
+<img alt="../_images/Screenshot_463.png" src="../_images/Screenshot_463.png" />
+<div class="line-block">
+<div class="line">The RVA to rbp of registry structure is  544, then after the call to ptrace it get rbp-416</div>
+<div class="line">the differene is 544-416=128, and each value is 8 byte (64 bit), 128/8 =16,  so it got the registery at offset 16</div>
+<div class="line">to get what resides at that offset run .. code-block:: c</div>
+</div>
+<blockquote>
+<div><p>cat /usr/include/x86_64-linux-gnu/sys/reg.h</p>
+</div></blockquote>
+<p>and we get the rip registery</p>
+<img alt="../_images/Screenshot_473.png" src="../_images/Screenshot_473.png" />
+<div class="line-block">
+<div class="line">Now we can get the full picture, it gets the rip where the exception happened masks it with 0xFFF, runs crc32 to it</div>
+<div class="line">Then the index starting from 0 , the loop will search for the correct index, then write data using that index offset from 88A0 , with size (last argument) into where the rip points to</div>
+</div>
+<img alt="../_images/Screenshot_483.png" src="../_images/Screenshot_483.png" />
+<p>set 88A0 type to <cite>unsigned __int8[16512]</cite> to fix the indexing, also fixing my mistake of curr_address to size</p>
+<img alt="../_images/Screenshot_493.png" src="../_images/Screenshot_493.png" />
+<div class="line-block">
+<div class="line">To understand the 88A0 structure, if we set some_index to zero from <cite>v14 != *(_DWORD *)&amp;byte_88A0[24 * some_index]</cite> ,</div>
+<div class="line">we get that v14 (crc32(rip)) is first element in 88A0 structure, and we get its size is 4 bytes from this <cite>writeToPID(pid, rip_reg - 1, &amp;byte_88A0[24 * some_index + 5], byte_88A0[24 * some_index + 4]);</cite> As next element is after 4 bytes then after 5 bytes</div>
+<div class="line">so The size to be written is at after 4 bytes and to be written is after 5 bytes</div>
+</div>
+<img alt="../_images/Screenshot_503.png" src="../_images/Screenshot_503.png" />
+<p>so 41 57 is an instruction which is push r15</p>
+<img alt="../_images/Screenshot_514.png" src="../_images/Screenshot_514.png" />
+<p>we got all data we need, we just need to write code to get this 88A0 fixes the order of instructions and replace those with the CC’s in the elf file we got</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">struct</span>
+<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">from</span> <span class="nn">zlib</span> <span class="kn">import</span> <span class="n">crc32</span>
+<span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="n">u64</span><span class="p">,</span> <span class="n">p32</span>
+
+
+<span class="n">file</span><span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;cleaned_dance&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span>
+<span class="n">file</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mh">0x78a0</span><span class="p">)</span>
+<span class="n">crc_table</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">table_88a0</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mh">0xfff</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">crc_table</span><span class="p">[</span><span class="n">crc32</span><span class="p">(</span><span class="n">p32</span><span class="p">(</span><span class="n">i</span><span class="p">))]</span> <span class="o">=</span> <span class="n">i</span>
+        <span class="c1">#&gt;&gt;&gt; p32(5)</span>
+        <span class="c1"># b&#39;\x05\x00\x00\x00&#39;</span>
+
+
+
+<span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
+
+
+    <span class="c1"># &quot;&lt;&quot; indicates little-endian byte order. This means the least significant byte is stored first in memory.</span>
+    <span class="c1"># I represents an unsigned integer of 4 bytes.</span>
+    <span class="c1"># B represents an unsigned char of 1 byte.</span>
+    <span class="c1"># 19B represents 19 unsigned chars (each of 1 byte)</span>
+    <span class="c1"># intotal 24 where each part is 24 bytes &amp;byte_88A0[24 * some_index + 5]</span>
+    <span class="n">code</span> <span class="o">=</span><span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&lt;IB19B&quot;</span><span class="p">,</span><span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">24</span><span class="p">))</span>
+    <span class="c1"># print(code)</span>
+    <span class="n">crc</span> <span class="o">=</span> <span class="n">code</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="n">code</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">insn</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">code</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
+
+    <span class="k">if</span> <span class="n">crc</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">size</span> <span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+        <span class="k">break</span>
+
+    <span class="n">table_88a0</span><span class="p">[</span><span class="n">crc_table</span><span class="p">[</span><span class="n">crc</span><span class="p">]]</span> <span class="o">=</span> <span class="n">insn</span><span class="p">[:</span><span class="n">size</span><span class="p">]</span>
+
+<span class="n">elffile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;out.elf&quot;</span><span class="p">,</span><span class="s2">&quot;rb&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span> <span class="c1">#from cyberchef</span>
+<span class="n">elf_fp</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">elffile</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">addr</span><span class="p">,</span><span class="n">insns</span> <span class="ow">in</span> <span class="n">table_88a0</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">elf_fp</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mh">0x1000</span><span class="o">+</span><span class="n">addr</span><span class="p">)</span>
+    <span class="n">elf_fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">insns</span><span class="p">)</span>
+<span class="nb">open</span><span class="p">(</span><span class="s2">&quot;out2.elf&quot;</span><span class="p">,</span><span class="s2">&quot;wb&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">elf_fp</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>Then we see the flag is passed to the generated binary with calling the function dance_with_me</p>
+<img alt="../_images/Screenshot_522.png" src="../_images/Screenshot_522.png" />
+<p>opening the new binary in ida to dance_with_me function we see another chacha used</p>
+<img alt="../_images/Screenshot_532.png" src="../_images/Screenshot_532.png" />
+<p>Decrypting wih chacha in cyberchef</p>
+<p><a class="reference external" href="https://gchq.github.io/CyberChef/#recipe=From_Hex('Auto'/disabled)ChaCha(%7B'option':'Hex','string':'6C7BB1EE0A4C479DEDD75BBCD243DD401DB277B8356E594BF86326D7E250EDDB'%7D,%7B'option':'Hex','string':'96BFEBCA8E7CFBBCD972A853'%7D,0,'20','Hex','Hex')From_Hex('Auto')&amp;input=QjdFMDVERTg2NkFFQUU2QUQ5MEYzQTU3NTdDQkI3N0JGRTQ2OUEwQUY4MkZGODYzNUM1RUJDOEJGNjc0RjU2NjYxOTdGMTExQzU2OTZDRDVEQkREMjAyNDM2OEE2QzJG">https://gchq.github.io/CyberChef/#recipe=From_Hex(‘Auto’/disabled)ChaCha(%7B’option’:’Hex’,’string’:’6C7BB1EE0A4C479DEDD75BBCD243DD401DB277B8356E594BF86326D7E250EDDB’%7D,%7B’option’:’Hex’,’string’:’96BFEBCA8E7CFBBCD972A853’%7D,0,’20’,’Hex’,’Hex’)From_Hex(‘Auto’)&amp;input=QjdFMDVERTg2NkFFQUU2QUQ5MEYzQTU3NTdDQkI3N0JGRTQ2OUEwQUY4MkZGODYzNUM1RUJDOEJGNjc0RjU2NjYxOTdGMTExQzU2OTZDRDVEQkREMjAyNDM2OEE2QzJG</a></p>
+<img alt="../_images/Screenshot_542.png" src="../_images/Screenshot_542.png" />
 </section>
 </section>
 

@@ -313,7 +313,7 @@ we got all data we need, we just need to write code to get this 88A0 fixes the o
     for i in range(0xfff+1):
             crc_table[crc32(p32(i))] = i
             #>>> p32(5)
-            # b'\x05\x00\x00\x00'
+            # b'\x05\x00\x00\x00' to bytes
 
 
 

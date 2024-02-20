@@ -253,7 +253,7 @@ Then it calls ptrace with GETREGS then calls crc32
 
 .. image:: Screenshot_45.png
 
-| we need to calculate what is gotten with ptrace, so the ptrace GETREGS call last argument is a registery structure
+| we need to calculate what is gotten with ptrace, so we know the ptrace GETREGS call's last argument is a registery structure
 
 .. code-block:: c
 
@@ -265,7 +265,9 @@ Then it calls ptrace with GETREGS then calls crc32
 
 | The RVA to rbp of registry structure is  544, then after the call to ptrace it get rbp-416
 | the differene is 544-416=128, and each value is 8 byte (64 bit), 128/8 =16,  so it got the registery at offset 16
-| to get what resides at that offset run .. code-block:: c
+| to get what resides at that offset run
+
+ .. code-block:: bash
     
     cat /usr/include/x86_64-linux-gnu/sys/reg.h
 

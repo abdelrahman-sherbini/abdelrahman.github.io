@@ -277,7 +277,7 @@ To recognize RC4 use tools like capa ,sigsrch or its pattern as following:-</p>
 <p>Then it calls ptrace with GETREGS then calls crc32</p>
 <img alt="../_images/Screenshot_453.png" src="../_images/Screenshot_453.png" />
 <div class="line-block">
-<div class="line">we need to calculate what is gotten with ptrace, so the ptrace GETREGS call last argument is a registery structure</div>
+<div class="line">we need to calculate what is gotten with ptrace, so we know the ptrace GETREGS call’s last argument is a registery structure</div>
 </div>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">ptrace</span><span class="p">(</span><span class="n">PTRACE_GETREGS</span><span class="p">,</span><span class="w"> </span><span class="n">child</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">regs</span><span class="p">);</span>
 </pre></div>
@@ -289,10 +289,12 @@ To recognize RC4 use tools like capa ,sigsrch or its pattern as following:-</p>
 <div class="line-block">
 <div class="line">The RVA to rbp of registry structure is  544, then after the call to ptrace it get rbp-416</div>
 <div class="line">the differene is 544-416=128, and each value is 8 byte (64 bit), 128/8 =16,  so it got the registery at offset 16</div>
-<div class="line">to get what resides at that offset run .. code-block:: c</div>
+<div class="line">to get what resides at that offset run</div>
 </div>
 <blockquote>
-<div><p>cat /usr/include/x86_64-linux-gnu/sys/reg.h</p>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cat<span class="w"> </span>/usr/include/x86_64-linux-gnu/sys/reg.h
+</pre></div>
+</div>
 </div></blockquote>
 <p>and we get the rip registery</p>
 <img alt="../_images/Screenshot_473.png" src="../_images/Screenshot_473.png" />

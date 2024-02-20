@@ -276,7 +276,7 @@ and we get the rip registery
 .. image:: Screenshot_47.png
 
 | Now we can get the full picture, it gets the rip where the exception happened masks it with 0xFFF, runs crc32 to it 
-| Then the index starting from 0 , the loop will search for the correct index where  ** v14 != *(_DWORD *)&unk_88A0[24 * some_index]** Condition is not true , then write data using that index offset from 88A0 , with size (last argument) into where the rip points to 
+| Then the index starting from 0 , the loop will search for the correct index where  ** v14 != *(_DWORD *)&unk_88A0[24 * some_index]** Condition is not true where v14 = crc32(rip) , then write data using that index offset from 88A0 , with size (last argument) into where the rip points to 
 
 .. image:: Screenshot_48.png
 

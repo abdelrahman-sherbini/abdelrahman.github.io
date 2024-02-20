@@ -300,7 +300,7 @@ To recognize RC4 use tools like capa ,sigsrch or its pattern as following:-</p>
 <img alt="../_images/Screenshot_473.png" src="../_images/Screenshot_473.png" />
 <div class="line-block">
 <div class="line">Now we can get the full picture, it gets the rip where the exception happened masks it with 0xFFF, runs crc32 to it</div>
-<div class="line">Then the index starting from 0 , the loop will search for the correct index where  ** v14 != <em>(_DWORD *)&amp;unk_88A0[24 * some_index]*</em> Condition is not true , then write data using that index offset from 88A0 , with size (last argument) into where the rip points to</div>
+<div class="line">Then the index starting from 0 , the loop will search for the correct index where  ** v14 != <em>(_DWORD *)&amp;unk_88A0[24 * some_index]*</em> Condition is not true where v14 = crc32(rip) , then write data using that index offset from 88A0 , with size (last argument) into where the rip points to</div>
 </div>
 <img alt="../_images/Screenshot_483.png" src="../_images/Screenshot_483.png" />
 <p>set 88A0 type to <cite>unsigned __int8[16512]</cite> to fix the indexing, also fixing my mistake of curr_address to size</p>

@@ -72,7 +72,11 @@ What came out was a mess in dnspy couldn't understand the functionality, when i 
 
 .. image:: Screenshot_16.png
 
-So i resorted to running the malware, and then running `hollows_hunter <https://github.com/hasherezade/hollows_hunter/releases>`_ to get the binary from memory and dump it 
+I ran net reactor slayer on it, and deobfuscated successfully
+
+.. image:: Screenshot_50.png
+
+But i resorted to running the malware, and then running `hollows_hunter <https://github.com/hasherezade/hollows_hunter/releases>`_ to get the binary from memory and dump it 
 
 the new file sha256:1371BE6A1BDD10F8D0EA4EABD20453F80419B1C412B73555C113473B27373E9D
 

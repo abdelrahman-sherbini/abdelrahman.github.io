@@ -329,7 +329,7 @@ Then runs cmd with taskkill of current process created and exits
 
 
 
-.. code-block:: js
+.. code-block:: yara
 
     rule Vidar_Stealer : Vidar 
     {

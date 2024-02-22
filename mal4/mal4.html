@@ -21,6 +21,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="0xLaugh Rev Challenges" href="../laugh/chals.html" />
     <link rel="prev" title="SignedUrl Hub" href="../SignedUrl/text.html" /> 
 </head>
 
@@ -72,6 +73,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#references">References</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../laugh/chals.html">0xLaugh Rev Challenges</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal5/agenttesla.html">Agent Tesla Malware Analysis</a></li>
 </ul>
 
         </div>
@@ -311,25 +314,25 @@ Then it cleans directory created and deletes files downloaded</p>
 <p>Then runs cmd with taskkill of current process created and exits</p>
 <img alt="../_images/Screenshot_601.png" src="../_images/Screenshot_601.png" />
 <img alt="../_images/Screenshot_613.png" src="../_images/Screenshot_613.png" />
-<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="nx">rule</span><span class="w"> </span><span class="nx">Vidar_Stealer</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="nx">Vidar</span>
+<div class="highlight-yara notranslate"><div class="highlight"><pre><span></span><span class="kd">rule</span><span class="w"> </span>V<span class="n">idar_Stealer</span><span class="w"> </span><span class="p">:</span><span class="w"> </span>V<span class="n">idar</span>
 <span class="p">{</span>
-<span class="w">    </span><span class="nx">meta</span><span class="o">:</span>
-<span class="w">        </span><span class="nx">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Vidar strings yara&quot;</span>
-<span class="w">        </span><span class="nx">author</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;abdosalah&quot;</span>
+<span class="w">    </span><span class="k">meta</span><span class="p">:</span>
+<span class="w">        </span><span class="n">description</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;Vidar strings yara&quot;</span>
+<span class="w">        </span><span class="n">author</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;abdosalah&quot;</span>
 
-<span class="w">    </span><span class="nx">strings</span><span class="o">:</span>
+<span class="w">    </span><span class="k">strings</span><span class="p">:</span>
 
-<span class="w">        </span><span class="nx">$IOC1</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;\&quot;os_crypt\&quot;:{\&quot;encrypted_key\&quot;:\&quot;&quot;</span><span class="w"> </span><span class="nx">wide</span><span class="w"> </span><span class="nx">ascii</span>
-<span class="w">        </span><span class="nx">$IOC2</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;passwords.txt&quot;</span><span class="w"> </span><span class="nx">wide</span><span class="w"> </span><span class="nx">ascii</span>
-<span class="w">        </span><span class="nx">$IOC5</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;nss3.dll&quot;</span><span class="w"> </span><span class="nx">wide</span><span class="w"> </span><span class="nx">ascii</span>
-<span class="w">        </span><span class="nx">$IOC6</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;msvcp140.dll&quot;</span><span class="w"> </span><span class="nx">wide</span><span class="w"> </span><span class="nx">ascii</span>
-<span class="w">        </span><span class="nx">$IOC7</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;mozglue.dll&quot;</span><span class="w"> </span><span class="nx">wide</span><span class="w"> </span><span class="nx">ascii</span>
-<span class="w">        </span><span class="nx">$IOC8</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;freebl3.dll&quot;</span><span class="w"> </span><span class="nx">wide</span><span class="w"> </span><span class="nx">ascii</span>
-<span class="w">        </span><span class="nx">$IOC9</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;vcruntime140.dll&quot;</span><span class="w"> </span><span class="nx">wide</span><span class="w"> </span><span class="nx">ascii</span>
-<span class="w">        </span><span class="nx">$IOC10</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;softokn3.dll&quot;</span><span class="w"> </span><span class="nx">wide</span><span class="w"> </span><span class="nx">ascii</span>
+<span class="w">        </span><span class="nv">$IOC1</span><span class="w">  </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;\&quot;</span><span class="n">os_crypt</span>\<span class="s2">&quot;:{\&quot;</span><span class="n">encrypted_key</span>\<span class="s2">&quot;:\&quot;&quot; wide ascii</span>
+<span class="s2">        $IOC2  = &quot;</span><span class="n">passwords</span><span class="p">.</span><span class="n">txt</span><span class="s2">&quot; wide ascii</span>
+<span class="s2">        $IOC5  = &quot;</span><span class="n">nss3</span><span class="p">.</span><span class="n">dll</span><span class="s2">&quot; wide ascii</span>
+<span class="s2">        $IOC6  = &quot;</span><span class="n">msvcp140</span><span class="p">.</span><span class="n">dll</span><span class="s2">&quot; wide ascii</span>
+<span class="s2">        $IOC7  = &quot;</span><span class="n">mozglue</span><span class="p">.</span><span class="n">dll</span><span class="s2">&quot; wide ascii</span>
+<span class="s2">        $IOC8  = &quot;</span><span class="n">freebl3</span><span class="p">.</span><span class="n">dll</span><span class="s2">&quot; wide ascii</span>
+<span class="s2">        $IOC9  = &quot;</span><span class="n">vcruntime140</span><span class="p">.</span><span class="n">dll</span><span class="s2">&quot; wide ascii</span>
+<span class="s2">        $IOC10 = &quot;</span><span class="n">softokn3</span><span class="p">.</span><span class="n">dll</span>&quot;<span class="w"> </span><span class="nb">wide</span><span class="w"> </span><span class="nb">ascii</span>
 
-<span class="w">    </span><span class="nx">condition</span><span class="o">:</span>
-<span class="w">        </span><span class="nx">uint16</span><span class="p">(</span><span class="mf">0</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mh">0x5a4d</span><span class="w"> </span><span class="nx">and</span><span class="w">  </span><span class="p">(</span><span class="nx">all</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="p">(</span><span class="nx">$IOC</span><span class="o">*</span><span class="p">))</span>
+<span class="w">    </span><span class="k">condition</span><span class="p">:</span>
+<span class="w">        </span><span class="nb">uint16</span><span class="p">(</span>0<span class="p">)</span><span class="w"> </span><span class="p">==</span><span class="w"> </span>0<span class="n">x5a4d</span><span class="w"> </span><span class="ow">and</span><span class="w">  </span><span class="p">(</span><span class="ow">all</span><span class="w"> </span><span class="nb">of</span><span class="w"> </span><span class="p">(</span><span class="nv">$IOC</span><span class="p">*))</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -345,6 +348,7 @@ Then it cleans directory created and deletes files downloaded</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../SignedUrl/text.html" class="btn btn-neutral float-left" title="SignedUrl Hub" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../laugh/chals.html" class="btn btn-neutral float-right" title="0xLaugh Rev Challenges" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

@@ -1,0 +1,385 @@
+Agent Tesla Malware Analysis
+=============================
+
+MD5: 04f44a0cce98b16a0c4154119ff88cd6
+
+Download: https://malshare.com/sample.php?action=detail&hash=02a690404a3d82ed7aef87f8518cac02809384d6b0550a36fc837c8552255d3d
+
+Link: https://app.any.run/tasks/518958b9-4306-42cb-b525-214a942050ad/
+
+dynamic analysis
+----------------
+
+Let's analyze a sample which are ranked 1st for this week in any.run, with last attack today 21/2 and has been compiled Wed Feb ***21 12:29:54 2024***
+
+.. image:: Screenshot_1.png
+
+The file comes named as **BL-SHIPPING INVOICE.exe** and it is a 32-bit .NET file
+
+.. image:: Screenshot_2.png
+
+Let's spin up our Dynamic analysis setup with procmon+procdot / process hacker / fakenet / regshot  / wireshark
+
+It spawns some threads of itself 
+
+.. image:: Screenshot_7.png
+
+.. image:: Screenshot_4.png
+
+In fakenet it goes example.com (why?!) , and ipify to get my public ip address ,Then it dns queries mail.2sautomobile.com ??!
+
+.. image:: Screenshot_5.png
+
+.. image:: Screenshot_6.png
+
+and when i restart the machine i get those two processes spawned which have same sha256 as original malware (maybe some persistance deployed)
+
+.. image:: Screenshot_8.png
+
+In procdot+procmon we see it creates file **Zmbgisvguo.exe** in appdata/roaming and puts it in the run registry , same way as **HroxB.exe**
+
+.. image:: Screenshot_9.png
+
+.. image:: Screenshot_10.png
+
+.. image:: Screenshot_11.png
+
+Code analysis
+-------------
+
+let's go into dnspy, it just send a post to `http://www.example.com/recepticle.aspx` and does nothing with the response, it does that a few times maybe to create noise we can ignore them
+
+.. image:: Screenshot_12.png
+
+Then it loads array from resources, reverse it , then invoke (run) ``ExcludeToken`` method 
+
+.. image:: Screenshot_13.png
+
+So let's dump the array reversed 
+
+.. image:: Screenshot_14.png
+
+Second stage
+------------
+
+the other file sha256:0E950415034458215DF5DE5084CBD5AC18DDF5921E64E8037783A4AA6289DB13
+
+it is also 32-bit .NET but its a dll
+
+.. image:: Screenshot_15.png
+
+What came out was a mess in dnspy couldn't understand the functionality, when i even went the invoked method was empty
+
+.. image:: Screenshot_16.png
+
+So i resorted to running the malware, and then running `hollows_hunter <https://github.com/hasherezade/hollows_hunter/releases>`_ to get the binary from memory and dump it 
+
+the new file sha256:1371BE6A1BDD10F8D0EA4EABD20453F80419B1C412B73555C113473B27373E9D
+
+.. image:: Screenshot_17.png
+
+and ran de4dot on it and .net reactor slayer 
+
+.. image:: Screenshot_18.png
+
+and we got almost clean sample
+
+.. image:: Screenshot_19.png
+
+now onto main function, the binary is full of these jumps and conditions for obfuscation
+
+.. image:: Screenshot_20.png
+
+| following ``kyG.smethod_0();`` it is also bunch of if conditions and jumps, lets go step by step
+| First it checks if there is any processes with same name and kills it except itself 
+
+.. image:: Screenshot_21.png
+
+Configuration extraction
+-------------------------
+
+Then calls ``HobCHX.smethod_0();`` which gets bunch of my hardware and computer info and ip 
+
+.. image:: Screenshot_22.png
+
+.. image:: Screenshot_23.png
+
+and sets some configurations, notice there is an email there maybe send my info to that email ? but it seems legit site i don't know
+
+.. image:: Screenshot_24.png
+
+.. code-block:: c#
+
+            public static bool EnableKeylogger = Convert.ToBoolean("false");
+
+            // Token: 0x0400000F RID: 15
+            public static bool EnableScreenLogger = Convert.ToBoolean("false");
+
+            // Token: 0x04000010 RID: 16
+            public static bool EnableClipboardLogger = Convert.ToBoolean("false");
+
+            // Token: 0x04000011 RID: 17
+            public static bool EnableTorPanel = Convert.ToBoolean("false");
+
+            // Token: 0x04000012 RID: 18
+            public static bool EnableCookies = Convert.ToBoolean("false");
+
+            // Token: 0x04000013 RID: 19
+            public static bool EnableContacts = Convert.ToBoolean("false");
+
+            // Token: 0x04000014 RID: 20
+            public static bool DeleteBackspace = Convert.ToBoolean("false");
+
+            // Token: 0x04000015 RID: 21
+            public static int TorPid = 0;
+
+            // Token: 0x04000016 RID: 22
+            public static int KeyloggerInterval = Convert.ToInt32("20");
+
+            // Token: 0x04000017 RID: 23
+            public static int ScreenInterval = Convert.ToInt32("20");
+
+            // Token: 0x04000018 RID: 24
+            public static int LogType = Convert.ToInt32("1");
+
+            // Token: 0x04000019 RID: 25
+            public static bool SmtpSSL = Convert.ToBoolean("true");
+
+            // Token: 0x0400001A RID: 26
+            public static int SmtpPort = Convert.ToInt32("587");
+
+            // Token: 0x0400001B RID: 27
+            public static bool SmtpAttach = Convert.ToBoolean("false");
+
+            // Token: 0x0400001C RID: 28
+            public static string SmtpServer = "mail.2sautomobile.com";
+
+            // Token: 0x0400001D RID: 29
+            public static string SmtpSender = "contact@2sautomobile.com";
+
+            // Token: 0x0400001E RID: 30
+            public static string SmtpPassword = "Kenzi051008";
+
+            // Token: 0x0400001F RID: 31
+            public static string SmtpReceiver = "contact@2sautomobile.com";
+
+            // Token: 0x04000020 RID: 32
+            public static bool AppAddStartup = Convert.ToBoolean("true");
+
+            // Token: 0x04000021 RID: 33
+            public static bool HideFileStartup = Convert.ToBoolean("false");
+
+            // Token: 0x04000022 RID: 34
+            public static string AppStartupFullPath = "";
+
+            // Token: 0x04000023 RID: 35
+            public static string StartupDirectoryPath = "";
+
+            // Token: 0x04000024 RID: 36
+            public static string StartupEnvName = "appdata";
+
+            // Token: 0x04000025 RID: 37
+            public static string StartupDirectoryName = "HroxB";
+
+            // Token: 0x04000026 RID: 38
+            public static string StartupInstallationName = "HroxB.exe";
+
+            // Token: 0x04000027 RID: 39
+            public static string StartupRegName = "HroxB";
+
+            // Token: 0x04000028 RID: 40
+            public static bool DestructionFile = Convert.ToBoolean("true");
+        }
+    }
+
+More functionality
+-------------------
+
+Then it runs cgAknd.FhsFTO() which contains antidebugging
+
+.. image:: Screenshot_25.png
+
+Checks if iam a running a host server
+
+.. image:: Screenshot_26.png
+
+antidebugging
+
+.. image:: Screenshot_27.png
+
+antisandbox (like `sandboxie <https://github.com/sandboxie-plus/Sandboxie>`_)
+
+.. image:: Screenshot_28.png
+
+antiVMs
+
+.. image:: Screenshot_29.png
+
+Next it runs ``MmBwTjUv.smethod_0();`` , it is the one setting up run key for the executable
+
+.. image:: Screenshot_30.png
+
+Notice that the file names we say above starting after reboot are just random names so we can't provide that as IOCs
+
+.. image:: Screenshot_31.png
+
+Next it runs ``MmBwTjUv.smethod_1();``, First it creates a directory if not found
+
+.. image:: Screenshot_32.png
+
+which is just appdata + HroxB , so the other name Zmbgisvguo is the random one
+
+.. image:: Screenshot_33.png
+
+.. image:: Screenshot_34.png
+
+| AppStartupFullPath contain appdata/roaming/HroxB.exe
+| It tries to kill all processes with that name
+
+.. image:: Screenshot_35.png
+
+Then puts that in run registry
+
+.. image:: Screenshot_36.png
+
+Next it runs ``dPZw6.NTl();`` , which runs ``BtmSV7Q.smethod_0();`` into a list that gets enumerated
+
+.. image:: Screenshot_37.png
+
+a lot of things are added to the string list, ``e5B3Ad.l9vHHu`` appends to a local list
+
+.. image:: Screenshot_38.png
+
+1st on the list is Becky! , Which grabs all juicy stuff from the mail client, adds it to the list
+
+.. image:: Screenshot_39.png
+
+.. image:: Screenshot_40.png
+
+Then openVPN config and Data
+
+.. image:: Screenshot_41.png
+
+Here is the full list it steals data from 
+
+.. code-block:: text
+
+    PocoMail
+    Trillian
+
+    Psi/Psi+
+    FTP Navigator
+    Discord
+    MysqlWorkbench
+    IE/Edge
+    UC Browser
+    Opera Mail
+    IncrediMail
+    Flock Browser
+    FileZilla
+    Flash FXP
+    WS_FTP
+    FTPGetter
+    Outlook
+    Mailbird
+
+    ClawsMail
+    SmartFTP
+    Becky!
+
+    The Bat!
+    NordVPN
+    OpenVPN
+    FtpCommander
+    Falkon Browser
+    eM Client
+    Private Internet Access
+    DynDns
+    Safari for Windows
+    Paltalk
+    Eudora
+    JDownloader 2.0
+    Pidgin
+    FoxMail
+    Internet Downloader Manager
+    Windows Mail App
+    WinSCP
+    CoreFTP
+    QQ Browser
+
+The list is enumerated, then put into string, then send as arguemnt call to function ``Nc9M4.A9h7JE``
+
+.. image:: Screenshot_42.png
+
+the function call take another argument first arguemnt which contains my computer info
+
+.. image:: Screenshot_46.png
+
+the function call then send all the data as an attachment to the SmtpSender we saw in configuration above
+
+.. image:: Screenshot_43.png
+
+.. image:: Screenshot_44.png
+
+.. image:: Screenshot_45.png
+
+Next is a typical key logger (if enabled)
+
+.. image:: Screenshot_47.png
+
+.. image:: Screenshot_48.png
+
+Then a screenLogger (if enabled)
+
+.. image:: Screenshot_49.png
+
+The End :)
+
+Yara Rules 
+-----------
+
+``unpacked``
+
+.. code-block:: yara
+
+    rule AgentTesla 
+    {
+        meta:
+            description = "AgentTesla unpacked yara"
+            author = "abdosalah"
+
+        strings:
+
+            $IOC1  = "Software\OpenVPN-GUI\configs" wide ascii
+            $IOC2  = "Software\Qualcomm\Eudora\CommandLine\" wide ascii
+            $IOC5  = "HroxB" wide ascii
+            $IOC6  = "e6d37ee4-1914-4eb1-8974-e61e8192e837" wide ascii
+            $IOC7  = "608d5fdb-93de-4af9-8456-c7c4075a7429" wide ascii
+            $IOC8  = "dfcb687e-bb6a-43b0-8540-b98d235b274f" wide ascii
+            $IOC9  = "\\.purple\\accounts.xml" wide ascii
+            $IOC10 = "SmartFTP\\Client 2.0\\Favorites\\Quick Connect" wide ascii
+
+        condition:
+            uint16(0) == 0x5a4d and  (all of ($IOC*)) 
+    }
+
+``packed``
+
+.. code-block:: yara
+
+    rule AgentTeslaPacked  
+    {
+        meta:
+            description = "AgentTesla Packed yara"
+            author = "abdosalah"
+
+        strings:
+            $mz    = { 4D 5A }
+            $IOC1  = "http://www.example.com/recepticle.aspx" wide ascii
+            $IOC2  = "&thing2=" wide ascii
+            $IOC3  = "ExcludeToken" wide ascii
+            $IOC4  = { 28 08 00 00 06 13 04 }  #Get the resource Ukhknlmdl
+
+        condition:
+            $mz at 0 and  (all of ($IOC*)) 
+    }

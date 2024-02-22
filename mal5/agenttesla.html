@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agent Tesla Malware Analysis &mdash; abdelrahman walkthrough 1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=29a6c3e3"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="0xLaugh Rev Challenges" href="../laugh/chals.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            abdelrahman walkthrough
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../lab1/lab1.html">Practical Malware Analysis - Lab 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab3/lab3.html">Practical Malware Analysis - Lab 3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab5/lab5.html">Practical Malware Analysis - Lab 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab6/lab6.html">Practical Malware Analysis - Lab 6</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab7/lab7.html">Practical Malware Analysis - Lab 7</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab9/lab9.html">Practical Malware Analysis - Lab 9</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab10/lab10.html">Practical Malware Analysis - Lab 10</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab11/lab11.html">Practical Malware Analysis - Lab 11</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab12/lab12.html">Practical Malware Analysis - Lab 12</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab13/lab13.html">Practical Malware Analysis - Lab 13</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab14/lab14.html">Practical Malware Analysis - Lab 14</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab15/lab15.html">Practical Malware Analysis - Lab 15</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab16/lab16.html">Practical Malware Analysis - Lab 16</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab17/lab17.html">Practical Malware Analysis - Lab 17</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab18/lab18.html">Practical Malware Analysis - Lab 18</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab19/lab19.html">Practical Malware Analysis - Lab 19</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal1/mal1.html">Princess Locker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal2/mal2.html">Blackcat Ransomware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal3/mal3.html">Agent tesla</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../SignedUrl/text.html">SignedUrl Hub</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal4/mal4.html">Vidar</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../laugh/chals.html">0xLaugh Rev Challenges</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Agent Tesla Malware Analysis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#dynamic-analysis">dynamic analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#code-analysis">Code analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#second-stage">Second stage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configuration-extraction">Configuration extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#more-functionality">More functionality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#yara-rules">Yara Rules</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">abdelrahman walkthrough</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Agent Tesla Malware Analysis</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/mal5/agenttesla.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="agent-tesla-malware-analysis">
+<h1>Agent Tesla Malware Analysis<a class="headerlink" href="#agent-tesla-malware-analysis" title="Link to this heading"></a></h1>
+<p>MD5: 04f44a0cce98b16a0c4154119ff88cd6</p>
+<p>Download: <a class="reference external" href="https://malshare.com/sample.php?action=detail&amp;hash=02a690404a3d82ed7aef87f8518cac02809384d6b0550a36fc837c8552255d3d">https://malshare.com/sample.php?action=detail&amp;hash=02a690404a3d82ed7aef87f8518cac02809384d6b0550a36fc837c8552255d3d</a></p>
+<p>Link: <a class="reference external" href="https://app.any.run/tasks/518958b9-4306-42cb-b525-214a942050ad/">https://app.any.run/tasks/518958b9-4306-42cb-b525-214a942050ad/</a></p>
+<section id="dynamic-analysis">
+<h2>dynamic analysis<a class="headerlink" href="#dynamic-analysis" title="Link to this heading"></a></h2>
+<p>Let’s analyze a sample which are ranked 1st for this week in any.run, with last attack today 21/2 and has been compiled Wed Feb <strong>*21 12:29:54 2024*</strong></p>
+<img alt="../_images/Screenshot_118.png" src="../_images/Screenshot_118.png" />
+<p>The file comes named as <strong>BL-SHIPPING INVOICE.exe</strong> and it is a 32-bit .NET file</p>
+<img alt="../_images/Screenshot_219.png" src="../_images/Screenshot_219.png" />
+<p>Let’s spin up our Dynamic analysis setup with procmon+procdot / process hacker / fakenet / regshot  / wireshark</p>
+<p>It spawns some threads of itself</p>
+<img alt="../_images/Screenshot_77.png" src="../_images/Screenshot_77.png" />
+<img alt="../_images/Screenshot_417.png" src="../_images/Screenshot_417.png" />
+<p>In fakenet it goes example.com (why?!) , and ipify to get my public ip address ,Then it dns queries mail.2sautomobile.com ??!</p>
+<img alt="../_images/Screenshot_515.png" src="../_images/Screenshot_515.png" />
+<img alt="../_images/Screenshot_615.png" src="../_images/Screenshot_615.png" />
+<p>and when i restart the machine i get those two processes spawned which have same sha256 as original malware (maybe some persistance deployed)</p>
+<img alt="../_images/Screenshot_87.png" src="../_images/Screenshot_87.png" />
+<p>In procdot+procmon we see it creates file <strong>Zmbgisvguo.exe</strong> in appdata/roaming and puts it in the run registry , same way as <strong>HroxB.exe</strong></p>
+<img alt="../_images/Screenshot_96.png" src="../_images/Screenshot_96.png" />
+<img alt="../_images/Screenshot_107.png" src="../_images/Screenshot_107.png" />
+<img alt="../_images/Screenshot_119.png" src="../_images/Screenshot_119.png" />
+</section>
+<section id="code-analysis">
+<h2>Code analysis<a class="headerlink" href="#code-analysis" title="Link to this heading"></a></h2>
+<p>let’s go into dnspy, it just send a post to <cite>http://www.example.com/recepticle.aspx</cite> and does nothing with the response, it does that a few times maybe to create noise we can ignore them</p>
+<img alt="../_images/Screenshot_126.png" src="../_images/Screenshot_126.png" />
+<p>Then it loads array from resources, reverse it , then invoke (run) <code class="docutils literal notranslate"><span class="pre">ExcludeToken</span></code> method</p>
+<img alt="../_images/Screenshot_136.png" src="../_images/Screenshot_136.png" />
+<p>So let’s dump the array reversed</p>
+<img alt="../_images/Screenshot_145.png" src="../_images/Screenshot_145.png" />
+</section>
+<section id="second-stage">
+<h2>Second stage<a class="headerlink" href="#second-stage" title="Link to this heading"></a></h2>
+<p>the other file sha256:0E950415034458215DF5DE5084CBD5AC18DDF5921E64E8037783A4AA6289DB13</p>
+<p>it is also 32-bit .NET but its a dll</p>
+<img alt="../_images/Screenshot_156.png" src="../_images/Screenshot_156.png" />
+<p>What came out was a mess in dnspy couldn’t understand the functionality, when i even went the invoked method was empty</p>
+<img alt="../_images/Screenshot_166.png" src="../_images/Screenshot_166.png" />
+<p>So i resorted to running the malware, and then running <a class="reference external" href="https://github.com/hasherezade/hollows_hunter/releases">hollows_hunter</a> to get the binary from memory and dump it</p>
+<p>the new file sha256:1371BE6A1BDD10F8D0EA4EABD20453F80419B1C412B73555C113473B27373E9D</p>
+<img alt="../_images/Screenshot_175.png" src="../_images/Screenshot_175.png" />
+<p>and ran de4dot on it and .net reactor slayer</p>
+<img alt="../_images/Screenshot_185.png" src="../_images/Screenshot_185.png" />
+<p>and we got almost clean sample</p>
+<img alt="../_images/Screenshot_195.png" src="../_images/Screenshot_195.png" />
+<p>now onto main function, the binary is full of these jumps and conditions for obfuscation</p>
+<img alt="../_images/Screenshot_204.png" src="../_images/Screenshot_204.png" />
+<div class="line-block">
+<div class="line">following <code class="docutils literal notranslate"><span class="pre">kyG.smethod_0();</span></code> it is also bunch of if conditions and jumps, lets go step by step</div>
+<div class="line">First it checks if there is any processes with same name and kills it except itself</div>
+</div>
+<img alt="../_images/Screenshot_2110.png" src="../_images/Screenshot_2110.png" />
+</section>
+<section id="configuration-extraction">
+<h2>Configuration extraction<a class="headerlink" href="#configuration-extraction" title="Link to this heading"></a></h2>
+<p>Then calls <code class="docutils literal notranslate"><span class="pre">HobCHX.smethod_0();</span></code> which gets bunch of my hardware and computer info and ip</p>
+<img alt="../_images/Screenshot_226.png" src="../_images/Screenshot_226.png" />
+<img alt="../_images/Screenshot_234.png" src="../_images/Screenshot_234.png" />
+<p>and sets some configurations, notice there is an email there maybe send my info to that email ? but it seems legit site i don’t know</p>
+<img alt="../_images/Screenshot_245.png" src="../_images/Screenshot_245.png" />
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">EnableKeylogger</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Convert</span><span class="p">.</span><span class="n">ToBoolean</span><span class="p">(</span><span class="s">&quot;false&quot;</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Token: 0x0400000F RID: 15</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">EnableScreenLogger</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Convert</span><span class="p">.</span><span class="n">ToBoolean</span><span class="p">(</span><span class="s">&quot;false&quot;</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Token: 0x04000010 RID: 16</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">EnableClipboardLogger</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Convert</span><span class="p">.</span><span class="n">ToBoolean</span><span class="p">(</span><span class="s">&quot;false&quot;</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Token: 0x04000011 RID: 17</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">EnableTorPanel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Convert</span><span class="p">.</span><span class="n">ToBoolean</span><span class="p">(</span><span class="s">&quot;false&quot;</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Token: 0x04000012 RID: 18</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">EnableCookies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Convert</span><span class="p">.</span><span class="n">ToBoolean</span><span class="p">(</span><span class="s">&quot;false&quot;</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Token: 0x04000013 RID: 19</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">EnableContacts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Convert</span><span class="p">.</span><span class="n">ToBoolean</span><span class="p">(</span><span class="s">&quot;false&quot;</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Token: 0x04000014 RID: 20</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">DeleteBackspace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Convert</span><span class="p">.</span><span class="n">ToBoolean</span><span class="p">(</span><span class="s">&quot;false&quot;</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Token: 0x04000015 RID: 21</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">TorPid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// Token: 0x04000016 RID: 22</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">KeyloggerInterval</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Convert</span><span class="p">.</span><span class="n">ToInt32</span><span class="p">(</span><span class="s">&quot;20&quot;</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Token: 0x04000017 RID: 23</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">ScreenInterval</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Convert</span><span class="p">.</span><span class="n">ToInt32</span><span class="p">(</span><span class="s">&quot;20&quot;</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Token: 0x04000018 RID: 24</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">LogType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Convert</span><span class="p">.</span><span class="n">ToInt32</span><span class="p">(</span><span class="s">&quot;1&quot;</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Token: 0x04000019 RID: 25</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">SmtpSSL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Convert</span><span class="p">.</span><span class="n">ToBoolean</span><span class="p">(</span><span class="s">&quot;true&quot;</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Token: 0x0400001A RID: 26</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">SmtpPort</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Convert</span><span class="p">.</span><span class="n">ToInt32</span><span class="p">(</span><span class="s">&quot;587&quot;</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Token: 0x0400001B RID: 27</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">SmtpAttach</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Convert</span><span class="p">.</span><span class="n">ToBoolean</span><span class="p">(</span><span class="s">&quot;false&quot;</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Token: 0x0400001C RID: 28</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">SmtpServer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;mail.2sautomobile.com&quot;</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// Token: 0x0400001D RID: 29</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">SmtpSender</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;contact@2sautomobile.com&quot;</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// Token: 0x0400001E RID: 30</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">SmtpPassword</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Kenzi051008&quot;</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// Token: 0x0400001F RID: 31</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">SmtpReceiver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;contact@2sautomobile.com&quot;</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// Token: 0x04000020 RID: 32</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">AppAddStartup</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Convert</span><span class="p">.</span><span class="n">ToBoolean</span><span class="p">(</span><span class="s">&quot;true&quot;</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Token: 0x04000021 RID: 33</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">HideFileStartup</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Convert</span><span class="p">.</span><span class="n">ToBoolean</span><span class="p">(</span><span class="s">&quot;false&quot;</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Token: 0x04000022 RID: 34</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">AppStartupFullPath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// Token: 0x04000023 RID: 35</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">StartupDirectoryPath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// Token: 0x04000024 RID: 36</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">StartupEnvName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;appdata&quot;</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// Token: 0x04000025 RID: 37</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">StartupDirectoryName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;HroxB&quot;</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// Token: 0x04000026 RID: 38</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">StartupInstallationName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;HroxB.exe&quot;</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// Token: 0x04000027 RID: 39</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">StartupRegName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;HroxB&quot;</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// Token: 0x04000028 RID: 40</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">DestructionFile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Convert</span><span class="p">.</span><span class="n">ToBoolean</span><span class="p">(</span><span class="s">&quot;true&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="more-functionality">
+<h2>More functionality<a class="headerlink" href="#more-functionality" title="Link to this heading"></a></h2>
+<p>Then it runs cgAknd.FhsFTO() which contains antidebugging</p>
+<img alt="../_images/Screenshot_254.png" src="../_images/Screenshot_254.png" />
+<p>Checks if iam a running a host server</p>
+<img alt="../_images/Screenshot_264.png" src="../_images/Screenshot_264.png" />
+<p>antidebugging</p>
+<img alt="../_images/Screenshot_274.png" src="../_images/Screenshot_274.png" />
+<p>antisandbox (like <a class="reference external" href="https://github.com/sandboxie-plus/Sandboxie">sandboxie</a>)</p>
+<img alt="../_images/Screenshot_283.png" src="../_images/Screenshot_283.png" />
+<p>antiVMs</p>
+<img alt="../_images/Screenshot_294.png" src="../_images/Screenshot_294.png" />
+<p>Next it runs <code class="docutils literal notranslate"><span class="pre">MmBwTjUv.smethod_0();</span></code> , it is the one setting up run key for the executable</p>
+<img alt="../_images/Screenshot_304.png" src="../_images/Screenshot_304.png" />
+<p>Notice that the file names we say above starting after reboot are just random names so we can’t provide that as IOCs</p>
+<img alt="../_images/Screenshot_318.png" src="../_images/Screenshot_318.png" />
+<p>Next it runs <code class="docutils literal notranslate"><span class="pre">MmBwTjUv.smethod_1();</span></code>, First it creates a directory if not found</p>
+<img alt="../_images/Screenshot_326.png" src="../_images/Screenshot_326.png" />
+<p>which is just appdata + HroxB , so the other name Zmbgisvguo is the random one</p>
+<img alt="../_images/Screenshot_335.png" src="../_images/Screenshot_335.png" />
+<img alt="../_images/Screenshot_345.png" src="../_images/Screenshot_345.png" />
+<div class="line-block">
+<div class="line">AppStartupFullPath contain appdata/roaming/HroxB.exe</div>
+<div class="line">It tries to kill all processes with that name</div>
+</div>
+<img alt="../_images/Screenshot_355.png" src="../_images/Screenshot_355.png" />
+<p>Then puts that in run registry</p>
+<img alt="../_images/Screenshot_365.png" src="../_images/Screenshot_365.png" />
+<p>Next it runs <code class="docutils literal notranslate"><span class="pre">dPZw6.NTl();</span></code> , which runs <code class="docutils literal notranslate"><span class="pre">BtmSV7Q.smethod_0();</span></code> into a list that gets enumerated</p>
+<img alt="../_images/Screenshot_375.png" src="../_images/Screenshot_375.png" />
+<p>a lot of things are added to the string list, <code class="docutils literal notranslate"><span class="pre">e5B3Ad.l9vHHu</span></code> appends to a local list</p>
+<img alt="../_images/Screenshot_385.png" src="../_images/Screenshot_385.png" />
+<p>1st on the list is Becky! , Which grabs all juicy stuff from the mail client, adds it to the list</p>
+<img alt="../_images/Screenshot_395.png" src="../_images/Screenshot_395.png" />
+<img alt="../_images/Screenshot_404.png" src="../_images/Screenshot_404.png" />
+<p>Then openVPN config and Data</p>
+<img alt="../_images/Screenshot_418.png" src="../_images/Screenshot_418.png" />
+<p>Here is the full list it steals data from</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>PocoMail
+Trillian
+
+Psi/Psi+
+FTP Navigator
+Discord
+MysqlWorkbench
+IE/Edge
+UC Browser
+Opera Mail
+IncrediMail
+Flock Browser
+FileZilla
+Flash FXP
+WS_FTP
+FTPGetter
+Outlook
+Mailbird
+
+ClawsMail
+SmartFTP
+Becky!
+
+The Bat!
+NordVPN
+OpenVPN
+FtpCommander
+Falkon Browser
+eM Client
+Private Internet Access
+DynDns
+Safari for Windows
+Paltalk
+Eudora
+JDownloader 2.0
+Pidgin
+FoxMail
+Internet Downloader Manager
+Windows Mail App
+WinSCP
+CoreFTP
+QQ Browser
+</pre></div>
+</div>
+<p>The list is enumerated, then put into string, then send as arguemnt call to function <code class="docutils literal notranslate"><span class="pre">Nc9M4.A9h7JE</span></code></p>
+<img alt="../_images/Screenshot_424.png" src="../_images/Screenshot_424.png" />
+<p>the function call take another argument first arguemnt which contains my computer info</p>
+<img alt="../_images/Screenshot_464.png" src="../_images/Screenshot_464.png" />
+<p>the function call then send all the data as an attachment to the SmtpSender we saw in configuration above</p>
+<img alt="../_images/Screenshot_434.png" src="../_images/Screenshot_434.png" />
+<img alt="../_images/Screenshot_444.png" src="../_images/Screenshot_444.png" />
+<img alt="../_images/Screenshot_454.png" src="../_images/Screenshot_454.png" />
+<p>Next is a typical key logger (if enabled)</p>
+<img alt="../_images/Screenshot_474.png" src="../_images/Screenshot_474.png" />
+<img alt="../_images/Screenshot_484.png" src="../_images/Screenshot_484.png" />
+<p>Then a screenLogger (if enabled)</p>
+<img alt="../_images/Screenshot_494.png" src="../_images/Screenshot_494.png" />
+<p>The End :)</p>
+</section>
+<section id="yara-rules">
+<h2>Yara Rules<a class="headerlink" href="#yara-rules" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">unpacked</span></code></p>
+<div class="highlight-yara notranslate"><div class="highlight"><pre><span></span><span class="kd">rule</span><span class="w"> </span>A<span class="n">gentTesla</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">meta</span><span class="p">:</span>
+<span class="w">        </span><span class="n">description</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;AgentTesla unpacked yara&quot;</span>
+<span class="w">        </span><span class="n">author</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;abdosalah&quot;</span>
+
+<span class="w">    </span><span class="k">strings</span><span class="p">:</span>
+
+<span class="w">        </span><span class="nv">$IOC1</span><span class="w">  </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;Software\OpenVPN-GUI\configs&quot;</span><span class="w"> </span><span class="nb">wide</span><span class="w"> </span><span class="nb">ascii</span>
+<span class="w">        </span><span class="nv">$IOC2</span><span class="w">  </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;Software\Qualcomm\Eudora\CommandLine\&quot;</span><span class="w"> </span><span class="nb">wide</span><span class="w"> </span><span class="nb">ascii</span>
+<span class="w">        </span><span class="nv">$IOC5</span><span class="w">  </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;HroxB&quot;</span><span class="w"> </span><span class="nb">wide</span><span class="w"> </span><span class="nb">ascii</span>
+<span class="w">        </span><span class="nv">$IOC6</span><span class="w">  </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;e6d37ee4-1914-4eb1-8974-e61e8192e837&quot;</span><span class="w"> </span><span class="nb">wide</span><span class="w"> </span><span class="nb">ascii</span>
+<span class="w">        </span><span class="nv">$IOC7</span><span class="w">  </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;608d5fdb-93de-4af9-8456-c7c4075a7429&quot;</span><span class="w"> </span><span class="nb">wide</span><span class="w"> </span><span class="nb">ascii</span>
+<span class="w">        </span><span class="nv">$IOC8</span><span class="w">  </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;dfcb687e-bb6a-43b0-8540-b98d235b274f&quot;</span><span class="w"> </span><span class="nb">wide</span><span class="w"> </span><span class="nb">ascii</span>
+<span class="w">        </span><span class="nv">$IOC9</span><span class="w">  </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;\\.purple\\accounts.xml&quot;</span><span class="w"> </span><span class="nb">wide</span><span class="w"> </span><span class="nb">ascii</span>
+<span class="w">        </span><span class="nv">$IOC10</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;SmartFTP\\Client 2.0\\Favorites\\Quick Connect&quot;</span><span class="w"> </span><span class="nb">wide</span><span class="w"> </span><span class="nb">ascii</span>
+
+<span class="w">    </span><span class="k">condition</span><span class="p">:</span>
+<span class="w">        </span><span class="nb">uint16</span><span class="p">(</span>0<span class="p">)</span><span class="w"> </span><span class="p">==</span><span class="w"> </span>0<span class="n">x5a4d</span><span class="w"> </span><span class="ow">and</span><span class="w">  </span><span class="p">(</span><span class="ow">all</span><span class="w"> </span><span class="nb">of</span><span class="w"> </span><span class="p">(</span><span class="nv">$IOC</span><span class="p">*))</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">packed</span></code></p>
+<div class="highlight-yara notranslate"><div class="highlight"><pre><span></span><span class="kd">rule</span><span class="w"> </span>A<span class="n">gentTeslaPacked</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">meta</span><span class="p">:</span>
+<span class="w">        </span><span class="n">description</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;AgentTesla Packed yara&quot;</span>
+<span class="w">        </span><span class="n">author</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;abdosalah&quot;</span>
+
+<span class="w">    </span><span class="k">strings</span><span class="p">:</span>
+<span class="w">        </span><span class="nv">$mz</span><span class="w">    </span><span class="p">=</span><span class="w"> </span><span class="mh">{ 4D 5A }</span>
+<span class="w">        </span><span class="nv">$IOC1</span><span class="w">  </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;http://www.example.com/recepticle.aspx&quot;</span><span class="w"> </span><span class="nb">wide</span><span class="w"> </span><span class="nb">ascii</span>
+<span class="w">        </span><span class="nv">$IOC2</span><span class="w">  </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;&amp;thing2=&quot;</span><span class="w"> </span><span class="nb">wide</span><span class="w"> </span><span class="nb">ascii</span>
+<span class="w">        </span><span class="nv">$IOC3</span><span class="w">  </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;ExcludeToken&quot;</span><span class="w"> </span><span class="nb">wide</span><span class="w"> </span><span class="nb">ascii</span>
+<span class="w">        </span><span class="nv">$IOC4</span><span class="w">  </span><span class="p">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>28<span class="w"> </span>08<span class="w"> </span>00<span class="w"> </span>00<span class="w"> </span>06<span class="w"> </span>13<span class="w"> </span>04<span class="w"> </span><span class="p">}</span><span class="w">  </span><span class="c1">#Get the resource Ukhknlmdl</span>
+
+<span class="w">    </span><span class="k">condition</span><span class="p">:</span>
+<span class="w">        </span><span class="nv">$mz</span><span class="w"> </span><span class="nb">at</span><span class="w"> </span>0<span class="w"> </span><span class="ow">and</span><span class="w">  </span><span class="p">(</span><span class="ow">all</span><span class="w"> </span><span class="nb">of</span><span class="w"> </span><span class="p">(</span><span class="nv">$IOC</span><span class="p">*))</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../laugh/chals.html" class="btn btn-neutral float-left" title="0xLaugh Rev Challenges" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, abdelrahman khaled.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

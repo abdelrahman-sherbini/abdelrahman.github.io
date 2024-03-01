@@ -1,0 +1,703 @@
+Agent tesla (sample1)
+======================
+
+Attack Flow Graph
+-----------------
+
+.. image:: flow2.png
+
+.. image:: flow.png
+
+Deep analysis
+--------------
+
+| We got a sample1, let's pass it to exeinfo
+| It is a .NET 32bit exe and it is also obfuscated
+
+.. image:: Screenshot_1.png
+
+it is obfuscated with bunch of calcuations and conditional jumps 
+
+.. image:: Screenshot_2.png
+
+| cleaning it with de4dot
+| going into entrypoint, then the main function for unpacking
+
+.. image:: Screenshot_3.png
+
+the unpacking is just a string replace and concatenate and base64 decode, following the program it gives us a dll which
+then gets the second function (type) in that dll and calls it with paramter text2
+
+.. image:: Screenshot_4.png
+
+Following the invoke by stepping into createinstance call
+
+.. image:: Screenshot_5.png
+
+Stage 2
+--------
+
+We get into the dll decompiled by dsnpy, which seems like another unpacking
+
+.. image:: Screenshot_6.png
+
+
+Dumping that new binary
+
+.. image:: Screenshot_7.png
+
+Stage 3
+--------
+
+It is a .Net 32bit exe which is confused with confuserex :(
+
+.. image:: Screenshot_8.png
+
+.. image:: Screenshot_9.png
+
+It is running some protections bypass
+
+.. image:: Screenshot_78.png
+
+getting some config `runit <https://github.com/abdelrahman-sherbini/config-extract/blob/main/egcert/test.py>`_ 
+
+.. image:: Screenshot_79.png
+
+and adding the executable into scheduled tasks
+
+.. image:: Screenshot_76.png
+
+.. image:: Screenshot_77.png
+
+.. image:: Screenshot_75.png
+
+
+setting breakpoints at every invoke, assembly load
+
+.. image:: Screenshot_10.png
+
+we hit a breakpoint but can't view locals (proxy call probably from confuserex)
+
+.. image:: Screenshot_11.png
+
+Then it invokes that 
+
+.. image:: Screenshot_14.png
+
+showing modules then dumping that 
+
+.. image:: Screenshot_12.png
+
+Seems like a helper dll, for process injection
+
+.. image:: Screenshot_13.png
+
+Following the execution into that invoke 
+
+.. image:: Screenshot_15.png
+
+.. image:: Screenshot_16.png
+
+And look what we got , the executable that is going to be injected (looks like self injection)
+
+.. image:: Screenshot_17.png
+
+.. image:: Screenshot_20.png
+
+dumping that, and we get our final stage .Net executable 32bit
+
+.. image:: Screenshot_18.png
+
+Stage 4
+--------
+
+We see methods likely strange names like <Module>.\u200B to make it easier passing it to de4dot
+
+.. image:: Screenshot_19.png
+
+smethod_0 is a decryptor, decrypting the arrays present
+
+.. image:: Screenshot_22.png
+
+.. image:: Screenshot_21.png
+
+config-extract
+--------------
+
+| so i built same function with python to ease my analysis 
+| first script grabs all parameters passed to this decryptor `linkgrabber <https://github.com/abdelrahman-sherbini/config-extract/blob/main/egcert/getintfrombin.py>`_ 
+| second script converts the encrypted lists in .Net to python list to be integrate into third script `linklistconvert <https://github.com/abdelrahman-sherbini/config-extract/blob/main/egcert/buildarray.py>`_ 
+| Third script (python2) will decrypt all strings and output to a file `linkdecrypt <https://github.com/abdelrahman-sherbini/config-extract/blob/main/egcert/test2.py>`_ 
+
+Which also gives us all the configuration where we see sales@satamwa.com and more
+
+| Lets walk through the last stage binary now that we did our preparation
+| First it grabs my hwid 
+
+.. image:: Screenshot_23.png
+
+my computer and user name  and then grabs the startup folder path preparing to install something there with the place holder
+
+.. image:: Screenshot_24.png
+
+.. image:: Screenshot_25.png
+
+Then sleeps for 15 seconds (sandbox evasion) and if it can't sleep it will exit.
+
+.. image:: Screenshot_26.png
+
+.. image:: Screenshot_27.png
+
+then compares some value to be true or not, if true it will exit
+
+.. image:: Screenshot_28.png
+
+which checks my username is any of these names 
+
+.. image:: Screenshot_29.png
+
+.. image:: Screenshot_30.png
+
+Then it kills any instances of itself except itself
+
+.. image:: Screenshot_31.png
+
+it does a check to do this code blob which modifies ``temp.tmp`` file in temp folder 
+
+.. image:: Screenshot_32.png
+
+and bypasses uac
+
+.. image:: Screenshot_34.png
+
+.. image:: Screenshot_35.png
+
+but the check it self is hard coded false
+
+.. image:: Screenshot_33.png
+
+| Next it checks if file location isnot at temp folder if true it will excecute next code which create a folder in temp folder 
+| then checks if the binary is in that folder if true it will delete it
+
+.. image:: Screenshot_36.png
+
+.. image:: Screenshot_37.png
+
+Then sets the binary in run registry for persistence 
+
+.. image:: Screenshot_39.png
+
+.. image:: Screenshot_38.png
+
+but again the check hardcoded to false so it won't do the above ``if (afg.cev && Operators.CompareString(afg.ceq, afg.ceu, false) != 0)``
+
+.. image:: Screenshot_40.png
+
+Then it deletes the file in the temp folder
+
+.. image:: Screenshot_41.png
+
+.. image:: Screenshot_42.png
+
+then another check which is coded to be false
+
+.. image:: Screenshot_43.png
+
+where it will move the binary into temp with half-random name
+
+.. image:: Screenshot_44.png
+
+.. image:: Screenshot_45.png
+
+another check where the check is code to be false , where it will run restart from shell 
+
+.. image:: Screenshot_47.png
+
+.. image:: Screenshot_46.png
+
+then it will start a new thread 
+
+.. image:: Screenshot_48.png
+
+the new thread will check few checks which destined to be false to run some uac and bypass policies
+
+.. image:: Screenshot_51.png
+
+.. image:: Screenshot_50.png
+
+.. image:: Screenshot_49.png
+
+Next it will run another thread which will sleep
+
+.. image:: Screenshot_53.png
+
+.. image:: Screenshot_52.png
+
+another sleep (wont execute)
+
+.. image:: Screenshot_54.png
+
+.. image:: Screenshot_55.png
+
+then we got a class initialization and a method call , likely our main functions
+
+.. image:: Screenshot_56.png
+
+the class has a constuctor which sets this values
+
+.. image:: Screenshot_57.png
+
+steal
+-----
+
+onto the second function, it prepares a string and populates it with date.now() and the hwid and other data it grabbed ,with type being passwords
+
+.. image:: Screenshot_58.png
+
+.. image:: Screenshot_59.png
+
+Then it will start a series of adding to a list bunch of data to steal
+
+.. image:: Screenshot_60.png
+
+.. image:: Screenshot_61.png
+
+.. image:: Screenshot_62.png
+
+it will repeat same step for this data
+
+.. code-block:: text
+
+    \Google\Chrome\User Data\ 539600
+    Chrome 539632
+    logins 539536
+    Firefox									 539824
+    Firefox									 539728
+    IELibrary 539760
+    IELibrary 540176
+    IELibrary.InternetExplorer 539952
+    GetSavedPasswords 536272
+    UserName 536304
+    Password 536208
+    Browser									 536496
+    Major 536400
+    Minor 536432
+    2F1A6504-0641-44CF-8BB5-3612D865F2E5 536848
+    Windows Secure Note 536624
+    3CCD5499-87A8-4B10-A215-608888DD3B55 537040
+    Windows Web Password Credential 537072
+    154E23D0-C644-4E6F-8CE6-5069272F999F 536976
+    Windows Credential Picker Protector 537264
+    4BF4C442-9B8A-41A0-B380-DD4A704DDB28 537168
+    Web Credentials 537200
+    77BC582B-F0A6-4E15-4E80-61736B6F3B29 537616
+    Windows Credentials 537392
+    E69D7838-91B5-4FC9-89D5-230D4D4CC2BC 537808
+    Windows Domain Certificate Credential 537840
+    3E0E35BE-1B77-43E7-B873-AED901B6275B 537744
+    Windows Domain Password Credential 538032
+    3C886FF3-2669-4AA2-A8FB-3F6759A77548 537936
+    Windows Extended Credential 537968
+    00000000-0000-0000-0000-000000000000 542480
+    82BD0E67-9FEA-4748-8672-D5EFE5B779B0 542256
+    Windows Generic Credential 542672
+    PtrToStructure 542704
+    ToInt64									 542608
+    SchemaId 542896
+    pResourceElement 542800
+    pIdentityElement 542832
+    LastModified 543248
+    pPackageSid 543024
+    pAuthenticatorElement 543440
+    IE/Edge									 543472
+    Type 543376
+    Value 543664
+    \Common Files\Apple\Apple Application Support\plutil.exe 543568
+    \Apple Computer\Preferences\keychain.plist 543600
+    SeaMonkey 544016
+    SeaMonkey 543792
+    logins 544208
+    UCBrowser\ 544240
+    Login Data 544144
+    journal									 540336
+    UC Browser 540240
+    wow_logins 540272
+    Tencent\QQBrowser\User Data 540688
+    \Default\EncryptedStorage 540464
+    Profile									 540880
+    \EncryptedStorage 540912
+    entries									 540816
+    category 541104
+    Password 541008
+    str3 541040
+    str2 541456
+    blob0 541232
+
+
+then it will construct another list
+
+.. image:: Screenshot_63.png
+
+with this format, with type being passwords
+
+.. image:: Screenshot_64.png
+
+then addes bunch of things to steal to that list
+
+.. image:: Screenshot_65.png
+
+.. code-block:: text
+
+    Opera Browser 570480
+    Opera Software\Opera Stable\Login Data 570896
+    Yandex Browser 570672
+    Yandex\YandexBrowser\User Data 575184
+    360 Browser 575216
+    360Chrome\Chrome\User Data 575120
+    Iridium Browser 575408
+    Iridium\User Data 575312
+    Comodo Dragon 575344
+    Comodo\Dragon\User Data									 575760
+    Cool Novo 575536
+    MapleStudio\ChromePlus\User Data 575952
+    Chromium 575984
+    Chromium\User Data 575888
+    Torch Browser 576176
+    Torch\User Data 576080
+    7Star 576112
+    7Star\7Star\User Data 576528
+    Amigo 576304
+    Amigo\User Data 576720
+    Brave 576752
+    BraveSoftware\Brave-Browser\User Data 576656
+    CentBrowser 576944
+    CentBrowser\User Data 576848
+    Chedot 576880
+    Chedot\User Data 573200
+    Coccoc 572976
+    CocCoc\Browser\User Data 573392
+    Elements Browser 573424
+    Elements Browser\User Data 573328
+    Epic Privacy 573616
+    Epic Privacy Browser\User Data 573520
+    Kometa 573552
+    Kometa\User Data 573968
+    Orbitum									 573744
+    Orbitum\User Data 574160
+    Sputnik									 574192
+    Sputnik\Sputnik\User Data 574096
+    Uran 574384
+    uCozMedia\Uran\User Data 574288
+    Vivaldi									 574320
+    Vivaldi\User Data 574736
+    Citrio 574512
+    CatalinaGroup\Citrio\User Data 574928
+    Liebao Browser 574960
+    liebao\User Data 574864
+    Sleipnir 6 579248
+    Fenrir Inc\Sleipnir5\setting\modules\ChromiumViewer 579152
+    QIP Surf 579184
+    QIP Surf\User Data 579600
+    Coowon 579376
+    Coowon\Coowon\User Data									 579792
+
+
+And for each one on the list
+
+.. image:: Screenshot_66.png
+
+it will add to the list the following from each one in the list 
+
+.. code-block:: text
+
+    origin_url 538864
+    username_value 538768
+    password_value 539056
+
+.. image:: Screenshot_67.png
+
+then we are back to adding to list to steal bunch of things 
+
+.. image:: Screenshot_69.png
+
+.. image:: Screenshot_68.png
+
+.. code-block:: text
+
+    SeaMonkey 544016
+    SeaMonkey 543792
+    logins
+    544208
+    UCBrowser\ 544240
+    Login Data 544144
+    journal									 540336
+    UC Browser 540240
+    wow_logins 540272
+    Tencent\QQBrowser\User Data 540688
+    \Default\EncryptedStorage 540464
+    Profile									 540880
+    \EncryptedStorage 540912
+    entries									 540816
+    category 541104
+    Password 541008
+    str3 541040
+    str2 541456
+    blob0 541232
+    QQ Browser 541648
+    PopPassword 541680
+    SmtpPassword 541584
+    Software\IncrediMail\Identities\ 541872
+    \Accounts_New 541776
+    PopPassword 541808
+    SmtpPassword 542224
+    EmailAddress 542000
+    SmtpServer 546512
+    incredimail 546544
+    HKEY_CURRENT_USER\Software\Qualcomm\Eudora\CommandLine
+    546448
+    current									 546736
+    Settings 546640
+    SavePasswordText 546672
+    Settings 547088
+    ReturnAddress 546864
+    Eudora
+    547280
+    Thunderbird 547312
+    Thunderbird 547216
+    BlackHawk 547504
+    BlackHawk 547408
+    CyberFox 547440
+    CyberFox 547856
+    K-Meleon 547632
+    K-Meleon 548048
+    IceCat
+    548080
+    IceCat
+    547984
+    PaleMoon 548272
+    PaleMoon 548176
+    IceDragon 548208
+    IceDragon 544528
+    WaterFox 544304
+    WaterFox 544720
+    \falkon\profiles\ 544752
+    startProfile="([A-z0-9\/\.]+)" 544656
+    profiles.ini 544944
+    \browsedata.db 544848
+    autofill 544880
+    Falkon Browser 545296
+    startProfile=([A-z0-9\/\.]+) 545072
+    profiles.ini 545488
+    Backend=([A-z0-9\/\.-]+) 545520
+    \settings.ini 545424
+    \browsedata.db 545712
+    autofill 545616
+    Falkon Browser 545648
+    \Claws-mail 546064
+    \clawsrc 545840
+    \clawsrc 546256
+    passkey0 546288
+    master_passphrase_salt=(.+) 546192
+    master_passphrase_pbkdf2_rounds=(.+) 550576
+    use_master_passphrase=(.+) 550480
+    \accountrc 550512
+    smtp_server 550928
+    address									 550704
+    account									 551120
+    \passwordstorerc 551152
+    {(.*),(.*)}(.*) 551056
+    ClawsMail 551344
+    TransformFinalBlock
+    551248
+    Substring 551280
+    IterationCount 551696
+    GetBytes 551472
+    Postbox									 551888
+    Postbox									 551920
+    signons3.txt 551824
+    objects									 552112
+    objects									 552016
+    objects									 552048
+    Data 552464
+    objects									 552240
+    objects									 548560
+    Data 548592
+    DecryptTripleDes 548496
+    Flock Browser 548784
+    netsh 548688
+    wlan show profile 548720
+    All User Profile 549136
+    All User Profile * : (?<profile>.*)
+    548912
+    profile									 549328
+    Wi-Fi 549360
+    wlan show profile name=" 549264
+    " key=clear 549552
+    Key Content * : (?<password>.*) 549456
+    password 549488
+    No Password! 549904
+    ALLUSERSPROFILE 549680
+    DynDNS\Updater\config.dyndns 550096
+    username= 550128
+    password= 550032 
+
+This function just collection of all different things to steal i uploaded the decrypted string where it contains everything it will steal
+`Link <https://github.com/abdelrahman-sherbini/config-extract/blob/main/egcert/dumpedtext.txt>`_ 
+
+Then at the end, for each item in the list 
+
+it will first check what method to send that data (webPanel ,ftp , smtp)
+
+.. image:: Screenshot_70.png
+
+here is the code for the smtp since the configuration is for smtp
+
+.. image:: Screenshot_71.png
+
+where it will prepare the email it will send and the reciever is sales@satamwa.com
+
+.. code-block:: text
+
+    smtp 578928
+    Recovered Accounts 583440
+    Time: 
+    583216
+    <br>IP:  583792
+    <hr> 584208
+    sales@satamwa.com 583984
+    keylog
+    584400
+    <br>UserName:  583632
+    <br>ComputerName:  583664
+    <br>RAM:  583760
+    <br>OSFullName:  583568
+    <br>CPU:  583856
+    yyyy_MM_dd_HH_mm_ss 584432
+
+and sends the data as an attachment
+
+.. image:: Screenshot_72.png
+
+after that it will start a keylogger and does nothing with the data and sleep then exits
+
+.. image:: Screenshot_73.png
+
+.. image:: Screenshot_74.png
+
+IOCs
+-----
+
+.. code-block:: text
+
+    sample1:
+    FB06D5A0EEE3AB810F143A3A461419AE4DCF06FE0CE841905EB732A0BA8E51E4
+
+    stage2(dll):
+    FB06D5A0EEE3AB810F143A3A461419AE4DCF06FE0CE841905EB732A0BA8E51E4
+
+    stage3:
+    6B828331C043BE217509439632E396261265E2270A1E8279ABA358164BBD52C7
+
+    iDYuaKmItG
+    LbipVLwCF
+    CyaX-Sharp.exe
+    f2e2facd-cbc9-4c20-a5b1-e91df5a8a10f
+    SOFTWARE\\Policies\\Microsoft\\Windows Defender
+    SOFTWARE\\Policies\\Microsoft\\Windows Defender\\Real-Time Protection
+    SOFTWARE\\Microsoft\\Windows Defender\\Features
+    Set-MpPreference -SignatureDisableUpdateOnStartupWithoutEngine $true
+    Kirkuk
+    CassaX.Bro
+    ZKjQGjbjHBeTdcVhudpaogKlWGeSDuFLcI
+    tZpAleWfaSPBeFUVFEJvLYqBBqfAEOpppRje
+    RJlIPFBQXhzfNUSjBiaGKoZOEkJpEEoHgJmN
+    HNBZpVkbWIalBGsYdtekbBgwNUGFuIrsZ
+    sUXEJeqJiqvzdvcFDwmXdALFFPHDgVOYuT
+    uPckaIByPPmWhAiEyRnREQFuGusdWpjHdI
+    StringBuilder
+    UxvsODUIcmRLWAuUJlsOOYAGeLScpEmHRVF
+    omikQXTykcqlgtSoiqYqOIoHwabLqFgTVcb
+    zlAmSNhHxIsrPxvvupmOxtAqmSQkevOJX
+    TgDqFbxUpbZYdRucelGDGwhIPNqnVDBNxo
+    ukhoiPzqcNcmRQexKzXkxaCSyyfPjObLd
+    HKVmVXwWNsiCYQNotkwYgAgwhYVbdVKzkwo
+    XWBoFvOEgdwLPJdrlUpzVRwOPmLOXhGiAU
+    rOamYSJvgcPmmdiDNSJsJGlngntpXfRmqEB
+    ZxfOzxFOCSnSBLYtNFEpghAsuUUQqJamV
+    WRwVIXnZJHtpnZJWpyAKwTPFjSjSFGYtyzf
+    LIUrpVVvfOKnyvgmGKptCZfUXTSuwaqry
+    YBLWwQXtoctbdahngJsCgkBzqiTaJxrOGl
+    emDkINkfpooAoAmgxRnAaVYDVCCgyWktV
+    jHcxIUfeExKUWIfylbUCAITzJxVpdRlYneHP
+    rwvzzjZrLpyryxgvSOrpAOqVdzpeXlaNGky
+    GPORPADKtROgPHScElRuvvkLBBNsxSJxda
+    TRkeHeTQoUHnqVvSEEBNbklGTSAQbkSfe
+    yvTdKIgNexgzALeFnvAFJyBCmypBpTpbd
+    dqosuVAhWrvJjwCmHduEovNbIDDnjGbsHi
+    UKuJceHveRpuyXxdkEJuuflLhGZdWVNSStQi
+    elvOKJLOYfXYHTBdeVWsRzODmhJllSsZOsB
+    afGqvfzUiDoXBpjlWGFaETsdABIuFmEzV
+    UQkHIaXiWmfWOuGRuSwrupJQiGeiCEKQgvud
+    rDvdtLhwrdZpAiHVghlbOJOKiDsNIDfsq
+    QzgGBfLGbXXLvGDZdBrIRdrRykUjzjBIo
+    oYcOmkyRZlDVfjvdDQgolBgjPPUYEciCdPfo
+    ApplicationSettingsBase
+    SwurVZhuncsvNABxOZfUKyUvZfQqGVeRHCc
+
+    stage4:
+    73E2D4CEE6A2A9BAEB37E3BF19986C370C23454160C7CBCBBCFA0273B17D93A2
+
+    all decrypted strings at `Link <https://github.com/abdelrahman-sherbini/config-extract/blob/main/egcert/dumpedtext.txt>`_
+
+    sales@satamwa.com
+
+Yara
+-----
+
+.. code-block:: yara
+
+    rule AgentTeslaPacked 
+        {
+            meta:
+                description = "AgentTesla Packed yara"
+                author = "abdosalah"
+            strings:
+                $mz    = { 4D 5A }
+                $string =  "zU3lzdGVtLlJlc291cmNlcy5Ub29scy5TdHJvbmdseVR5cGVkUmVzb3VyY2VCdWlsZGVyCDE2" wide ascii
+                $string2 = "OSNTeXN0ZW0uUmVzb3VyY2VzLlJ1bnRpbWVSZXNvdXJjZVNl" wide ascii
+            $strReplace = { 11 04 72 DB 54 02 70 72 F9 54 02 70 6F 04 [2-2] 0A 13 09 }
+            condition:
+                $mz at 0 and  (all of ($str*))
+        }
+
+
+.. code-block:: yara
+
+    rule AgentTeslaUNPacked 
+        {
+            meta:
+                description = "AgentTesla UNPacked yara"
+                author = "abdosalah"
+            strings:
+                $mz    = { 4D 5A }
+                $rijindael =     { 28 19 00 00 0A 25 FE 09 01 00 6F 1A 00 00 0A 25 FE 09 02 00 6F 1B 00 00 0A 6F 1C 00 00 0A FE 09 00 00 20 00 00 00 00 FE 09 00 00 8E 69 6F 1D 00 00 0A 2A }
+                $decfunc = { 7E 01 00 00 04 0A 20 8F 6D A0 E3 20 1B A3 10 ED 61 25 FE 0E 0E 00 20 0A 00 00 00 5E 45 0A 00 00 00 BD FF FF FF 09 01 00 00 29 00 00 00 77 00 00 00 05 00 00 00 BF 00 00 00 DC 00 00 00 9A 01  }
+            condition:
+                $mz at 0 and  $rijindael and $decfunc
+        }
+
+.. image:: Screenshot_80.png
+
+Removal 
+-------
+We can just delete it from run registry and scheduled task LbipVLwCF and kill all processes running of it
+
+.. code-block:: powershell
+
+    schtasks /delete /tn "\Updates\LbipVLwCF" /f
+    wmic process where name="KHPGFRFGGTBFGELZQYRVNBXBYFFUNYHEIYXWKYLX_20191014224115751.exe" call terminate
+
+Mitre ATT&CK
+------------
+
+.. image:: Screenshot__1.png

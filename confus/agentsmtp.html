@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agent tesla (sample1) &mdash; abdelrahman walkthrough 1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=29a6c3e3"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Remcos Malware Analysis" href="../mal6/remcos.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            abdelrahman walkthrough
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../lab1/lab1.html">Practical Malware Analysis - Lab 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab3/lab3.html">Practical Malware Analysis - Lab 3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab5/lab5.html">Practical Malware Analysis - Lab 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab6/lab6.html">Practical Malware Analysis - Lab 6</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab7/lab7.html">Practical Malware Analysis - Lab 7</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab9/lab9.html">Practical Malware Analysis - Lab 9</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab10/lab10.html">Practical Malware Analysis - Lab 10</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab11/lab11.html">Practical Malware Analysis - Lab 11</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab12/lab12.html">Practical Malware Analysis - Lab 12</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab13/lab13.html">Practical Malware Analysis - Lab 13</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab14/lab14.html">Practical Malware Analysis - Lab 14</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab15/lab15.html">Practical Malware Analysis - Lab 15</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab16/lab16.html">Practical Malware Analysis - Lab 16</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab17/lab17.html">Practical Malware Analysis - Lab 17</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab18/lab18.html">Practical Malware Analysis - Lab 18</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab19/lab19.html">Practical Malware Analysis - Lab 19</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal1/mal1.html">Princess Locker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal2/mal2.html">Blackcat Ransomware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal3/mal3.html">Agent tesla</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../SignedUrl/text.html">SignedUrl Hub</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal4/mal4.html">Vidar</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../laugh/chals.html">0xLaugh Rev Challenges</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal5/agenttesla.html">Agent Tesla Malware Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal6/remcos.html">Remcos Malware Analysis</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Agent tesla (sample1)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#attack-flow-graph">Attack Flow Graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#deep-analysis">Deep analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#stage-2">Stage 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#stage-3">Stage 3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#stage-4">Stage 4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#config-extract">config-extract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#steal">steal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#iocs">IOCs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#yara">Yara</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#removal">Removal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mitre-att-ck">Mitre ATT&amp;CK</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">abdelrahman walkthrough</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Agent tesla (sample1)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/confus/agentsmtp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="agent-tesla-sample1">
+<h1>Agent tesla (sample1)<a class="headerlink" href="#agent-tesla-sample1" title="Link to this heading"></a></h1>
+<section id="attack-flow-graph">
+<h2>Attack Flow Graph<a class="headerlink" href="#attack-flow-graph" title="Link to this heading"></a></h2>
+<img alt="../_images/flow2.png" src="../_images/flow2.png" />
+<img alt="../_images/flow.png" src="../_images/flow.png" />
+</section>
+<section id="deep-analysis">
+<h2>Deep analysis<a class="headerlink" href="#deep-analysis" title="Link to this heading"></a></h2>
+<div class="line-block">
+<div class="line">We got a sample1, let’s pass it to exeinfo</div>
+<div class="line">It is a .NET 32bit exe and it is also obfuscated</div>
+</div>
+<img alt="../_images/Screenshot_120.png" src="../_images/Screenshot_120.png" />
+<p>it is obfuscated with bunch of calcuations and conditional jumps</p>
+<img alt="../_images/Screenshot_220.png" src="../_images/Screenshot_220.png" />
+<div class="line-block">
+<div class="line">cleaning it with de4dot</div>
+<div class="line">going into entrypoint, then the main function for unpacking</div>
+</div>
+<img alt="../_images/Screenshot_319.png" src="../_images/Screenshot_319.png" />
+<p>the unpacking is just a string replace and concatenate and base64 decode, following the program it gives us a dll which
+then gets the second function (type) in that dll and calls it with paramter text2</p>
+<img alt="../_images/Screenshot_419.png" src="../_images/Screenshot_419.png" />
+<p>Following the invoke by stepping into createinstance call</p>
+<img alt="../_images/Screenshot_517.png" src="../_images/Screenshot_517.png" />
+</section>
+<section id="stage-2">
+<h2>Stage 2<a class="headerlink" href="#stage-2" title="Link to this heading"></a></h2>
+<p>We get into the dll decompiled by dsnpy, which seems like another unpacking</p>
+<img alt="../_images/Screenshot_616.png" src="../_images/Screenshot_616.png" />
+<p>Dumping that new binary</p>
+<img alt="../_images/Screenshot_78.png" src="../_images/Screenshot_78.png" />
+</section>
+<section id="stage-3">
+<h2>Stage 3<a class="headerlink" href="#stage-3" title="Link to this heading"></a></h2>
+<p>It is a .Net 32bit exe which is confused with confuserex :(</p>
+<img alt="../_images/Screenshot_88.png" src="../_images/Screenshot_88.png" />
+<img alt="../_images/Screenshot_97.png" src="../_images/Screenshot_97.png" />
+<p>It is running some protections bypass</p>
+<img alt="../_images/Screenshot_781.png" src="../_images/Screenshot_781.png" />
+<p>getting some config <a class="reference external" href="https://github.com/abdelrahman-sherbini/config-extract/blob/main/egcert/test.py">runit</a></p>
+<img alt="../_images/Screenshot_79.png" src="../_images/Screenshot_79.png" />
+<p>and adding the executable into scheduled tasks</p>
+<img alt="../_images/Screenshot_761.png" src="../_images/Screenshot_761.png" />
+<img alt="../_images/Screenshot_771.png" src="../_images/Screenshot_771.png" />
+<img alt="../_images/Screenshot_751.png" src="../_images/Screenshot_751.png" />
+<p>setting breakpoints at every invoke, assembly load</p>
+<img alt="../_images/Screenshot_108.png" src="../_images/Screenshot_108.png" />
+<p>we hit a breakpoint but can’t view locals (proxy call probably from confuserex)</p>
+<img alt="../_images/Screenshot_1110.png" src="../_images/Screenshot_1110.png" />
+<p>Then it invokes that</p>
+<img alt="../_images/Screenshot_146.png" src="../_images/Screenshot_146.png" />
+<p>showing modules then dumping that</p>
+<img alt="../_images/Screenshot_127.png" src="../_images/Screenshot_127.png" />
+<p>Seems like a helper dll, for process injection</p>
+<img alt="../_images/Screenshot_137.png" src="../_images/Screenshot_137.png" />
+<p>Following the execution into that invoke</p>
+<img alt="../_images/Screenshot_157.png" src="../_images/Screenshot_157.png" />
+<img alt="../_images/Screenshot_167.png" src="../_images/Screenshot_167.png" />
+<p>And look what we got , the executable that is going to be injected (looks like self injection)</p>
+<img alt="../_images/Screenshot_176.png" src="../_images/Screenshot_176.png" />
+<img alt="../_images/Screenshot_205.png" src="../_images/Screenshot_205.png" />
+<p>dumping that, and we get our final stage .Net executable 32bit</p>
+<img alt="../_images/Screenshot_186.png" src="../_images/Screenshot_186.png" />
+</section>
+<section id="stage-4">
+<h2>Stage 4<a class="headerlink" href="#stage-4" title="Link to this heading"></a></h2>
+<p>We see methods likely strange names like &lt;Module&gt;.u200B to make it easier passing it to de4dot</p>
+<img alt="../_images/Screenshot_196.png" src="../_images/Screenshot_196.png" />
+<p>smethod_0 is a decryptor, decrypting the arrays present</p>
+<img alt="../_images/Screenshot_227.png" src="../_images/Screenshot_227.png" />
+<img alt="../_images/Screenshot_2111.png" src="../_images/Screenshot_2111.png" />
+</section>
+<section id="config-extract">
+<h2>config-extract<a class="headerlink" href="#config-extract" title="Link to this heading"></a></h2>
+<div class="line-block">
+<div class="line">so i built same function with python to ease my analysis</div>
+<div class="line">first script grabs all parameters passed to this decryptor <a class="reference external" href="https://github.com/abdelrahman-sherbini/config-extract/blob/main/egcert/getintfrombin.py">linkgrabber</a></div>
+<div class="line">second script converts the encrypted lists in .Net to python list to be integrate into third script <a class="reference external" href="https://github.com/abdelrahman-sherbini/config-extract/blob/main/egcert/buildarray.py">linklistconvert</a></div>
+<div class="line">Third script (python2) will decrypt all strings and output to a file <a class="reference external" href="https://github.com/abdelrahman-sherbini/config-extract/blob/main/egcert/test2.py">linkdecrypt</a></div>
+</div>
+<p>Which also gives us all the configuration where we see <a class="reference external" href="mailto:sales&#37;&#52;&#48;satamwa&#46;com">sales<span>&#64;</span>satamwa<span>&#46;</span>com</a> and more</p>
+<div class="line-block">
+<div class="line">Lets walk through the last stage binary now that we did our preparation</div>
+<div class="line">First it grabs my hwid</div>
+</div>
+<img alt="../_images/Screenshot_235.png" src="../_images/Screenshot_235.png" />
+<p>my computer and user name  and then grabs the startup folder path preparing to install something there with the place holder</p>
+<img alt="../_images/Screenshot_246.png" src="../_images/Screenshot_246.png" />
+<img alt="../_images/Screenshot_255.png" src="../_images/Screenshot_255.png" />
+<p>Then sleeps for 15 seconds (sandbox evasion) and if it can’t sleep it will exit.</p>
+<img alt="../_images/Screenshot_265.png" src="../_images/Screenshot_265.png" />
+<img alt="../_images/Screenshot_275.png" src="../_images/Screenshot_275.png" />
+<p>then compares some value to be true or not, if true it will exit</p>
+<img alt="../_images/Screenshot_284.png" src="../_images/Screenshot_284.png" />
+<p>which checks my username is any of these names</p>
+<img alt="../_images/Screenshot_295.png" src="../_images/Screenshot_295.png" />
+<img alt="../_images/Screenshot_305.png" src="../_images/Screenshot_305.png" />
+<p>Then it kills any instances of itself except itself</p>
+<img alt="../_images/Screenshot_3110.png" src="../_images/Screenshot_3110.png" />
+<p>it does a check to do this code blob which modifies <code class="docutils literal notranslate"><span class="pre">temp.tmp</span></code> file in temp folder</p>
+<img alt="../_images/Screenshot_327.png" src="../_images/Screenshot_327.png" />
+<p>and bypasses uac</p>
+<img alt="../_images/Screenshot_346.png" src="../_images/Screenshot_346.png" />
+<img alt="../_images/Screenshot_356.png" src="../_images/Screenshot_356.png" />
+<p>but the check it self is hard coded false</p>
+<img alt="../_images/Screenshot_336.png" src="../_images/Screenshot_336.png" />
+<div class="line-block">
+<div class="line">Next it checks if file location isnot at temp folder if true it will excecute next code which create a folder in temp folder</div>
+<div class="line">then checks if the binary is in that folder if true it will delete it</div>
+</div>
+<img alt="../_images/Screenshot_366.png" src="../_images/Screenshot_366.png" />
+<img alt="../_images/Screenshot_376.png" src="../_images/Screenshot_376.png" />
+<p>Then sets the binary in run registry for persistence</p>
+<img alt="../_images/Screenshot_396.png" src="../_images/Screenshot_396.png" />
+<img alt="../_images/Screenshot_386.png" src="../_images/Screenshot_386.png" />
+<p>but again the check hardcoded to false so it won’t do the above <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(afg.cev</span> <span class="pre">&amp;&amp;</span> <span class="pre">Operators.CompareString(afg.ceq,</span> <span class="pre">afg.ceu,</span> <span class="pre">false)</span> <span class="pre">!=</span> <span class="pre">0)</span></code></p>
+<img alt="../_images/Screenshot_405.png" src="../_images/Screenshot_405.png" />
+<p>Then it deletes the file in the temp folder</p>
+<img alt="../_images/Screenshot_4110.png" src="../_images/Screenshot_4110.png" />
+<img alt="../_images/Screenshot_425.png" src="../_images/Screenshot_425.png" />
+<p>then another check which is coded to be false</p>
+<img alt="../_images/Screenshot_435.png" src="../_images/Screenshot_435.png" />
+<p>where it will move the binary into temp with half-random name</p>
+<img alt="../_images/Screenshot_445.png" src="../_images/Screenshot_445.png" />
+<img alt="../_images/Screenshot_455.png" src="../_images/Screenshot_455.png" />
+<p>another check where the check is code to be false , where it will run restart from shell</p>
+<img alt="../_images/Screenshot_475.png" src="../_images/Screenshot_475.png" />
+<img alt="../_images/Screenshot_465.png" src="../_images/Screenshot_465.png" />
+<p>then it will start a new thread</p>
+<img alt="../_images/Screenshot_485.png" src="../_images/Screenshot_485.png" />
+<p>the new thread will check few checks which destined to be false to run some uac and bypass policies</p>
+<img alt="../_images/Screenshot_518.png" src="../_images/Screenshot_518.png" />
+<img alt="../_images/Screenshot_505.png" src="../_images/Screenshot_505.png" />
+<img alt="../_images/Screenshot_495.png" src="../_images/Screenshot_495.png" />
+<p>Next it will run another thread which will sleep</p>
+<img alt="../_images/Screenshot_533.png" src="../_images/Screenshot_533.png" />
+<img alt="../_images/Screenshot_523.png" src="../_images/Screenshot_523.png" />
+<p>another sleep (wont execute)</p>
+<img alt="../_images/Screenshot_543.png" src="../_images/Screenshot_543.png" />
+<img alt="../_images/Screenshot_551.png" src="../_images/Screenshot_551.png" />
+<p>then we got a class initialization and a method call , likely our main functions</p>
+<img alt="../_images/Screenshot_561.png" src="../_images/Screenshot_561.png" />
+<p>the class has a constuctor which sets this values</p>
+<img alt="../_images/Screenshot_571.png" src="../_images/Screenshot_571.png" />
+</section>
+<section id="steal">
+<h2>steal<a class="headerlink" href="#steal" title="Link to this heading"></a></h2>
+<p>onto the second function, it prepares a string and populates it with date.now() and the hwid and other data it grabbed ,with type being passwords</p>
+<img alt="../_images/Screenshot_581.png" src="../_images/Screenshot_581.png" />
+<img alt="../_images/Screenshot_591.png" src="../_images/Screenshot_591.png" />
+<p>Then it will start a series of adding to a list bunch of data to steal</p>
+<img alt="../_images/Screenshot_602.png" src="../_images/Screenshot_602.png" />
+<img alt="../_images/Screenshot_617.png" src="../_images/Screenshot_617.png" />
+<img alt="../_images/Screenshot_623.png" src="../_images/Screenshot_623.png" />
+<p>it will repeat same step for this data</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>\Google\Chrome\User Data\ 539600
+Chrome 539632
+logins 539536
+Firefox                                                                      539824
+Firefox                                                                      539728
+IELibrary 539760
+IELibrary 540176
+IELibrary.InternetExplorer 539952
+GetSavedPasswords 536272
+UserName 536304
+Password 536208
+Browser                                                                      536496
+Major            536400
+Minor            536432
+2F1A6504-0641-44CF-8BB5-3612D865F2E5             536848
+Windows Secure Note 536624
+3CCD5499-87A8-4B10-A215-608888DD3B55             537040
+Windows Web Password Credential 537072
+154E23D0-C644-4E6F-8CE6-5069272F999F             536976
+Windows Credential Picker Protector 537264
+4BF4C442-9B8A-41A0-B380-DD4A704DDB28             537168
+Web Credentials 537200
+77BC582B-F0A6-4E15-4E80-61736B6F3B29             537616
+Windows Credentials 537392
+E69D7838-91B5-4FC9-89D5-230D4D4CC2BC             537808
+Windows Domain Certificate Credential            537840
+3E0E35BE-1B77-43E7-B873-AED901B6275B             537744
+Windows Domain Password Credential 538032
+3C886FF3-2669-4AA2-A8FB-3F6759A77548             537936
+Windows Extended Credential 537968
+00000000-0000-0000-0000-000000000000             542480
+82BD0E67-9FEA-4748-8672-D5EFE5B779B0             542256
+Windows Generic Credential 542672
+PtrToStructure 542704
+ToInt64                                                                      542608
+SchemaId 542896
+pResourceElement 542800
+pIdentityElement 542832
+LastModified 543248
+pPackageSid 543024
+pAuthenticatorElement            543440
+IE/Edge                                                                      543472
+Type             543376
+Value            543664
+\Common Files\Apple\Apple Application Support\plutil.exe 543568
+\Apple Computer\Preferences\keychain.plist 543600
+SeaMonkey 544016
+SeaMonkey 543792
+logins 544208
+UCBrowser\ 544240
+Login Data 544144
+journal                                                                      540336
+UC Browser 540240
+wow_logins 540272
+Tencent\QQBrowser\User Data 540688
+\Default\EncryptedStorage 540464
+Profile                                                                      540880
+\EncryptedStorage 540912
+entries                                                                      540816
+category 541104
+Password 541008
+str3             541040
+str2             541456
+blob0            541232
+</pre></div>
+</div>
+<p>then it will construct another list</p>
+<img alt="../_images/Screenshot_632.png" src="../_images/Screenshot_632.png" />
+<p>with this format, with type being passwords</p>
+<img alt="../_images/Screenshot_642.png" src="../_images/Screenshot_642.png" />
+<p>then addes bunch of things to steal to that list</p>
+<img alt="../_images/Screenshot_651.png" src="../_images/Screenshot_651.png" />
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Opera Browser 570480
+Opera Software\Opera Stable\Login Data 570896
+Yandex Browser 570672
+Yandex\YandexBrowser\User Data 575184
+360 Browser 575216
+360Chrome\Chrome\User Data 575120
+Iridium Browser 575408
+Iridium\User Data 575312
+Comodo Dragon 575344
+Comodo\Dragon\User Data                                                                      575760
+Cool Novo 575536
+MapleStudio\ChromePlus\User Data 575952
+Chromium 575984
+Chromium\User Data 575888
+Torch Browser 576176
+Torch\User Data 576080
+7Star            576112
+7Star\7Star\User Data            576528
+Amigo            576304
+Amigo\User Data 576720
+Brave            576752
+BraveSoftware\Brave-Browser\User Data            576656
+CentBrowser 576944
+CentBrowser\User Data            576848
+Chedot 576880
+Chedot\User Data 573200
+Coccoc 572976
+CocCoc\Browser\User Data 573392
+Elements Browser 573424
+Elements Browser\User Data 573328
+Epic Privacy 573616
+Epic Privacy Browser\User Data 573520
+Kometa 573552
+Kometa\User Data 573968
+Orbitum                                                                      573744
+Orbitum\User Data 574160
+Sputnik                                                                      574192
+Sputnik\Sputnik\User Data 574096
+Uran             574384
+uCozMedia\Uran\User Data 574288
+Vivaldi                                                                      574320
+Vivaldi\User Data 574736
+Citrio 574512
+CatalinaGroup\Citrio\User Data 574928
+Liebao Browser 574960
+liebao\User Data 574864
+Sleipnir 6 579248
+Fenrir Inc\Sleipnir5\setting\modules\ChromiumViewer 579152
+QIP Surf 579184
+QIP Surf\User Data 579600
+Coowon 579376
+Coowon\Coowon\User Data                                                                      579792
+</pre></div>
+</div>
+<p>And for each one on the list</p>
+<img alt="../_images/Screenshot_661.png" src="../_images/Screenshot_661.png" />
+<p>it will add to the list the following from each one in the list</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>origin_url 538864
+username_value 538768
+password_value 539056
+</pre></div>
+</div>
+<img alt="../_images/Screenshot_671.png" src="../_images/Screenshot_671.png" />
+<p>then we are back to adding to list to steal bunch of things</p>
+<img alt="../_images/Screenshot_691.png" src="../_images/Screenshot_691.png" />
+<img alt="../_images/Screenshot_681.png" src="../_images/Screenshot_681.png" />
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>SeaMonkey 544016
+SeaMonkey 543792
+logins
+544208
+UCBrowser\ 544240
+Login Data 544144
+journal                                                                      540336
+UC Browser 540240
+wow_logins 540272
+Tencent\QQBrowser\User Data 540688
+\Default\EncryptedStorage 540464
+Profile                                                                      540880
+\EncryptedStorage 540912
+entries                                                                      540816
+category 541104
+Password 541008
+str3             541040
+str2             541456
+blob0            541232
+QQ Browser 541648
+PopPassword 541680
+SmtpPassword 541584
+Software\IncrediMail\Identities\ 541872
+\Accounts_New 541776
+PopPassword 541808
+SmtpPassword 542224
+EmailAddress 542000
+SmtpServer 546512
+incredimail 546544
+HKEY_CURRENT_USER\Software\Qualcomm\Eudora\CommandLine
+546448
+current                                                                      546736
+Settings 546640
+SavePasswordText 546672
+Settings 547088
+ReturnAddress 546864
+Eudora
+547280
+Thunderbird 547312
+Thunderbird 547216
+BlackHawk 547504
+BlackHawk 547408
+CyberFox 547440
+CyberFox 547856
+K-Meleon 547632
+K-Meleon 548048
+IceCat
+548080
+IceCat
+547984
+PaleMoon 548272
+PaleMoon 548176
+IceDragon 548208
+IceDragon 544528
+WaterFox 544304
+WaterFox 544720
+\falkon\profiles\ 544752
+startProfile=&quot;([A-z0-9\/\.]+)&quot; 544656
+profiles.ini 544944
+\browsedata.db 544848
+autofill 544880
+Falkon Browser 545296
+startProfile=([A-z0-9\/\.]+) 545072
+profiles.ini 545488
+Backend=([A-z0-9\/\.-]+) 545520
+\settings.ini 545424
+\browsedata.db 545712
+autofill 545616
+Falkon Browser 545648
+\Claws-mail 546064
+\clawsrc 545840
+\clawsrc 546256
+passkey0 546288
+master_passphrase_salt=(.+) 546192
+master_passphrase_pbkdf2_rounds=(.+)             550576
+use_master_passphrase=(.+) 550480
+\accountrc 550512
+smtp_server 550928
+address                                                                      550704
+account                                                                      551120
+\passwordstorerc 551152
+{(.*),(.*)}(.*) 551056
+ClawsMail 551344
+TransformFinalBlock
+551248
+Substring 551280
+IterationCount 551696
+GetBytes 551472
+Postbox                                                                      551888
+Postbox                                                                      551920
+signons3.txt 551824
+objects                                                                      552112
+objects                                                                      552016
+objects                                                                      552048
+Data             552464
+objects                                                                      552240
+objects                                                                      548560
+Data             548592
+DecryptTripleDes 548496
+Flock Browser 548784
+netsh            548688
+wlan show profile 548720
+All User Profile 549136
+All User Profile * : (?&lt;profile&gt;.*)
+548912
+profile                                                                      549328
+Wi-Fi            549360
+wlan show profile name=&quot; 549264
+&quot; key=clear 549552
+Key Content * : (?&lt;password&gt;.*) 549456
+password 549488
+No Password! 549904
+ALLUSERSPROFILE 549680
+DynDNS\Updater\config.dyndns 550096
+username= 550128
+password= 550032
+</pre></div>
+</div>
+<p>This function just collection of all different things to steal i uploaded the decrypted string where it contains everything it will steal
+<a class="reference external" href="https://github.com/abdelrahman-sherbini/config-extract/blob/main/egcert/dumpedtext.txt">Link</a></p>
+<p>Then at the end, for each item in the list</p>
+<p>it will first check what method to send that data (webPanel ,ftp , smtp)</p>
+<img alt="../_images/Screenshot_701.png" src="../_images/Screenshot_701.png" />
+<p>here is the code for the smtp since the configuration is for smtp</p>
+<img alt="../_images/Screenshot_712.png" src="../_images/Screenshot_712.png" />
+<p>where it will prepare the email it will send and the reciever is <a class="reference external" href="mailto:sales&#37;&#52;&#48;satamwa&#46;com">sales<span>&#64;</span>satamwa<span>&#46;</span>com</a></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>smtp             578928
+Recovered Accounts 583440
+Time:
+583216
+&lt;br&gt;IP:  583792
+&lt;hr&gt;             584208
+sales@satamwa.com 583984
+keylog
+584400
+&lt;br&gt;UserName:  583632
+&lt;br&gt;ComputerName:  583664
+&lt;br&gt;RAM:  583760
+&lt;br&gt;OSFullName:  583568
+&lt;br&gt;CPU:  583856
+yyyy_MM_dd_HH_mm_ss 584432
+</pre></div>
+</div>
+<p>and sends the data as an attachment</p>
+<img alt="../_images/Screenshot_722.png" src="../_images/Screenshot_722.png" />
+<p>after that it will start a keylogger and does nothing with the data and sleep then exits</p>
+<img alt="../_images/Screenshot_731.png" src="../_images/Screenshot_731.png" />
+<img alt="../_images/Screenshot_741.png" src="../_images/Screenshot_741.png" />
+</section>
+<section id="iocs">
+<h2>IOCs<a class="headerlink" href="#iocs" title="Link to this heading"></a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sample1:
+FB06D5A0EEE3AB810F143A3A461419AE4DCF06FE0CE841905EB732A0BA8E51E4
+
+stage2(dll):
+FB06D5A0EEE3AB810F143A3A461419AE4DCF06FE0CE841905EB732A0BA8E51E4
+
+stage3:
+6B828331C043BE217509439632E396261265E2270A1E8279ABA358164BBD52C7
+
+iDYuaKmItG
+LbipVLwCF
+CyaX-Sharp.exe
+f2e2facd-cbc9-4c20-a5b1-e91df5a8a10f
+SOFTWARE\\Policies\\Microsoft\\Windows Defender
+SOFTWARE\\Policies\\Microsoft\\Windows Defender\\Real-Time Protection
+SOFTWARE\\Microsoft\\Windows Defender\\Features
+Set-MpPreference -SignatureDisableUpdateOnStartupWithoutEngine $true
+Kirkuk
+CassaX.Bro
+ZKjQGjbjHBeTdcVhudpaogKlWGeSDuFLcI
+tZpAleWfaSPBeFUVFEJvLYqBBqfAEOpppRje
+RJlIPFBQXhzfNUSjBiaGKoZOEkJpEEoHgJmN
+HNBZpVkbWIalBGsYdtekbBgwNUGFuIrsZ
+sUXEJeqJiqvzdvcFDwmXdALFFPHDgVOYuT
+uPckaIByPPmWhAiEyRnREQFuGusdWpjHdI
+StringBuilder
+UxvsODUIcmRLWAuUJlsOOYAGeLScpEmHRVF
+omikQXTykcqlgtSoiqYqOIoHwabLqFgTVcb
+zlAmSNhHxIsrPxvvupmOxtAqmSQkevOJX
+TgDqFbxUpbZYdRucelGDGwhIPNqnVDBNxo
+ukhoiPzqcNcmRQexKzXkxaCSyyfPjObLd
+HKVmVXwWNsiCYQNotkwYgAgwhYVbdVKzkwo
+XWBoFvOEgdwLPJdrlUpzVRwOPmLOXhGiAU
+rOamYSJvgcPmmdiDNSJsJGlngntpXfRmqEB
+ZxfOzxFOCSnSBLYtNFEpghAsuUUQqJamV
+WRwVIXnZJHtpnZJWpyAKwTPFjSjSFGYtyzf
+LIUrpVVvfOKnyvgmGKptCZfUXTSuwaqry
+YBLWwQXtoctbdahngJsCgkBzqiTaJxrOGl
+emDkINkfpooAoAmgxRnAaVYDVCCgyWktV
+jHcxIUfeExKUWIfylbUCAITzJxVpdRlYneHP
+rwvzzjZrLpyryxgvSOrpAOqVdzpeXlaNGky
+GPORPADKtROgPHScElRuvvkLBBNsxSJxda
+TRkeHeTQoUHnqVvSEEBNbklGTSAQbkSfe
+yvTdKIgNexgzALeFnvAFJyBCmypBpTpbd
+dqosuVAhWrvJjwCmHduEovNbIDDnjGbsHi
+UKuJceHveRpuyXxdkEJuuflLhGZdWVNSStQi
+elvOKJLOYfXYHTBdeVWsRzODmhJllSsZOsB
+afGqvfzUiDoXBpjlWGFaETsdABIuFmEzV
+UQkHIaXiWmfWOuGRuSwrupJQiGeiCEKQgvud
+rDvdtLhwrdZpAiHVghlbOJOKiDsNIDfsq
+QzgGBfLGbXXLvGDZdBrIRdrRykUjzjBIo
+oYcOmkyRZlDVfjvdDQgolBgjPPUYEciCdPfo
+ApplicationSettingsBase
+SwurVZhuncsvNABxOZfUKyUvZfQqGVeRHCc
+
+stage4:
+73E2D4CEE6A2A9BAEB37E3BF19986C370C23454160C7CBCBBCFA0273B17D93A2
+
+all decrypted strings at `Link &lt;https://github.com/abdelrahman-sherbini/config-extract/blob/main/egcert/dumpedtext.txt&gt;`_
+
+sales@satamwa.com
+</pre></div>
+</div>
+</section>
+<section id="yara">
+<h2>Yara<a class="headerlink" href="#yara" title="Link to this heading"></a></h2>
+<div class="highlight-yara notranslate"><div class="highlight"><pre><span></span><span class="kd">rule</span><span class="w"> </span>A<span class="n">gentTeslaPacked</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">meta</span><span class="p">:</span>
+<span class="w">            </span><span class="n">description</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;AgentTesla Packed yara&quot;</span>
+<span class="w">            </span><span class="n">author</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;abdosalah&quot;</span>
+<span class="w">        </span><span class="k">strings</span><span class="p">:</span>
+<span class="w">            </span><span class="nv">$mz</span><span class="w">    </span><span class="p">=</span><span class="w"> </span><span class="mh">{ 4D 5A }</span>
+<span class="w">            </span><span class="nv">$string</span><span class="w"> </span><span class="p">=</span><span class="w">  </span><span class="s2">&quot;zU3lzdGVtLlJlc291cmNlcy5Ub29scy5TdHJvbmdseVR5cGVkUmVzb3VyY2VCdWlsZGVyCDE2&quot;</span><span class="w"> </span><span class="nb">wide</span><span class="w"> </span><span class="nb">ascii</span>
+<span class="w">            </span><span class="nv">$string2</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;OSNTeXN0ZW0uUmVzb3VyY2VzLlJ1bnRpbWVSZXNvdXJjZVNl&quot;</span><span class="w"> </span><span class="nb">wide</span><span class="w"> </span><span class="nb">ascii</span>
+<span class="w">        </span><span class="nv">$strReplace</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mh">{ 11 04 72 DB 54 02 70 72 F9 54 02 70 6F 04 [2-2] 0A 13 09 }</span>
+<span class="w">        </span><span class="k">condition</span><span class="p">:</span>
+<span class="w">            </span><span class="nv">$mz</span><span class="w"> </span><span class="nb">at</span><span class="w"> </span>0<span class="w"> </span><span class="ow">and</span><span class="w">  </span><span class="p">(</span><span class="ow">all</span><span class="w"> </span><span class="nb">of</span><span class="w"> </span><span class="p">(</span><span class="nv">$str</span><span class="p">*))</span>
+<span class="w">    </span><span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-yara notranslate"><div class="highlight"><pre><span></span><span class="kd">rule</span><span class="w"> </span>A<span class="n">gentTeslaUNPacked</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">meta</span><span class="p">:</span>
+<span class="w">            </span><span class="n">description</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;AgentTesla UNPacked yara&quot;</span>
+<span class="w">            </span><span class="n">author</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;abdosalah&quot;</span>
+<span class="w">        </span><span class="k">strings</span><span class="p">:</span>
+<span class="w">            </span><span class="nv">$mz</span><span class="w">    </span><span class="p">=</span><span class="w"> </span><span class="mh">{ 4D 5A }</span>
+<span class="w">            </span><span class="nv">$rijindael</span><span class="w"> </span><span class="p">=</span><span class="w">     </span><span class="mh">{ 28 19 00 00 0A 25 FE 09 01 00 6F 1A 00 00 0A 25 FE 09 02 00 6F 1B 00 00 0A 6F 1C 00 00 0A FE 09 00 00 20 00 00 00 00 FE 09 00 00 8E 69 6F 1D 00 00 0A 2A }</span>
+<span class="w">            </span><span class="nv">$decfunc</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mh">{ 7E 01 00 00 04 0A 20 8F 6D A0 E3 20 1B A3 10 ED 61 25 FE 0E 0E 00 20 0A 00 00 00 5E 45 0A 00 00 00 BD FF FF FF 09 01 00 00 29 00 00 00 77 00 00 00 05 00 00 00 BF 00 00 00 DC 00 00 00 9A 01  }</span>
+<span class="w">        </span><span class="k">condition</span><span class="p">:</span>
+<span class="w">            </span><span class="nv">$mz</span><span class="w"> </span><span class="nb">at</span><span class="w"> </span>0<span class="w"> </span><span class="ow">and</span><span class="w">  </span><span class="nv">$rijindael</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">$decfunc</span>
+<span class="w">    </span><span class="p">}</span>
+</pre></div>
+</div>
+<img alt="../_images/Screenshot_80.png" src="../_images/Screenshot_80.png" />
+</section>
+<section id="removal">
+<h2>Removal<a class="headerlink" href="#removal" title="Link to this heading"></a></h2>
+<p>We can just delete it from run registry and scheduled task LbipVLwCF and kill all processes running of it</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">schtasks</span> <span class="p">/</span><span class="n">delete</span> <span class="p">/</span><span class="n">tn</span> <span class="s2">&quot;\Updates\LbipVLwCF&quot;</span> <span class="p">/</span><span class="n">f</span>
+<span class="n">wmic</span> <span class="k">process</span> <span class="nb">where </span><span class="n">name</span><span class="p">=</span><span class="s2">&quot;KHPGFRFGGTBFGELZQYRVNBXBYFFUNYHEIYXWKYLX_20191014224115751.exe&quot;</span> <span class="n">call</span> <span class="n">terminate</span>
+</pre></div>
+</div>
+</section>
+<section id="mitre-att-ck">
+<h2>Mitre ATT&amp;CK<a class="headerlink" href="#mitre-att-ck" title="Link to this heading"></a></h2>
+<img alt="../_images/Screenshot__1.png" src="../_images/Screenshot__1.png" />
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../mal6/remcos.html" class="btn btn-neutral float-left" title="Remcos Malware Analysis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, abdelrahman khaled.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

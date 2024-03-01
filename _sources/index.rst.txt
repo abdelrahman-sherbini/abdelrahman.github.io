@@ -32,6 +32,8 @@ Welcome to my blog! LinkedIn: `abdelrahman-abouelsherbini <https://www.linkedin.
    mal4/mal4
    laugh/chals
    mal5/agenttesla
+   mal6/remcos
+   confus/agentsmtp
 
 Indices and tables
 ==================

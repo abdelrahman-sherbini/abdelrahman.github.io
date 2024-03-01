@@ -1,0 +1,49 @@
+Remcos Malware Analysis
+=============================
+
+sha256: 369adb906e16ea8074f400e3ec40e8eb1a0ff15064fd885a69ef73092563d511
+
+https://app.any.run/tasks/adc543b9-fe88-46df-a979-decbd0f1d4fe/
+
+Let's analyze a sample which are ranked 1st for this week in any.run, where last attack 2/26
+
+.. image:: Screenshot_1.png
+
+We get Vbs code where goal was to run a powershell command, using cmd watchcer we get the powershell command
+
+.. image:: Screenshot_3.png
+
+Cleaning the code and formatting it in VS code
+
+.. image:: Screenshot_4.png
+
+In the script an deobfuscator function , and an invoke command ``iex`` for the deobfuscated text
+
+.. image:: Screenshot_5.png
+
+Where the scipt goal is to download ``http://constructumllc.sa.com/.well-known/vb/Wrapperer.ttf`` into appdata
+
+.. image:: Screenshot_6.png
+
+.. image:: Screenshot_8.png
+
+Then base64 it, to string and take only a part from that string then invokes it
+
+.. image:: Screenshot_7.png
+
+Outputting the result into a file, We get another powershell code
+
+.. image:: Screenshot_9.png
+
+That uses also deobfuscator , and deobfuscated strings then invokes it 
+
+.. image:: Screenshot_10.png
+
+
+
+
+
+
+
+
+

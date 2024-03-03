@@ -645,6 +645,12 @@ IOCs
     SwurVZhuncsvNABxOZfUKyUvZfQqGVeRHCc
 
     stage4:
+    1A944A4D85090CFD719F2D19A06CA4AA1A69A2BBA901203A8D2A9774BD325E1C
+    CyaX.dll
+    CassaX
+    Kirkuk
+
+    stage5:
     73E2D4CEE6A2A9BAEB37E3BF19986C370C23454160C7CBCBBCFA0273B17D93A2
 
     all decrypted strings at `Link <https://github.com/abdelrahman-sherbini/config-extract/blob/main/egcert/dumpedtext.txt>`_

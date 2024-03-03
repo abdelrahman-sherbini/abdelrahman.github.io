@@ -1,0 +1,690 @@
+Sample 2 
+---------
+
+Deep analysis
+--------------
+
+| The sample is a 32bit, opening it in ida we notice it is using api hashing and peb walking
+| Cleaning the sample with hashdb plugin and fixing variable types to correctly display the peb walking and renaming some functions
+
+First it gets the kernel32 base address from the peb and then resolves LdrGetDllHandle
+
+.. image:: Screenshot_1.png
+
+Then it resolves some additional functions from the kernel32 dll handle and storing it into v31
+
+.. image:: Screenshot_2.png
+
+.. image:: Screenshot_3.png
+
+using hashdb we get the functions
+
+.. image:: Screenshot_4.png
+
+then it calls some function with ``lol``
+
+.. image:: Screenshot_5.png
+
+turns out it was openmutex call, so the mutex name is ``lol``
+
+.. image:: Screenshot_6.png
+
+then checks last error from teb equals two (likely ERROR_FILE_NOT_FOUND error code), seems like if mutex opened successful
+
+.. image:: Screenshot_7.png
+
+passing the check, then it iterates over the process searching for any vm processes
+
+.. image:: Screenshot_9.png
+
+.. image:: Screenshot_10.png
+
+passing the check, we arrive at another check for sandboxie dll it tries to gethandle of that dll if succeed we go to that rabbit hole function
+
+.. image:: Screenshot_11.png
+
+.. image:: Screenshot_12.png
+
+Then another check for checking registry keys at system\\currentcontrolset\\services\\disk\\enum which contains the name and serial ID of disk (antiVM)
+
+.. image:: Screenshot_13.png
+
+.. image:: Screenshot_14.png
+
+.. image:: Screenshot_15.png
+
+Then does a check to check time elapsed between instruction (antidebugging but does nothing with it nopped)
+
+.. image:: Screenshot_16.png
+
+We arrive at last bit of code which seems like our main functions
+
+.. image:: Screenshot_17.png
+
+it takes in a huge blob likely a packed code
+
+.. image:: Screenshot_18.png
+
+and prepares another variable containing another encoded code
+
+.. image:: Screenshot_19.png
+
+| Inside the function, it peb walks again and prepares virtual allocate and terminateprocess
+| and puts the encoded data as size in the virtual allocate with base address same as v22
+
+.. code-block:: c++
+
+    NTSYSAPI NTSTATUS ZwAllocateVirtualMemory(
+    [in]      HANDLE    ProcessHandle,
+    [in, out] PVOID     *BaseAddress,
+    [in]      ULONG_PTR ZeroBits,
+    [in, out] PSIZE_T   RegionSize,
+    [in]      ULONG     AllocationType,
+    [in]      ULONG     Protect
+    )
+
+.. image:: Screenshot_20.png
+
+.. image:: Screenshot_21.png
+
+Then while debugging running over this function, exits the exe and executes malicious behaviour
+
+.. image:: Screenshot_22.png
+
+Maybe because it starts with modifying the ret address
+
+.. image:: Screenshot_23.png
+
+Setting some breakpoints, noticed it is writing something , some decoded data
+
+.. image:: Screenshot_24.png
+
+decoded more data, likely this is the process it will inject svchost
+
+.. image:: Screenshot_25.png
+
+it is just writing some gibberish now so i will break on that interesting call
+
+.. image:: Screenshot_26.png
+
+.. image:: Screenshot_27.png
+
+it hit that breakpoint, and we see new data written , libraries used for process injection
+
+.. image:: Screenshot_28.png
+
+Now we got out of the function lets skip this processing till we get this last bit
+
+.. image:: Screenshot_29.png
+
+.. image:: Screenshot_30.png
+
+This line sounds interesting, running till that instruction, and letting all deobfuscation write to that function that is called
+
+.. image:: Screenshot_31.png
+
+Then we see the decoded routine, where the process injection happens
+
+.. image:: Screenshot_32.png
+
+Going till the virtualalloc and grabbing the allocated address in the dump
+
+.. image:: Screenshot_33.png
+
+basically what is happening is similar to this code
+
+.. code-block:: c++
+
+    if (CreateProcessA(szFileName, NULL, NULL, NULL, FALSE, CREATE_SUSPENDED, NULL, NULL, &si, &pi) == FALSE) {
+        Debug("[Debug] RunPE(): CreateProcessA(): (%lu)\n", GetLastError());
+        return FALSE;
+    }
+
+    /* Get thread context (processor-specific register data) */
+    context.ContextFlags = CONTEXT_FULL;
+    if (GetThreadContext(pi.hThread, &context) == FALSE) {
+        Debug("[Debug] RunPE(): GetThreadContext()");
+    }
+
+    /* Unmap memory space of program */
+    pZwUnmapViewOfSection = (PZUVOS)GetProcAddress(GetModuleHandleA("ntdll.dll"), "ZwUnmapViewOfSection");
+    pZwUnmapViewOfSection(pi.hProcess, (PVOID)pinh->OptionalHeader.ImageBase);
+
+    /* Allocate virtual memory for program */
+    lpAddress = VirtualAllocEx(pi.hProcess, (PVOID)pinh->OptionalHeader.ImageBase, pinh->OptionalHeader.SizeOfImage, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+    if (lpAddress == NULL) {
+        Debug("[Debug] RunPE(): VirtualAllocEx(): (%lu)\n", GetLastError());
+        return FALSE;
+    }                         
+
+And this code also, notice memcpy part i will break at all memcpy to dump the packed malware
+memcpy in assembly is rep movsb
+
+.. image:: Screenshot_42.png
+
+.. code-block:: c++
+
+    // create a memory section
+	fNtCreateSection(&sectionHandle, SECTION_MAP_READ | SECTION_MAP_WRITE | SECTION_MAP_EXECUTE, NULL, (PLARGE_INTEGER)&sectionSize, PAGE_EXECUTE_READWRITE, SEC_COMMIT, NULL);
+	
+	// create a view of the memory section in the local process
+	fNtMapViewOfSection(sectionHandle, GetCurrentProcess(), &localSectionAddress, NULL, NULL, NULL, &size, 2, NULL, PAGE_READWRITE);
+
+	// create a view of the memory section in the target process
+	HANDLE targetHandle = OpenProcess(PROCESS_ALL_ACCESS, false, 1480);
+	fNtMapViewOfSection(sectionHandle, targetHandle, &remoteSectionAddress, NULL, NULL, NULL, &size, 2, NULL, PAGE_EXECUTE_READ);
+
+	// copy shellcode to the local view, which will get reflected in the target process's mapped view
+	memcpy(localSectionAddress, buf, sizeof(buf));
+	
+	HANDLE targetThreadHandle = NULL;
+	
+And here it is deciding what to inject based on OS 32 or 64 bit ,i get svchost because iam on 64 bit OS.
+
+.. image:: Screenshot_34.png
+
+.. image:: Screenshot_35.png
+
+Then the start of typical process injection, it creates a process with CREATE_SUSPENDED (at push 4)
+
+.. image:: Screenshot_36.png
+
+Our first hit with memcpy, is the malware is copying svchost after mapping it
+
+.. image:: Screenshot_40.png
+
+Our second hit, we see it is copying itself into the svchost
+
+.. image:: Screenshot_41.png
+
+Then it creates suspended process with the copied svchost 
+
+.. image:: Screenshot_43.png
+
+Then writes our copied malware into mapped svchost
+
+.. image:: Screenshot_44.png
+
+I debugged the malware into ida then fixed function calls ,types and renaming to make analysis easier
+
+.. code-block:: c++
+
+    void __cdecl __noreturn sub_300C0(int a1)
+    {
+    char *v1; // edx
+    char *v2; // edi
+    char *v3; // esi
+    void *v4; // [esp+0h] [ebp-354h] BYREF
+    int v5; // [esp+B0h] [ebp-2A4h]
+    struct _PROCESS_INFORMATION ProcessInformation; // [esp+2CCh] [ebp-88h] BYREF
+    struct _STARTUPINFOW StartupInfo; // [esp+2DCh] [ebp-78h] BYREF
+    char *svchostInMEM; // [esp+320h] [ebp-34h] BYREF
+    int v9; // [esp+324h] [ebp-30h] BYREF
+    char *v10; // [esp+328h] [ebp-2Ch] BYREF
+    int v11; // [esp+32Ch] [ebp-28h] BYREF
+    int v12; // [esp+330h] [ebp-24h]
+    unsigned int v13; // [esp+334h] [ebp-20h] BYREF
+    int v14; // [esp+338h] [ebp-1Ch]
+    _IMAGE_DOS_HEADER *localSelectionAddress; // [esp+33Ch] [ebp-18h] BYREF
+    int v16; // [esp+340h] [ebp-14h] BYREF
+    HANDLE v17; // [esp+344h] [ebp-10h]
+    LPWSTR lpFilename; // [esp+348h] [ebp-Ch]
+    HMODULE thisFile; // [esp+34Ch] [ebp-8h]
+    int v20; // [esp+350h] [ebp-4h] BYREF
+
+    thisFile = GetModuleHandleW(0);
+    lpFilename = VirtualAlloc(0, 0x8000u, 0x1000u, 4u);
+    if ( !lpFilename )
+    LABEL_26:
+        ExitProcess(0);
+    GetModuleFileNameW(0, lpFilename, 0x8000u);
+    SetEnvironmentVariableW(&Name, lpFilename);
+    if ( !GetWindowsDirectoryW(lpFilename, 0x8000u)
+        || ((v20 = 0, (ZwQueryInformationProcess)(-1, 26, &v20, 4, 0), v20) ? lstrcatW(lpFilename, &off_30094) : lstrcatW(lpFilename, &String2),
+            v17 = CreateFileW(lpFilename, GENERIC_READ, 1u, 0, OPEN_EXISTING, 0x80u, 0),
+            v17 == -1) )
+    {
+    LABEL_25:
+        VirtualFree(lpFilename, 0, 0x8000u);
+        goto LABEL_26;
+    }
+    if ( (ZWCreateSection)(&v16, 4, 0, 0, 2, 0x1000000, v17) < 0 )
+    {
+    LABEL_24:
+        CloseHandle(v17);
+        goto LABEL_25;
+    }
+    localSelectionAddress = 0;
+    v13 = 0;
+    if ( (NtMapViewOfSection)(v16, -1, &localSelectionAddress, 0, 0, 0, &v13, 1, 0, PAGE_READONLY) < 0 )// svchost
+    {
+    LABEL_23:
+        (ZwClose)(v16);
+        goto LABEL_24;
+    }
+    v1 = &localSelectionAddress->e_lfarlc + localSelectionAddress->e_lfanew;
+    v13 = *(&localSelectionAddress[1].e_sp + localSelectionAddress->e_lfanew);
+    v12 = *(v1 + 4);
+    v14 = 0;
+    if ( (ZWCreateSection)(&v9, &unk_F001F, 0, &v13, 64, 0x8000000, 0) < 0 )// create memory section at svchost
+    {
+    LABEL_22:
+        (NtUnmapViewOfSection)(-1, localSelectionAddress);
+        goto LABEL_23;
+    }
+    svchostInMEM = 0;
+    v13 = 0;
+    if ( (NtMapViewOfSection)(v9, -1, &svchostInMEM, 0, 0, 0, &v13, 1, 0, PAGE_READWRITE) < 0 )
+    {
+    LABEL_21:
+        (ZwClose)(v9);
+        goto LABEL_22;
+    }
+    qmemcpy(svchostInMEM, localSelectionAddress, v13);// copy svchost
+    v13 = *(thisFile + *(thisFile + 15) + 80);    // This file
+    v14 = 0;
+    if ( (ZWCreateSection)(&v11, &unk_F001F, 0, &v13, 64, 0x8000000, 0) >= 0 )
+    {
+        v10 = 0;
+        v13 = 0;
+        if ( (NtMapViewOfSection)(v11, -1, &v10, 0, 0, 0, &v13, 1, 0, PAGE_READWRITE) >= 0 )
+        {
+        // copy this file (itself) into memory
+        qmemcpy(v10, thisFile, v13);              // and does nothing with it
+        memset(&StartupInfo, 0, sizeof(StartupInfo));
+        StartupInfo.cb = 68;
+        if ( CreateProcessW(0, lpFilename, 0, 0, 0, CREATE_SUSPENDED, 0, 0, &StartupInfo, &ProcessInformation) )
+        {
+            v13 = -1000000;
+            v14 = -1;
+            (NtDelayExecution)(0, &v13);            // sleep
+            (NtUnmapViewOfSection)(-1, v10);
+            v10 = 0;
+            v13 = 0;                                //    Map svchost into memory
+            if ( !(NtMapViewOfSection)(v11, ProcessInformation.hProcess, &v10, 0, 0, 0, &v13, 1, 0, 64) )
+            {
+            (ZwClose)(v11);
+            v2 = &svchostInMEM[v12];
+            *v2++ = 'h';
+            *v2 = &v10[a1 - thisFile];
+            v2[4] = -61;                          // adds `push 28213B9; ret` to svchost in memory
+            v4 = &unk_10002;
+            if ( (GetThreadContest)(ProcessInformation.hThread, &v4) )
+            {
+                v3 = (v5 - v12);
+                (NtUnmapViewOfSection)(ProcessInformation.hProcess, v5 - v12);
+                (NtUnmapViewOfSection)(-1, svchostInMEM);
+                svchostInMEM = v3;
+                v13 = 0;
+                if ( !(NtMapViewOfSection)(v9, ProcessInformation.hProcess, &svchostInMEM, 0, 0, 0, &v13, 1, 0, 64) )
+                (NtResumeThread)(ProcessInformation.hThread, 0);
+                goto LABEL_21;
+            }
+            goto LABEL_20;
+            }
+        }
+        else
+        {
+            (NtUnmapViewOfSection)(-1, v10);
+        }
+        }
+        (ZwClose)(v11);
+    }
+    LABEL_20:
+    (NtUnmapViewOfSection)(-1, svchostInMEM);
+    goto LABEL_21;
+    }
+
+Now that we got the big picture, i will set a breakpoint at this location to dump the modified svchost 
+
+.. image:: Screenshot_45.png
+
+Then follow address EDI in dissassembler, we find the modified code which is a jump to that location
+
+.. image:: Screenshot_46.png
+
+Following into memory then dumping the file
+
+.. image:: Screenshot_48.png
+
+The sections point to nothing, for example first section points to 400 while its null bytes as it was dumped from memory
+
+.. image:: Screenshot_49.png
+
+.. image:: Screenshot_50.png
+
+| Fixing the section alignment with put raw address on disk as virtual address on memory
+| And then we can view it on pstudio
+
+.. image:: Screenshot_52.png
+
+.. image:: Screenshot_51.png
+
+So the executable didn't run, there was an error, i decided to break at NtResumeThread, then run to that function, in windbg attach to the created process svchost and break of entry ``bp $exentry`` and run in windbg , and then step over the NtResumeThread 
+and we get a hit on windbg
+
+.. image:: Screenshot_53.png
+
+.. image:: Screenshot_54.png
+
+First it get the next instruction address by call and pop , where EAX will be at the end address of the first instruction
+
+.. image:: Screenshot_55.png
+
+.. image:: Screenshot_56.png
+
+then it calls a function with that address 
+
+.. image:: Screenshot_57.png
+
+and we get peb walking and api hashing
+
+.. image:: Screenshot_62.png
+
+to make it easier i will use ida with windbg debugger with same steps, attach process , run over NtResumeThread , break on entrypoint
+
+.. image:: Screenshot_59.png
+
+.. image:: Screenshot_60.png
+
+we arrive at same push ret
+
+.. image:: Screenshot_61.png
+
+and then it is calling same decrypting function in original malware with a blob of data
+
+.. image:: Screenshot_64.png
+
+.. image:: Screenshot_65.png
+
+We arrive at this compare where it is skipped in original malware (this code changes the dynamic function that will be called later)
+
+.. image:: Screenshot_66.png
+
+Running over some functions, we arive at a patched instruction with int 3 (cc) where it will decode data for the dynamic routine 
+
+.. image:: Screenshot_67.png
+
+And here what the code looks like after replicating the patched instructions (notice we are still at the code that decodes the dynamic routine that was skipped in original malware)
+
+.. image:: Screenshot_68.png
+
+The instructions was patched by the malware, to continue debugging, we will return this to normal
+
+.. image:: Screenshot_69.png
+
+and we got a reference from a clean sample
+
+.. image:: Screenshot_70.png
+
+fixed
+
+.. image:: Screenshot_71.png
+
+.. image:: Screenshot_72.png
+
+we arrive at the jump address but it is also patched, so we have to fix it same way from the clean sample 
+
+.. image:: Screenshot_73.png
+
+.. image:: Screenshot_74.png
+
+.. image:: Screenshot_75.png
+
+And finally we arrive the main malicious code
+
+.. image:: Screenshot_76.png
+
+First function is a kernel32dll seterror, going into the second , it is also peb walking and api hashing
+
+.. image:: Screenshot_77.png
+
+.. image:: Screenshot_78.png
+
+It gets the volume information and OS version
+
+.. image:: Screenshot_79.png
+
+Then checks if process is 64 or 32 bit
+
+.. image:: Screenshot_80.png
+
+Then sleeps and allocates place in memory
+
+.. image:: Screenshot_81.png
+
+Then it gets path of environment variable ``src``
+
+.. image:: Screenshot_82.png
+
+.. image:: Screenshot_83.png
+
+Then calls a routine , that checks whether iam in admin group or not using this sid S-1-5-32-544 `sidInfo <https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-identifiers>`_ 
+
+.. image:: Screenshot_84.png
+
+If iam admin it will use all users and run registry , and if not it will just use current user and load registry
+
+.. image:: Screenshot_86.png
+
+Then it used GetTickCount that ``Retrieves the number of milliseconds that have elapsed since the system was started`` and masks it to 3 bits (as a way to generate a random number and set that dword variable based on that)
+
+.. image:: Screenshot_87.png
+
+which at the end settles on exe
+
+.. image:: Screenshot_88.png
+
+Then it creates a mutex with My VolumeInfo as a name, Then does ``GetLastError() != 183`` to check ERROR_ALREADY_EXISTS error if mutex already exists
+
+.. image:: Screenshot_89.png
+
+Then it calls a function, which copies our executable into allocated memory , and prepares temp folder variable
+
+.. image:: Screenshot_90.png
+
+.. image:: Screenshot_91.png
+
+Then it gets just the executable name
+
+.. image:: Screenshot_92.png
+
+Then it checks if the file is in the temp folder to do the following code
+
+.. image:: Screenshot_94.png
+
+.. image:: Screenshot_93.png
+
+Next function just allocates heap and another garbage code
+
+.. image:: Screenshot_95.png
+
+Prepares a name of the path executable that will likely copy into it, the executable will be in temp folder with name ms(RANDOM).exe (the random is from str(heapPTR))
+
+.. image:: Screenshot_96.png
+
+Then this blob, to copy the file into temp folder
+
+.. image:: Screenshot_98.png
+
+Then it sets CreationTime, &LastAccessTime, &LastWriteTime of svchost same as the created file in temp
+
+.. image:: Screenshot_99.png
+
+And copies the path of temp folder executable into registry key load
+
+.. image:: Screenshot_100.png
+
+.. image:: Screenshot_101.png
+
+.. image:: Screenshot_102.png
+
+Sets security descriptor of the key to D:(A;;KRWD;;;WD)
+ 
+.. code-block:: text
+
+    A: This stands for "Allow." It specifies that this ACE allows access.
+
+    KRWD: These are access rights. Each letter corresponds to a specific set of rights:
+
+    K: Read Control
+    R: Read
+    W: Write
+    D: Delete
+    ;;;WD: These are SID (Security Identifier) placeholders. The ;;; indicates that the ACE applies to "Everyone" (the well-known SID for the Everyone group). 
+
+    The WD part specifies that this ACE applies to the "Everyone" group.
+
+
+Then deletes the original file
+
+.. image:: Screenshot_103.png
+
+Next in the program flow, it calls 3 routines which are just noise 
+
+.. image:: Screenshot_104.png
+
+First one, enumerates all registry values under ``Software\\microsoft`` , and search for that random number(i think) and does nothing with the return
+
+.. image:: Screenshot_105.png
+
+.. image:: Screenshot_106.png
+
+Second function , enumerates all registry values under ``Software\\microsoft`` , and checks if type is reg_sz, and calls every software there 
+
+.. image:: Screenshot_109.png
+
+.. image:: Screenshot_108.png
+
+and sets the directory to %alluserprofile%
+
+.. image:: Screenshot_110.png
+
+.. image:: Screenshot_111.png
+
+Third function calls www.update.microsoft.com 
+
+.. image:: Screenshot_112.png
+
+Now onto the main function, it is in an infinite loop with a sleep at the end
+
+.. image:: Screenshot_113.png
+
+It first prepares a string with some of my info like id , admin or not (to know which machine it is running on) 
+
+.. image:: Screenshot_115.png
+
+Then calls a loop that will break at first round (junk code)
+
+.. image:: Screenshot_116.png
+
+Encodes my info 
+
+.. image:: Screenshot_117.png
+
+Then calls sub_2EC0FC1 with my data 
+
+.. image:: Screenshot_118.png
+
+Which is a base64
+
+.. image:: Screenshot_119.png
+
+.. image:: Screenshot_120.png
+
+Then enter an infinite loop (to ensure data send, will break on data sent), and calls postreq with my encoded data 
+
+.. image:: Screenshot_121.png
+
+and this url http://filer.comeze.com/panel/image.php
+
+.. image:: Screenshot_122.png
+
+Into the postreq function, first it removes http:// from the url
+
+.. image:: Screenshot_126.png
+
+then removes what is after /
+
+.. image:: Screenshot_127.png
+
+Then does series of checks to  try to resolve the host 
+
+.. image:: Screenshot_128.png
+
+.. image:: Screenshot_129.png
+
+.. image:: Screenshot_130.png
+
+we got ip 1677745305 converting it to ip we get
+
+.. image:: Screenshot_131.png
+
+.. image:: Screenshot_132.png
+
+starts the connection
+
+.. image:: Screenshot_133.png
+
+Then it checks if it got our info sends it as post request else just sends a get request, and gets the response in v13
+
+.. image:: Screenshot_134.png
+
+And returns the response 
+
+.. image:: Screenshot_135.png
+
+Decodes the response, then calls a routine with that response
+
+.. image:: Screenshot_137.png
+
+In the function, it does some processing, then call another function with the processed response
+
+.. image:: Screenshot_138.png
+
+And based on the response it does multiple code cases
+
+.. image:: Screenshot_139.png
+
+First case, it downloads an executable to %src%  with name [Random].exe, then creates a process with that exe
+
+.. image:: Screenshot_140.png
+
+Second case, gets response data and pass it to sub_372119 and then saves the [Random].exe into software\\microsoft registry
+
+.. image:: Screenshot_141.png
+
+.. image:: Screenshot_142.png
+
+If there was error (miscalc) it would send the result as post request
+
+.. image:: Screenshot_149.png
+ 
+sub_372119 is same as we saw in orignial malware, it likely write a dynamic routine
+
+.. image:: Screenshot_143.png
+
+Third case, writes a file into temp folder with random name , and starts a process as that executable
+
+.. image:: Screenshot_144.png
+
+Fourth case , Writes an executable as ms[Random].dat (from The post request response)inside %alluserprofile% 
+
+.. image:: Screenshot_145.png
+
+Fifth case is a cleanup deletes the executable and the registry created
+
+.. image:: Screenshot_146.png
+
+Sixth case runs what is in Load registry as a created process
+
+.. image:: Screenshot_147.png
+
+Seventh case it is retuning software\\microsoft registry access to Everyone and does a cleanup of load registry
+
+.. image:: Screenshot_148.png
+
+Then at the very end does a cleanup and deletes the file
+
+.. image:: Screenshot_150.png
+

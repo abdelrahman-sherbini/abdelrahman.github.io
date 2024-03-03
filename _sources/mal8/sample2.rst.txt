@@ -1,5 +1,5 @@
-Sample 2 
-=========
+AndroMeda Malware analysis
+==========================
 
 Attack Flow Graph
 -----------------

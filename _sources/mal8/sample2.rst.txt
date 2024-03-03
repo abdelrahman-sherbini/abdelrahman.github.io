@@ -1,5 +1,12 @@
 Sample 2 
----------
+=========
+
+Attack Flow Graph
+-----------------
+
+.. image:: Untitled-2024-02-29-0843.png
+
+.. image:: flow2.png
 
 Deep analysis
 --------------
@@ -109,17 +116,17 @@ it is just writing some gibberish now so i will break on that interesting call
 
 .. image:: Screenshot_27.png
 
-it hit that breakpoint, and we see new data written , libraries used for process injection
+it hit that breakpoint, and we see new data written , libraries used for process injection (maybe it will modify some code)
 
 .. image:: Screenshot_28.png
 
-Now we got out of the function lets skip this processing till we get this last bit
+Now we got out of the function (it was just a weird error), lets skip this processing till we get this last bit
 
 .. image:: Screenshot_29.png
 
 .. image:: Screenshot_30.png
 
-This line sounds interesting, running till that instruction, and letting all deobfuscation write to that function that is called
+This line sounds interesting, running till that instruction, and letting all deobfuscation write to that dynamic function that is called
 
 .. image:: Screenshot_31.png
 
@@ -127,7 +134,7 @@ Then we see the decoded routine, where the process injection happens
 
 .. image:: Screenshot_32.png
 
-Going till the virtualalloc and grabbing the allocated address in the dump
+Going till the virtualalloc and grabbing the allocated address in the dump, and turns out it only contained value for the process name to inject
 
 .. image:: Screenshot_33.png
 
@@ -179,6 +186,7 @@ memcpy in assembly is rep movsb
 	
 	HANDLE targetThreadHandle = NULL;
 	
+https://cocomelonc.github.io/tutorial/2021/12/13/malware-injection-12.html
 And here it is deciding what to inject based on OS 32 or 64 bit ,i get svchost because iam on 64 bit OS.
 
 .. image:: Screenshot_34.png
@@ -307,7 +315,7 @@ I debugged the malware into ida then fixed function calls ,types and renaming to
             v2 = &svchostInMEM[v12];
             *v2++ = 'h';
             *v2 = &v10[a1 - thisFile];
-            v2[4] = -61;                          // adds `push 28213B9; ret` to svchost in memory
+            v2[4] = -61;                          // adds `push 28213B9; ret` to svchost entry in memory
             v4 = &unk_10002;
             if ( (GetThreadContest)(ProcessInformation.hThread, &v4) )
             {
@@ -381,7 +389,7 @@ and we get peb walking and api hashing
 
 .. image:: Screenshot_62.png
 
-to make it easier i will use ida with windbg debugger with same steps, attach process , run over NtResumeThread , break on entrypoint
+to make it easier i will use ida with windbg debugger with same steps, attach process , run over to NtResumeThread , break on entrypoint , run , then stepover NtResumeThread
 
 .. image:: Screenshot_59.png
 
@@ -430,6 +438,9 @@ we arrive at the jump address but it is also patched, so we have to fix it same 
 .. image:: Screenshot_74.png
 
 .. image:: Screenshot_75.png
+
+Stage 2
+--------
 
 And finally we arrive the main malicious code
 
@@ -688,3 +699,223 @@ Then at the very end does a cleanup and deletes the file
 
 .. image:: Screenshot_150.png
 
+IOCs
+-----
+
+.. code-block:: text
+
+    Hash SHA256:F3BB357944367A76A7AD5CC1791CE0ED41A24B4C8015DB97A97937EC6B56124C
+    IP: 153.92.0.100
+
+    id:%lu|bid:%lu|bv:%lu|sv:%lu|pa:%lu|la:%lu|ar:%lu
+    %allusersprofile%
+    S-1-5-32-544
+    %userprofile%
+    software\microsoft\windows nt\currentversion\windows
+    %allusersprofile%
+    software\microsoft\windows\currentversion\Policies\Explorer\Run
+    %s\ms%s.%s
+    D:(A;;KA;;;WD)
+    D:(A;;KRWD;;;WD)
+    D:(A;;KA;;;WD)
+    ms%08X.dat
+    %allusersprofile%\
+    ms%08X.dat
+    %tmp%\
+    %08x.exe
+    id:%lu|tid:%lu|result:%lu
+    d40e75961383124949436f37f45a8cb6|
+    http://filer.comeze.com/panel/image.php
+    POST /%s HTTP/1.1 Host: %s User-Agent: Mozilla/4.0 Content-Type: application/x-www-form-urlencoded Content-Length: %d Connection: close
+    GET /%s HTTP/1.0 Host: %s User-Agent: Mozilla/4.0 Connection: close
+    aabcdeefghiijklmnoopqrstuuvwxyzaU
+    software\microsoft
+    C:\Windows\SysWOW64\
+    qemut!
+    vboxt-
+    wmwat9
+    hsk\\ehs\\dihviceh\\serhlsethntrohntcohurrehem\\chsyst
+
+
+Yara rule
+----------
+
+.. code-block:: yara
+
+    rule sample2
+    {
+        
+        strings:
+            $str = "hsk\\ehs\\dihviceh\\serhlsethntrohntcohurrehem\\chsyst"
+        
+        condition:
+            uint16(0) == 0x5a4d and $str
+    }
+
+Removal
+-------
+
+
+regini -i hklm\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run [1 5 7 11]
+regini -i hcu\Software\Microsoft\Windows NT\CurrentVersion\Windows [1 5 7 11]
+
+.. code-block:: python3
+
+    import psutil
+    import re
+    import os
+    import tempfile
+    import winreg
+    import sys
+    import win32security
+    import ntsecuritycon
+
+    def remove(path):
+        path = path.replace("\\", "/")
+        os.remove(path)
+        print("File at {} was deleted".format(path))
+
+    def deleteRegistry(regKey, regSubkey, malFile):
+        try:
+            hKey = winreg.OpenKey(regKey, regSubkey, 0, winreg.KEY_ALL_ACCESS)
+            i = 0
+
+            while True:
+                try:
+                    x = winreg.EnumValue(hKey, i)
+                    value = str(x[0])
+                    data = str(x[1])
+
+                    if malFile in data:
+                        print("Found Malware registry value")
+                        winreg.DeleteValue(hKey, value)
+                        print("Deleted Malware registry value")
+                        break
+
+                    i += 1
+                except Exception as e:
+                    break
+
+        except Exception as e:
+            print(f"Error opening registry key: {e}")
+        finally:
+            winreg.CloseKey(hKey)
+
+    def setRegistryPermissions(key, subkey, username, permissions):
+        try:
+            key_handle = winreg.OpenKey(key, subkey, 0, winreg.KEY_SET_VALUE)
+            security_descriptor = win32security.GetSecurityInfo(key_handle, win32security.SE_REGISTRY_KEY, win32security.DACL_SECURITY_INFORMATION)
+            dacl = security_descriptor.GetSecurityDescriptorDacl()
+            everyone = win32security.LookupAccountName("", "Everyone")[0]
+
+            ace = win32security.ACE(
+                win32security.ACL_REVISION,
+                permissions,
+                0,
+                everyone
+            )
+            dacl.AddAccessAllowedAce(ace)
+
+            win32security.SetSecurityInfo(
+                key_handle,
+                win32security.SE_REGISTRY_KEY,
+                win32security.DACL_SECURITY_INFORMATION,
+                None,
+                None,
+                dacl,
+                None
+            )
+
+            print(f"Permissions modified for {subkey} key.")
+
+        except Exception as e:
+            print(f"Error modifying permissions for {subkey} key: {e}")
+        finally:
+            winreg.CloseKey(key_handle)
+
+    # Your registry paths
+    regPath1 = r"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows"
+    regPath2 = r"Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run"
+    regPath3 = r"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows"
+
+    # Flag to indicate 32 or 64 bits.
+    is32bit = 1 if sys.maxsize > 2**32 else 0
+
+    malFile = ""
+    malProcess = ""
+
+    if is32bit:
+        malProcess = "wuauclt.exe"
+    else:
+        malProcess = "svchost.exe"
+
+    tempDir = tempfile.gettempdir()
+
+    for proc in psutil.pids():
+        p = psutil.Process(proc)
+
+        if p.name() == malProcess:
+            try:
+                files = p.open_files()
+            except:
+                continue
+
+            for f in files:
+                if tempDir in f[0]:
+                    x = f[0].split('\\')
+
+                    if x[-1][0:2] == "ms":
+                        malFile = x[-1]
+                        print("Malware random name is: {}".format(malFile))
+
+                        try:
+                            p.kill()
+                            print("Malware Process with PID {} was killed".format(proc))
+                        except Exception as e:
+                            print("Unable to kill the process")
+
+                        exit(1)
+
+    if not malFile:
+        exit(0)
+
+    remove(os.path.join(tempDir, malFile))
+    key1 = winreg.HKEY_CURRENT_USER
+    sub1 = r"Software\Microsoft\Windows NT\CurrentVersion\Windows"
+
+    key2 = winreg.HKEY_LOCAL_MACHINE
+    sub2 = r"Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run"
+    # Set permissions for the registry keys
+    setRegistryPermissions(key1, sub1, "Everyone", ntsecuritycon.KEY_ALL_ACCESS)
+    setRegistryPermissions(key2, sub2, "Everyone", ntsecuritycon.KEY_ALL_ACCESS)
+    # Delete the registry values
+    deleteRegistry(key1, sub1, malFile)
+    deleteRegistry(key2, sub2, malFile)
+
+    
+
+Mitre ATT&CK
+------------
+
+.. list-table:: Mitre
+    :widths: 40 60
+    :header-rows: 1
+
+    * - ATT&CK Tactic 
+      - ATT&CK Technique
+    * - DEFENSE EVASION
+      - Virtualization/Sandbox Evasion::System Checks T1497.001 
+        Time, Delay (object)
+        Anti-Sandbox + Anti-VM
+    * - EXECUTION   
+      - Shared Modules T1129 
+        CreateMutexA
+        LoadLibraryA, LdrLoadDLL, GetModuleHandleA, CreateFileMappingA
+        CreateRemoteThread, ResumeThread, OpenThread::Process injection
+    * - Persistence
+      - Registry Key: Run,Load
+        File (startup)
+    * - Command and Control + Exfiltration
+      - Internet/inet/Connect, HTTP, URL, Socket, Send
+        DNS Query
+        

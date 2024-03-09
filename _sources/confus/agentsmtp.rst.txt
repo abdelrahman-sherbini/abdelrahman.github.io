@@ -59,7 +59,7 @@ It is running some protections bypass
 
 .. image:: Screenshot_78.png
 
-getting some config `runit <https://github.com/abdelrahman-sherbini/config-extract/blob/main/egcert/test.py>`_ 
+getting some config `runit <https://github.com/abdelrahman-sherbini/config-extract/blob/main/AgentTesla/values.py>`_ 
 
 .. image:: Screenshot_79.png
 
@@ -125,9 +125,9 @@ config-extract
 --------------
 
 | so i built same function with python to ease my analysis 
-| first script grabs all parameters passed to this decryptor `linkgrabber <https://github.com/abdelrahman-sherbini/config-extract/blob/main/egcert/getintfrombin.py>`_ 
-| second script converts the encrypted lists in .Net to python list to be integrate into third script `linklistconvert <https://github.com/abdelrahman-sherbini/config-extract/blob/main/egcert/buildarray.py>`_ 
-| Third script (python2) will decrypt all strings and output to a file `linkdecrypt <https://github.com/abdelrahman-sherbini/config-extract/blob/main/egcert/test2.py>`_ 
+| first script grabs all parameters passed to this decryptor `linkgrabber <https://github.com/abdelrahman-sherbini/config-extract/blob/main/AgentTesla/getintfrombin.py>`_ 
+| second script converts the encrypted lists in .Net to python list to be integrate into third script `linklistconvert <https://github.com/abdelrahman-sherbini/config-extract/blob/main/AgentTesla/buildarray.py>`_ 
+| Third script (python2) will decrypt all strings and output to a file `linkdecrypt <https://github.com/abdelrahman-sherbini/config-extract/blob/main/AgentTesla/decryptorpy2.py>`_ 
 
 Which also gives us all the configuration where we see sales@satamwa.com and more
 
@@ -542,7 +542,7 @@ then we are back to adding to list to steal bunch of things
     password= 550032 
 
 This function just collection of all different things to steal i uploaded the decrypted string where it contains everything it will steal
-`Link <https://github.com/abdelrahman-sherbini/config-extract/blob/main/egcert/dumpedtext.txt>`_ 
+`Link <https://github.com/abdelrahman-sherbini/config-extract/blob/main/AgentTesla/dumpedtext.txt>`_ 
 
 Then at the end, for each item in the list 
 
@@ -702,6 +702,8 @@ We can just delete it from run registry and scheduled task LbipVLwCF and kill al
 
     schtasks /delete /tn "\Updates\LbipVLwCF" /f
     wmic process where name="KHPGFRFGGTBFGELZQYRVNBXBYFFUNYHEIYXWKYLX_20191014224115751.exe" call terminate
+
+We can also utilize the script from `Removal <https://github.com/abdelrahman-sherbini/config-extract/blob/main/AgentTesla/Sample2Removal.py>`_ 
 
 Mitre ATT&CK
 ------------

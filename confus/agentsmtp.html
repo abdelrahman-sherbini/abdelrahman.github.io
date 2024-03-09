@@ -21,7 +21,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Sample 2" href="../mal8/sample2.html" />
+    <link rel="next" title="AndroMeda Malware analysis" href="../mal8/sample2.html" />
     <link rel="prev" title="Remcos Malware Analysis" href="../mal6/remcos.html" /> 
 </head>
 
@@ -83,7 +83,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#mitre-att-ck">Mitre ATT&amp;CK</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../mal8/sample2.html">Sample 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal8/sample2.html">AndroMeda Malware analysis</a></li>
 </ul>
 
         </div>
@@ -151,7 +151,7 @@ then gets the second function (type) in that dll and calls it with paramter text
 <img alt="../_images/Screenshot_97.png" src="../_images/Screenshot_97.png" />
 <p>It is running some protections bypass</p>
 <img alt="../_images/Screenshot_781.png" src="../_images/Screenshot_781.png" />
-<p>getting some config <a class="reference external" href="https://github.com/abdelrahman-sherbini/config-extract/blob/main/egcert/test.py">runit</a></p>
+<p>getting some config <a class="reference external" href="https://github.com/abdelrahman-sherbini/config-extract/blob/main/AgentTesla/values.py">runit</a></p>
 <img alt="../_images/Screenshot_79.png" src="../_images/Screenshot_79.png" />
 <p>and adding the executable into scheduled tasks</p>
 <img alt="../_images/Screenshot_761.png" src="../_images/Screenshot_761.png" />
@@ -188,9 +188,9 @@ then gets the second function (type) in that dll and calls it with paramter text
 <h2>config-extract<a class="headerlink" href="#config-extract" title="Link to this heading"></a></h2>
 <div class="line-block">
 <div class="line">so i built same function with python to ease my analysis</div>
-<div class="line">first script grabs all parameters passed to this decryptor <a class="reference external" href="https://github.com/abdelrahman-sherbini/config-extract/blob/main/egcert/getintfrombin.py">linkgrabber</a></div>
-<div class="line">second script converts the encrypted lists in .Net to python list to be integrate into third script <a class="reference external" href="https://github.com/abdelrahman-sherbini/config-extract/blob/main/egcert/buildarray.py">linklistconvert</a></div>
-<div class="line">Third script (python2) will decrypt all strings and output to a file <a class="reference external" href="https://github.com/abdelrahman-sherbini/config-extract/blob/main/egcert/test2.py">linkdecrypt</a></div>
+<div class="line">first script grabs all parameters passed to this decryptor <a class="reference external" href="https://github.com/abdelrahman-sherbini/config-extract/blob/main/AgentTesla/getintfrombin.py">linkgrabber</a></div>
+<div class="line">second script converts the encrypted lists in .Net to python list to be integrate into third script <a class="reference external" href="https://github.com/abdelrahman-sherbini/config-extract/blob/main/AgentTesla/buildarray.py">linklistconvert</a></div>
+<div class="line">Third script (python2) will decrypt all strings and output to a file <a class="reference external" href="https://github.com/abdelrahman-sherbini/config-extract/blob/main/AgentTesla/decryptorpy2.py">linkdecrypt</a></div>
 </div>
 <p>Which also gives us all the configuration where we see <a class="reference external" href="mailto:sales&#37;&#52;&#48;satamwa&#46;com">sales<span>&#64;</span>satamwa<span>&#46;</span>com</a> and more</p>
 <div class="line-block">
@@ -524,7 +524,7 @@ password= 550032
 </pre></div>
 </div>
 <p>This function just collection of all different things to steal i uploaded the decrypted string where it contains everything it will steal
-<a class="reference external" href="https://github.com/abdelrahman-sherbini/config-extract/blob/main/egcert/dumpedtext.txt">Link</a></p>
+<a class="reference external" href="https://github.com/abdelrahman-sherbini/config-extract/blob/main/AgentTesla/dumpedtext.txt">Link</a></p>
 <p>Then at the end, for each item in the list</p>
 <p>it will first check what method to send that data (webPanel ,ftp , smtp)</p>
 <img alt="../_images/Screenshot_701.png" src="../_images/Screenshot_701.png" />
@@ -666,6 +666,7 @@ sales@satamwa.com
 <span class="n">wmic</span> <span class="k">process</span> <span class="nb">where </span><span class="n">name</span><span class="p">=</span><span class="s2">&quot;KHPGFRFGGTBFGELZQYRVNBXBYFFUNYHEIYXWKYLX_20191014224115751.exe&quot;</span> <span class="n">call</span> <span class="n">terminate</span>
 </pre></div>
 </div>
+<p>We can also utilize the script from <a class="reference external" href="https://github.com/abdelrahman-sherbini/config-extract/blob/main/AgentTesla/Sample2Removal.py">Removal</a></p>
 </section>
 <section id="mitre-att-ck">
 <h2>Mitre ATT&amp;CK<a class="headerlink" href="#mitre-att-ck" title="Link to this heading"></a></h2>
@@ -678,7 +679,7 @@ sales@satamwa.com
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../mal6/remcos.html" class="btn btn-neutral float-left" title="Remcos Malware Analysis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../mal8/sample2.html" class="btn btn-neutral float-right" title="Sample 2" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../mal8/sample2.html" class="btn btn-neutral float-right" title="AndroMeda Malware analysis" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

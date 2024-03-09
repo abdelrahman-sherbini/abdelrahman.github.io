@@ -75,6 +75,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#stage-2">Stage 2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#stage-3">Stage 3</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#stage-4">Stage 4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#stage-5">Stage 5</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#config-extract">config-extract</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#steal">steal</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#iocs">IOCs</a></li>
@@ -170,14 +171,17 @@ then gets the second function (type) in that dll and calls it with paramter text
 <p>Following the execution into that invoke</p>
 <img alt="../_images/Screenshot_157.png" src="../_images/Screenshot_157.png" />
 <img alt="../_images/Screenshot_167.png" src="../_images/Screenshot_167.png" />
-<p>And look what we got , the executable that is going to be injected (looks like self injection)</p>
-<img alt="../_images/Screenshot_176.png" src="../_images/Screenshot_176.png" />
-<img alt="../_images/Screenshot_205.png" src="../_images/Screenshot_205.png" />
-<p>dumping that, and we get our final stage .Net executable 32bit</p>
-<img alt="../_images/Screenshot_186.png" src="../_images/Screenshot_186.png" />
 </section>
 <section id="stage-4">
 <h2>Stage 4<a class="headerlink" href="#stage-4" title="Link to this heading"></a></h2>
+<p>And look what we got , the executable that is going to be injected (looks like self injection)</p>
+<img alt="../_images/Screenshot_176.png" src="../_images/Screenshot_176.png" />
+<img alt="../_images/Screenshot_205.png" src="../_images/Screenshot_205.png" />
+</section>
+<section id="stage-5">
+<h2>Stage 5<a class="headerlink" href="#stage-5" title="Link to this heading"></a></h2>
+<p>dumping that, and we get our final stage .Net executable 32bit</p>
+<img alt="../_images/Screenshot_186.png" src="../_images/Screenshot_186.png" />
 <p>We see methods likely strange names like &lt;Module&gt;.u200B to make it easier passing it to de4dot</p>
 <img alt="../_images/Screenshot_196.png" src="../_images/Screenshot_196.png" />
 <p>smethod_0 is a decryptor, decrypting the arrays present</p>

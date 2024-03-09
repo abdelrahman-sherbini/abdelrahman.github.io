@@ -98,18 +98,22 @@ Following the execution into that invoke
 
 .. image:: Screenshot_16.png
 
+Stage 4
+-------
+
 And look what we got , the executable that is going to be injected (looks like self injection)
 
 .. image:: Screenshot_17.png
 
 .. image:: Screenshot_20.png
 
+Stage 5
+--------
+
 dumping that, and we get our final stage .Net executable 32bit
 
 .. image:: Screenshot_18.png
 
-Stage 4
---------
 
 We see methods likely strange names like <Module>.\u200B to make it easier passing it to de4dot
 

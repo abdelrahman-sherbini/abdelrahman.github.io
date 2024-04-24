@@ -70,6 +70,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../mal2/mal2.html">Blackcat Ransomware</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../mal3/mal3.html">Agent tesla</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../SignedUrl/text.html">SignedUrl Hub</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal4/mal4.html">Vidar</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../laugh/chals.html">0xLaugh Rev Challenges</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal5/agenttesla.html">Agent Tesla Malware Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal6/remcos.html">Remcos Malware Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../confus/agentsmtp.html">Agent tesla (sample1)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal8/sample2.html">AndroMeda Malware analysis</a></li>
 </ul>
 
         </div>
@@ -217,27 +223,27 @@ into routine 401750</p>
 <p>401000 is some encoding routine, 401750 gets the encoded data prepends ‘(!&lt;’ to it that put that in the User-Agent then runs the url</p>
 <img alt="../_images/2q93.png" src="../_images/2q93.png" />
 <p>the encoding routine sounds like Base64 with custom indexing string <code class="docutils literal notranslate"><span class="pre">WXYZlabcd3fghijko12e456789ABCDEFGHIJKL+/MNOPQRSTUVmn0pqrstuvwxyz</span></code></p>
-<img alt="../_images/Screenshot_15.png" src="../_images/Screenshot_15.png" />
-<img alt="../_images/Screenshot_21.png" src="../_images/Screenshot_21.png" />
+<img alt="../_images/Screenshot_112.png" src="../_images/Screenshot_112.png" />
+<img alt="../_images/Screenshot_210.png" src="../_images/Screenshot_210.png" />
 <p>The second thread function calls 4015C0 which uses similar 401800 call which use wininet, it is the thread responsible for
 receiving commands then writing it to the pipe</p>
-<img alt="../_images/Screenshot_31.png" src="../_images/Screenshot_31.png" />
+<img alt="../_images/Screenshot_310.png" src="../_images/Screenshot_310.png" />
 <p>it reads command with User-Agent: <code class="docutils literal notranslate"><span class="pre">Internet</span> <span class="pre">Surf</span></code></p>
-<img alt="../_images/Screenshot_61.png" src="../_images/Screenshot_61.png" />
-<img alt="../_images/Screenshot_71.png" src="../_images/Screenshot_71.png" />
+<img alt="../_images/Screenshot_610.png" src="../_images/Screenshot_610.png" />
+<img alt="../_images/Screenshot_710.png" src="../_images/Screenshot_710.png" />
 <p>so the first thread reads pipe then sends data, second thread receives data writes to pipe (commands)</p>
 <p>Running the malware we get the following two requests</p>
-<img alt="../_images/Screenshot_41.png" src="../_images/Screenshot_41.png" />
-<img alt="../_images/Screenshot_51.png" src="../_images/Screenshot_51.png" />
+<img alt="../_images/Screenshot_410.png" src="../_images/Screenshot_410.png" />
+<img alt="../_images/Screenshot_510.png" src="../_images/Screenshot_510.png" />
 <p>which seems if no command given to last request it waits for a command though in background</p>
 <p>then in the end it deletes itself when thread fails or exit is passed</p>
-<img alt="../_images/Screenshot_9.png" src="../_images/Screenshot_9.png" />
-<img alt="../_images/Screenshot_101.png" src="../_images/Screenshot_101.png" />
-<img alt="../_images/Screenshot_111.png" src="../_images/Screenshot_111.png" />
+<img alt="../_images/Screenshot_91.png" src="../_images/Screenshot_91.png" />
+<img alt="../_images/Screenshot_102.png" src="../_images/Screenshot_102.png" />
+<img alt="../_images/Screenshot_113.png" src="../_images/Screenshot_113.png" />
 <p><strong>Q5: What kind of information is communicated in the malware’s initial
 beacon?</strong></p>
 <p>My command propmt</p>
-<img alt="../_images/Screenshot_81.png" src="../_images/Screenshot_81.png" />
+<img alt="../_images/Screenshot_82.png" src="../_images/Screenshot_82.png" />
 <p><strong>Q6: What are some disadvantages in the design of this malware’s communication
 channels?</strong></p>
 <p>While the attacker encodes outgoing information, he doesn’t encode

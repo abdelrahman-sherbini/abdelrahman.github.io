@@ -1,0 +1,152 @@
+Automated malware analysis with frida
+======================================
+
+Frida is Dynamic instrumentation toolkit for developers, reverse-engineers, and security researchers. Dynamic instrumentation is the process of modifying the instructions of a binary program while it executes.
+
+It is possible to inject your own scripts into application processes and hook any function, spy on crypto APIs or trace private application code. This also allows modifying your injecting script and seeing the results instantly. With the help of Frida, we can bypass certificate pinning, root detection, dump memory…etc.
+
+First Part
+----------
+
+install it with::
+
+    pip install frida-tools
+
+Runs with::
+
+    frida-trace -f <program name> -i <Function(s) to monitor>
+
+We can use for example to see what a malware will code inject into.
+Using `my analysis of Andromeda <https://abdelrahman-sherbini.github.io/abdelrahman.github.io/mal8/sample2.html>`_  as an example.
+
+One important api call in code injection is createprocess or openprocess to get a handle to the process it will inject to 
+We hook that api with following command::
+
+    frida-trace -f andromeda -i KERNEL32.DLL!CreateProcessW
+
+We get one hit 
+
+.. image:: Screenshot_1.png
+
+| To add arguments to our output we modify the generated js file in ``_handlers`` folder.
+| According to our analysis the injected process will be passed in lpcommandline argument and its type is LPWSTR (wide string / utf16).
+
+.. image:: Screenshot_2.png
+
+| The generated file contains onEnter (on accessing the hooked api call ) and onLeave (returning from the hooked api call)
+| we modify onEnter as follow to print the to-be injected process
+
+.. image:: Screenshot_3.png
+
+And we get the hooked process 
+
+.. image:: Screenshot_4.png
+
+We can use it same way with LoadLibraryA
+
+.. image:: Screenshot_6.png
+
+.. image:: Screenshot_5.png
+
+According to our analysis we know that 4010E6 is the function that resolves the api calls from a dll and returns address of the function 
+
+.. image:: Screenshot_7.png
+
+we will need a custom script to input our ``4010E6`` function and get the name of the function from the address returned, so we will use ```frida``` command this time not ```frida-trace```::
+
+    frida -l resolver.js -f andromeda
+
+with this custom script::
+
+    Interceptor.attach(ptr('0x4010E6'), {
+        onEnter: function(args) {
+        
+        },
+        onLeave: function(retval) {
+        var resolvedFunction = DebugSymbol.fromAddress(retval).name;
+            console.log('Return value:', resolvedFunction);
+        }
+    });
+
+And we get the resolved APIs (same way can be used for config extraction for other malwares)
+
+.. image:: Screenshot_8.png
+
+
+Second Part
+-----------
+
+| In second part i will use vidar sample i analyzed `here <https://abdelrahman-sherbini.github.io/abdelrahman.github.io/mal4/mal4.html>`_  to automtically unpack with frida
+| According to our analysis the unpacking is simple  , it uses ``VirtualAlloc`` to allocate space for the main payload, and we will use VirtualAlloc as a checkpoint as it is used a lot to check if our main payload is written into the allocated space
+
+.. image:: Screenshot_9.png
+
+Then using the below python script which gets address of allocate address at onLeave and at the next VirtualAlloc call onEnter i check if there an executable written and dump it 
+
+.. code-block:: python
+
+    import frida
+    import sys
+    import time
+    import argparse
+
+    parser = argparse.ArgumentParser(description='Unpacker via frida')
+    parser.add_argument("-f","--file",required=True)
+    args = parser.parse_args()
+
+    pid = frida.spawn(args.file)
+    session = frida.attach(pid)
+    time.sleep(1)
+
+    script =  session.create_script("""
+        var vaExportAddress = Module.findExportByName("kernel32.dll", "VirtualAlloc");
+        var count = 0;
+        var vaRet = 0;
+        var vaSize = 0;
+        if (vaExportAddress != null) {
+            console.log("VirtualAlloc found at: " + vaExportAddress);
+            Interceptor.attach(vaExportAddress, {
+                onEnter: function (args) {
+                
+                if (vaRet != 0 ){
+                if (vaRet.readAnsiString(2) === "MZ") {
+                            console.log("Found PE header at allocated memory");
+                            count += 1;
+                            var mainP = vaRet.readByteArray(vaSize);
+                            var fileName = "Dumped_" + count + ".bin";
+                            var file = new File(fileName, "wb");
+                            file.write(mainP);
+                            file.flush();
+                            file.close();
+                            console.log("Dumped -> " + fileName);
+                        }
+                        }
+                    vaSize = args[1].toInt32();
+                    console.log("VirtualAlloc called with size: " + vaSize);
+                },
+                onLeave: function (retval) {
+                    if (retval.isNull()) {
+                        console.log("VirtualAlloc returned NULL");
+                    } else {
+                    
+                        vaRet = ptr(retval);
+                        
+                        
+                    }
+                }
+            });
+        } else {
+            console.error("VirtualAlloc not found in kernel32.dll");
+        }
+    """)
+    script.load()
+    frida.resume(pid)
+    sys.stdin.read()
+
+It dumped three files
+
+.. image:: Screenshot_11.png
+
+Where our unpacked binary is second file dumped and the others is just windows dlls
+
+.. image:: Screenshot_10.png

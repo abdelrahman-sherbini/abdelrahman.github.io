@@ -21,6 +21,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Remcos Malware Analysis" href="../mal6/remcos.html" />
     <link rel="prev" title="0xLaugh Rev Challenges" href="../laugh/chals.html" /> 
 </head>
 
@@ -75,6 +76,9 @@
 <li class="toctree-l2"><a class="reference internal" href="#yara-rules">Yara Rules</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../mal6/remcos.html">Remcos Malware Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../confus/agentsmtp.html">Agent tesla (sample1)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal8/sample2.html">AndroMeda Malware analysis</a></li>
 </ul>
 
         </div>
@@ -109,31 +113,31 @@
 <section id="dynamic-analysis">
 <h2>dynamic analysis<a class="headerlink" href="#dynamic-analysis" title="Link to this heading"></a></h2>
 <p>Let’s analyze a sample which are ranked 1st for this week in any.run, with last attack today 21/2 and has been compiled Wed Feb <strong>*21 12:29:54 2024*</strong></p>
-<img alt="../_images/Screenshot_118.png" src="../_images/Screenshot_118.png" />
+<img alt="../_images/Screenshot_127.png" src="../_images/Screenshot_127.png" />
 <p>The file comes named as <strong>BL-SHIPPING INVOICE.exe</strong> and it is a 32-bit .NET file</p>
-<img alt="../_images/Screenshot_219.png" src="../_images/Screenshot_219.png" />
+<img alt="../_images/Screenshot_226.png" src="../_images/Screenshot_226.png" />
 <p>Let’s spin up our Dynamic analysis setup with procmon+procdot / process hacker / fakenet / regshot  / wireshark</p>
 <p>It spawns some threads of itself</p>
-<img alt="../_images/Screenshot_77.png" src="../_images/Screenshot_77.png" />
-<img alt="../_images/Screenshot_417.png" src="../_images/Screenshot_417.png" />
+<img alt="../_images/Screenshot_716.png" src="../_images/Screenshot_716.png" />
+<img alt="../_images/Screenshot_420.png" src="../_images/Screenshot_420.png" />
 <p>In fakenet it goes example.com (why?!) , and ipify to get my public ip address ,Then it dns queries mail.2sautomobile.com ??!</p>
-<img alt="../_images/Screenshot_515.png" src="../_images/Screenshot_515.png" />
-<img alt="../_images/Screenshot_615.png" src="../_images/Screenshot_615.png" />
+<img alt="../_images/Screenshot_520.png" src="../_images/Screenshot_520.png" />
+<img alt="../_images/Screenshot_618.png" src="../_images/Screenshot_618.png" />
 <p>and when i restart the machine i get those two processes spawned which have same sha256 as original malware (maybe some persistance deployed)</p>
-<img alt="../_images/Screenshot_87.png" src="../_images/Screenshot_87.png" />
+<img alt="../_images/Screenshot_88.png" src="../_images/Screenshot_88.png" />
 <p>In procdot+procmon we see it creates file <strong>Zmbgisvguo.exe</strong> in appdata/roaming and puts it in the run registry , same way as <strong>HroxB.exe</strong></p>
-<img alt="../_images/Screenshot_96.png" src="../_images/Screenshot_96.png" />
-<img alt="../_images/Screenshot_107.png" src="../_images/Screenshot_107.png" />
-<img alt="../_images/Screenshot_119.png" src="../_images/Screenshot_119.png" />
+<img alt="../_images/Screenshot_97.png" src="../_images/Screenshot_97.png" />
+<img alt="../_images/Screenshot_108.png" src="../_images/Screenshot_108.png" />
+<img alt="../_images/Screenshot_1111.png" src="../_images/Screenshot_1111.png" />
 </section>
 <section id="code-analysis">
 <h2>Code analysis<a class="headerlink" href="#code-analysis" title="Link to this heading"></a></h2>
 <p>let’s go into dnspy, it just send a post to <cite>http://www.example.com/recepticle.aspx</cite> and does nothing with the response, it does that a few times maybe to create noise we can ignore them</p>
-<img alt="../_images/Screenshot_126.png" src="../_images/Screenshot_126.png" />
+<img alt="../_images/Screenshot_128.png" src="../_images/Screenshot_128.png" />
 <p>Then it loads array from resources, reverse it , then invoke (run) <code class="docutils literal notranslate"><span class="pre">ExcludeToken</span></code> method</p>
-<img alt="../_images/Screenshot_136.png" src="../_images/Screenshot_136.png" />
+<img alt="../_images/Screenshot_137.png" src="../_images/Screenshot_137.png" />
 <p>So let’s dump the array reversed</p>
-<img alt="../_images/Screenshot_145.png" src="../_images/Screenshot_145.png" />
+<img alt="../_images/Screenshot_146.png" src="../_images/Screenshot_146.png" />
 </section>
 <section id="second-stage">
 <h2>Second stage<a class="headerlink" href="#second-stage" title="Link to this heading"></a></h2>
@@ -143,31 +147,31 @@
 <p>What came out was a mess in dnspy couldn’t understand the functionality, when i even went the invoked method was empty</p>
 <img alt="../_images/Screenshot_166.png" src="../_images/Screenshot_166.png" />
 <p>I ran net reactor slayer on it, and deobfuscated successfully</p>
-<img alt="../_images/Screenshot_504.png" src="../_images/Screenshot_504.png" />
+<img alt="../_images/Screenshot_505.png" src="../_images/Screenshot_505.png" />
 <p>and then get the binary from resources and fix it</p>
-<img alt="../_images/Screenshot_516.png" src="../_images/Screenshot_516.png" />
+<img alt="../_images/Screenshot_5110.png" src="../_images/Screenshot_5110.png" />
 <p>But i resorted to running the malware, and then running <a class="reference external" href="https://github.com/hasherezade/hollows_hunter/releases">hollows_hunter</a> to get the binary from memory and dump it</p>
 <p>the new file sha256:1371BE6A1BDD10F8D0EA4EABD20453F80419B1C412B73555C113473B27373E9D</p>
-<img alt="../_images/Screenshot_175.png" src="../_images/Screenshot_175.png" />
+<img alt="../_images/Screenshot_176.png" src="../_images/Screenshot_176.png" />
 <p>and ran de4dot on it and .net reactor slayer</p>
-<img alt="../_images/Screenshot_185.png" src="../_images/Screenshot_185.png" />
+<img alt="../_images/Screenshot_186.png" src="../_images/Screenshot_186.png" />
 <p>and we got almost clean sample</p>
-<img alt="../_images/Screenshot_195.png" src="../_images/Screenshot_195.png" />
+<img alt="../_images/Screenshot_196.png" src="../_images/Screenshot_196.png" />
 <p>now onto main function, the binary is full of these jumps and conditions for obfuscation</p>
-<img alt="../_images/Screenshot_204.png" src="../_images/Screenshot_204.png" />
+<img alt="../_images/Screenshot_205.png" src="../_images/Screenshot_205.png" />
 <div class="line-block">
 <div class="line">following <code class="docutils literal notranslate"><span class="pre">kyG.smethod_0();</span></code> it is also bunch of if conditions and jumps, lets go step by step</div>
 <div class="line">First it checks if there is any processes with same name and kills it except itself</div>
 </div>
-<img alt="../_images/Screenshot_2110.png" src="../_images/Screenshot_2110.png" />
+<img alt="../_images/Screenshot_2111.png" src="../_images/Screenshot_2111.png" />
 </section>
 <section id="configuration-extraction">
 <h2>Configuration extraction<a class="headerlink" href="#configuration-extraction" title="Link to this heading"></a></h2>
 <p>Then calls <code class="docutils literal notranslate"><span class="pre">HobCHX.smethod_0();</span></code> which gets bunch of my hardware and computer info and ip</p>
-<img alt="../_images/Screenshot_226.png" src="../_images/Screenshot_226.png" />
-<img alt="../_images/Screenshot_234.png" src="../_images/Screenshot_234.png" />
+<img alt="../_images/Screenshot_227.png" src="../_images/Screenshot_227.png" />
+<img alt="../_images/Screenshot_235.png" src="../_images/Screenshot_235.png" />
 <p>and sets some configurations, notice there is an email there maybe send my info to that email ? but it seems legit site i don’t know</p>
-<img alt="../_images/Screenshot_245.png" src="../_images/Screenshot_245.png" />
+<img alt="../_images/Screenshot_246.png" src="../_images/Screenshot_246.png" />
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">EnableKeylogger</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Convert</span><span class="p">.</span><span class="n">ToBoolean</span><span class="p">(</span><span class="s">&quot;false&quot;</span><span class="p">);</span>
 
 <span class="w">        </span><span class="c1">// Token: 0x0400000F RID: 15</span>
@@ -255,40 +259,40 @@
 <section id="more-functionality">
 <h2>More functionality<a class="headerlink" href="#more-functionality" title="Link to this heading"></a></h2>
 <p>Then it runs cgAknd.FhsFTO() which contains antidebugging</p>
-<img alt="../_images/Screenshot_254.png" src="../_images/Screenshot_254.png" />
+<img alt="../_images/Screenshot_255.png" src="../_images/Screenshot_255.png" />
 <p>Checks if iam a running a host server</p>
-<img alt="../_images/Screenshot_264.png" src="../_images/Screenshot_264.png" />
+<img alt="../_images/Screenshot_265.png" src="../_images/Screenshot_265.png" />
 <p>antidebugging</p>
-<img alt="../_images/Screenshot_274.png" src="../_images/Screenshot_274.png" />
+<img alt="../_images/Screenshot_275.png" src="../_images/Screenshot_275.png" />
 <p>antisandbox (like <a class="reference external" href="https://github.com/sandboxie-plus/Sandboxie">sandboxie</a>)</p>
-<img alt="../_images/Screenshot_283.png" src="../_images/Screenshot_283.png" />
+<img alt="../_images/Screenshot_284.png" src="../_images/Screenshot_284.png" />
 <p>antiVMs</p>
-<img alt="../_images/Screenshot_294.png" src="../_images/Screenshot_294.png" />
+<img alt="../_images/Screenshot_295.png" src="../_images/Screenshot_295.png" />
 <p>Next it runs <code class="docutils literal notranslate"><span class="pre">MmBwTjUv.smethod_0();</span></code> , it is the one setting up run key for the executable</p>
-<img alt="../_images/Screenshot_304.png" src="../_images/Screenshot_304.png" />
+<img alt="../_images/Screenshot_305.png" src="../_images/Screenshot_305.png" />
 <p>Notice that the file names we say above starting after reboot are just random names so we can’t provide that as IOCs</p>
-<img alt="../_images/Screenshot_318.png" src="../_images/Screenshot_318.png" />
+<img alt="../_images/Screenshot_3111.png" src="../_images/Screenshot_3111.png" />
 <p>Next it runs <code class="docutils literal notranslate"><span class="pre">MmBwTjUv.smethod_1();</span></code>, First it creates a directory if not found</p>
 <img alt="../_images/Screenshot_326.png" src="../_images/Screenshot_326.png" />
 <p>which is just appdata + HroxB , so the other name Zmbgisvguo is the random one</p>
-<img alt="../_images/Screenshot_335.png" src="../_images/Screenshot_335.png" />
-<img alt="../_images/Screenshot_345.png" src="../_images/Screenshot_345.png" />
+<img alt="../_images/Screenshot_336.png" src="../_images/Screenshot_336.png" />
+<img alt="../_images/Screenshot_346.png" src="../_images/Screenshot_346.png" />
 <div class="line-block">
 <div class="line">AppStartupFullPath contain appdata/roaming/HroxB.exe</div>
 <div class="line">It tries to kill all processes with that name</div>
 </div>
-<img alt="../_images/Screenshot_355.png" src="../_images/Screenshot_355.png" />
+<img alt="../_images/Screenshot_356.png" src="../_images/Screenshot_356.png" />
 <p>Then puts that in run registry</p>
-<img alt="../_images/Screenshot_365.png" src="../_images/Screenshot_365.png" />
+<img alt="../_images/Screenshot_366.png" src="../_images/Screenshot_366.png" />
 <p>Next it runs <code class="docutils literal notranslate"><span class="pre">dPZw6.NTl();</span></code> , which runs <code class="docutils literal notranslate"><span class="pre">BtmSV7Q.smethod_0();</span></code> into a list that gets enumerated</p>
-<img alt="../_images/Screenshot_375.png" src="../_images/Screenshot_375.png" />
+<img alt="../_images/Screenshot_376.png" src="../_images/Screenshot_376.png" />
 <p>a lot of things are added to the string list, <code class="docutils literal notranslate"><span class="pre">e5B3Ad.l9vHHu</span></code> appends to a local list</p>
-<img alt="../_images/Screenshot_385.png" src="../_images/Screenshot_385.png" />
+<img alt="../_images/Screenshot_386.png" src="../_images/Screenshot_386.png" />
 <p>1st on the list is Becky! , Which grabs all juicy stuff from the mail client, adds it to the list</p>
-<img alt="../_images/Screenshot_395.png" src="../_images/Screenshot_395.png" />
-<img alt="../_images/Screenshot_404.png" src="../_images/Screenshot_404.png" />
+<img alt="../_images/Screenshot_396.png" src="../_images/Screenshot_396.png" />
+<img alt="../_images/Screenshot_405.png" src="../_images/Screenshot_405.png" />
 <p>Then openVPN config and Data</p>
-<img alt="../_images/Screenshot_418.png" src="../_images/Screenshot_418.png" />
+<img alt="../_images/Screenshot_4110.png" src="../_images/Screenshot_4110.png" />
 <p>Here is the full list it steals data from</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>PocoMail
 Trillian
@@ -337,16 +341,16 @@ QQ Browser
 <p>The list is enumerated, then put into string, then send as arguemnt call to function <code class="docutils literal notranslate"><span class="pre">Nc9M4.A9h7JE</span></code></p>
 <img alt="../_images/Screenshot_424.png" src="../_images/Screenshot_424.png" />
 <p>the function call take another argument first arguemnt which contains my computer info</p>
-<img alt="../_images/Screenshot_464.png" src="../_images/Screenshot_464.png" />
+<img alt="../_images/Screenshot_465.png" src="../_images/Screenshot_465.png" />
 <p>the function call then send all the data as an attachment to the SmtpSender we saw in configuration above</p>
-<img alt="../_images/Screenshot_434.png" src="../_images/Screenshot_434.png" />
-<img alt="../_images/Screenshot_444.png" src="../_images/Screenshot_444.png" />
-<img alt="../_images/Screenshot_454.png" src="../_images/Screenshot_454.png" />
+<img alt="../_images/Screenshot_435.png" src="../_images/Screenshot_435.png" />
+<img alt="../_images/Screenshot_445.png" src="../_images/Screenshot_445.png" />
+<img alt="../_images/Screenshot_455.png" src="../_images/Screenshot_455.png" />
 <p>Next is a typical key logger (if enabled)</p>
-<img alt="../_images/Screenshot_474.png" src="../_images/Screenshot_474.png" />
-<img alt="../_images/Screenshot_484.png" src="../_images/Screenshot_484.png" />
+<img alt="../_images/Screenshot_475.png" src="../_images/Screenshot_475.png" />
+<img alt="../_images/Screenshot_485.png" src="../_images/Screenshot_485.png" />
 <p>Then a screenLogger (if enabled)</p>
-<img alt="../_images/Screenshot_494.png" src="../_images/Screenshot_494.png" />
+<img alt="../_images/Screenshot_495.png" src="../_images/Screenshot_495.png" />
 <p>The End :)</p>
 </section>
 <section id="yara-rules">
@@ -401,6 +405,7 @@ QQ Browser
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../laugh/chals.html" class="btn btn-neutral float-left" title="0xLaugh Rev Challenges" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../mal6/remcos.html" class="btn btn-neutral float-right" title="Remcos Malware Analysis" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

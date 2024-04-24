@@ -70,6 +70,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../mal5/agenttesla.html">Agent Tesla Malware Analysis</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Remcos Malware Analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../confus/agentsmtp.html">Agent tesla (sample1)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal8/sample2.html">AndroMeda Malware analysis</a></li>
 </ul>
 
         </div>
@@ -101,18 +102,18 @@
 <p>sha256: 369adb906e16ea8074f400e3ec40e8eb1a0ff15064fd885a69ef73092563d511</p>
 <p><a class="reference external" href="https://app.any.run/tasks/adc543b9-fe88-46df-a979-decbd0f1d4fe/">https://app.any.run/tasks/adc543b9-fe88-46df-a979-decbd0f1d4fe/</a></p>
 <p>Let’s analyze a sample which are ranked 1st for this week in any.run, where last attack 2/26</p>
-<img alt="../_images/Screenshot_128.png" src="../_images/Screenshot_128.png" />
+<img alt="../_images/Screenshot_129.png" src="../_images/Screenshot_129.png" />
 <p>We get Vbs code where goal was to run a powershell command, using cmd watchcer we get the powershell command</p>
 <img alt="../_images/Screenshot_320.png" src="../_images/Screenshot_320.png" />
 <p>Cleaning the code and formatting it in VS code</p>
-<img alt="../_images/Screenshot_420.png" src="../_images/Screenshot_420.png" />
+<img alt="../_images/Screenshot_425.png" src="../_images/Screenshot_425.png" />
 <p>In the script an deobfuscator function , and an invoke command <code class="docutils literal notranslate"><span class="pre">iex</span></code> for the deobfuscated text</p>
-<img alt="../_images/Screenshot_519.png" src="../_images/Screenshot_519.png" />
+<img alt="../_images/Screenshot_523.png" src="../_images/Screenshot_523.png" />
 <p>Where the scipt goal is to download <code class="docutils literal notranslate"><span class="pre">http://constructumllc.sa.com/.well-known/vb/Wrapperer.ttf</span></code> into appdata</p>
-<img alt="../_images/Screenshot_618.png" src="../_images/Screenshot_618.png" />
+<img alt="../_images/Screenshot_619.png" src="../_images/Screenshot_619.png" />
 <img alt="../_images/Screenshot_89.png" src="../_images/Screenshot_89.png" />
 <p>Then base64 it, to string and take only a part from that string then invokes it</p>
-<img alt="../_images/Screenshot_710.png" src="../_images/Screenshot_710.png" />
+<img alt="../_images/Screenshot_717.png" src="../_images/Screenshot_717.png" />
 <p>Outputting the result into a file, We get another powershell code</p>
 <img alt="../_images/Screenshot_98.png" src="../_images/Screenshot_98.png" />
 <p>That uses also deobfuscator , and deobfuscated strings then invokes it</p>

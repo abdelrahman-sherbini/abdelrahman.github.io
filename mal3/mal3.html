@@ -66,6 +66,11 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Agent tesla</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../SignedUrl/text.html">SignedUrl Hub</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../mal4/mal4.html">Vidar</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../laugh/chals.html">0xLaugh Rev Challenges</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal5/agenttesla.html">Agent Tesla Malware Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal6/remcos.html">Remcos Malware Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../confus/agentsmtp.html">Agent tesla (sample1)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal8/sample2.html">AndroMeda Malware analysis</a></li>
 </ul>
 
         </div>
@@ -98,104 +103,104 @@
 <p>SHA256:1c33eef0d22dc54bb2a41af485070612cd4579529e31b63be2141c4be9183eb6</p>
 <p>decompress it with <a class="reference external" href="https://peazip.github.io">https://peazip.github.io</a></p>
 <p>we find a file named <code class="docutils literal notranslate"><span class="pre">Zfaggccwnm.exe</span></code> with 950 MB size</p>
-<img alt="../_images/Screenshot_110.png" src="../_images/Screenshot_110.png" />
+<img alt="../_images/Screenshot_118.png" src="../_images/Screenshot_118.png" />
 <p>The file is a .Net executable</p>
-<img alt="../_images/Screenshot_213.png" src="../_images/Screenshot_213.png" />
+<img alt="../_images/Screenshot_218.png" src="../_images/Screenshot_218.png" />
 <p>Also Pstudio tells us there is overlay of zeroes starting at 2200 offset</p>
-<img alt="../_images/Screenshot_313.png" src="../_images/Screenshot_313.png" />
+<img alt="../_images/Screenshot_317.png" src="../_images/Screenshot_317.png" />
 <p>As it is slowing every tool i open the exe with, i will just delete the extra zeroes with HxD</p>
-<img alt="../_images/Screenshot_412.png" src="../_images/Screenshot_412.png" />
+<img alt="../_images/Screenshot_416.png" src="../_images/Screenshot_416.png" />
 <p>We see base64 is used and some encryption/decryption libraries and there is a url likely will grab that file and decode it
 <a class="reference external" href="https://www.mediafire.com/file/vgvujtm9ke2lj1c/Gnwwcgocwzl.wav/file">https://www.mediafire.com/file/vgvujtm9ke2lj1c/Gnwwcgocwzl.wav/file</a> the file is no longer there</p>
-<img alt="../_images/Screenshot_53.png" src="../_images/Screenshot_53.png" />
+<img alt="../_images/Screenshot_516.png" src="../_images/Screenshot_516.png" />
 <p>Opening the file in Dnspy it is decompiled badly, i read that it was a bug in Dnspy when dealing with async functions in .Net files</p>
-<img alt="../_images/Screenshot_612.png" src="../_images/Screenshot_612.png" />
+<img alt="../_images/Screenshot_616.png" src="../_images/Screenshot_616.png" />
 <p>So we will open it in Ilspy, it is much clearer , going into main</p>
-<img alt="../_images/Screenshot_75.png" src="../_images/Screenshot_75.png" />
+<img alt="../_images/Screenshot_715.png" src="../_images/Screenshot_715.png" />
 <p>Going into <code class="docutils literal notranslate"><span class="pre">Fwefji</span></code> function it loads assembly piusrhg
 <code class="docutils literal notranslate"><span class="pre">An</span> <span class="pre">assembly</span> <span class="pre">is</span> <span class="pre">a</span> <span class="pre">C#</span> <span class="pre">code</span> <span class="pre">library</span> <span class="pre">that</span> <span class="pre">contains</span> <span class="pre">the</span> <span class="pre">compiled</span> <span class="pre">classes</span> <span class="pre">and</span> <span class="pre">structs</span></code>
 Then it gets class Wzyys.Rutvtxx and invokes Gwjgucx member in it</p>
-<img alt="../_images/Screenshot_84.png" src="../_images/Screenshot_84.png" />
+<img alt="../_images/Screenshot_86.png" src="../_images/Screenshot_86.png" />
 <p>looking at piusrhg, it uses TDES with IV, KEY in base64 to decrypt a stream from Mheurfg()
 example for TDES <a class="reference external" href="https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.tripledes?view=net-8.0">https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.tripledes?view=net-8.0</a></p>
-<img alt="../_images/Screenshot_93.png" src="../_images/Screenshot_93.png" />
+<img alt="../_images/Screenshot_95.png" src="../_images/Screenshot_95.png" />
 <p>and in Mheurfg, it load the wav file, so the wav file is the main exe file</p>
-<img alt="../_images/Screenshot_104.png" src="../_images/Screenshot_104.png" />
+<img alt="../_images/Screenshot_106.png" src="../_images/Screenshot_106.png" />
 <p>wav file SHA256:c2c466e178b39577912c9ce989cf8a975c574d5febe15ae11a91bbb985ca8d2e
 using cyberchef https://cyberchef.org/#recipe=Triple_DES_Decrypt(%7B’option’:’Base64’,’string’:’CKqBjjdLDj8Kh5nq3QvdzA%3D%3D’%7D,%7B’option’:’Base64’,’string’:’hhxBFpSfWfI%3D’%7D,’CBC’,’Raw’,’Raw’)
 We get the exe file decrypted with IV and KEY we saw above</p>
-<img alt="../_images/Screenshot_113.png" src="../_images/Screenshot_113.png" />
+<img alt="../_images/Screenshot_119.png" src="../_images/Screenshot_119.png" />
 <p>it is also a 32 bit .Net file SHA256:04F896084F8CF79A1233DEC43FA215CB1A21641B2EED24CB31F65BD2023F13DC</p>
-<img alt="../_images/Screenshot_123.png" src="../_images/Screenshot_123.png" />
+<img alt="../_images/Screenshot_125.png" src="../_images/Screenshot_125.png" />
 <p>the file name is Wzyys.dll which was invoked above plus there is a huge resource</p>
-<img alt="../_images/Screenshot_133.png" src="../_images/Screenshot_133.png" />
+<img alt="../_images/Screenshot_135.png" src="../_images/Screenshot_135.png" />
 <p>Can’t read the methods so will pass it to de4dot to clean</p>
-<img alt="../_images/Screenshot_143.png" src="../_images/Screenshot_143.png" />
+<img alt="../_images/Screenshot_144.png" src="../_images/Screenshot_144.png" />
 <p>now it is much better, also remember in the caller file, it called Wzyys.Rutvtxx class invoking Gwjgucx() member</p>
-<img alt="../_images/Screenshot_153.png" src="../_images/Screenshot_153.png" />
+<img alt="../_images/Screenshot_154.png" src="../_images/Screenshot_154.png" />
 <p>To invoke the dll and step through the program, we use powershell [Reflection.Assembly]::LoadFile command and invoke the member used with attaching dnspy to powershell</p>
-<img alt="../_images/Screenshot_163.png" src="../_images/Screenshot_163.png" />
-<img alt="../_images/Screenshot_172.png" src="../_images/Screenshot_172.png" />
+<img alt="../_images/Screenshot_164.png" src="../_images/Screenshot_164.png" />
+<img alt="../_images/Screenshot_174.png" src="../_images/Screenshot_174.png" />
 <p>we hit our breakpoint</p>
-<img alt="../_images/Screenshot_182.png" src="../_images/Screenshot_182.png" />
+<img alt="../_images/Screenshot_184.png" src="../_images/Screenshot_184.png" />
 <p>First invoke Class3.smethod_12 contained antidebugging</p>
-<img alt="../_images/Screenshot_192.png" src="../_images/Screenshot_192.png" />
+<img alt="../_images/Screenshot_194.png" src="../_images/Screenshot_194.png" />
 <p>Second invoke Class3.smethod_112 containes some hidden strings, stepping into to see them we find it is <code class="docutils literal notranslate"><span class="pre">cmd</span> <span class="pre">/c</span> <span class="pre">ipconfig</span> <span class="pre">/release</span></code></p>
-<img alt="../_images/Screenshot_214.png" src="../_images/Screenshot_214.png" />
-<img alt="../_images/Screenshot_223.png" src="../_images/Screenshot_223.png" />
+<img alt="../_images/Screenshot_219.png" src="../_images/Screenshot_219.png" />
+<img alt="../_images/Screenshot_224.png" src="../_images/Screenshot_224.png" />
 <p>Third invoke Class3.smethod_89(); creates a mutex</p>
-<img alt="../_images/Screenshot_242.png" src="../_images/Screenshot_242.png" />
+<img alt="../_images/Screenshot_244.png" src="../_images/Screenshot_244.png" />
 <p>Fourth invoke Class3.smethod_105, can’t step into it gives me this error</p>
-<img alt="../_images/Screenshot_251.png" src="../_images/Screenshot_251.png" />
+<img alt="../_images/Screenshot_253.png" src="../_images/Screenshot_253.png" />
 <p>So will just do it manual, here we see the decompiled function, it uses Class3.smethod_11 to decode some strings for use</p>
-<img alt="../_images/Screenshot_261.png" src="../_images/Screenshot_261.png" />
+<img alt="../_images/Screenshot_263.png" src="../_images/Screenshot_263.png" />
 <p>using powershell we get those strings output, it runs <code class="docutils literal notranslate"><span class="pre">cmd</span> <span class="pre">/c</span> <span class="pre">powershell</span> <span class="pre">set-mppreference</span> <span class="pre">-exclusionpath</span> <span class="pre">&quot;currentFilePath&quot;</span></code></p>
-<img alt="../_images/Screenshot_271.png" src="../_images/Screenshot_271.png" />
+<img alt="../_images/Screenshot_273.png" src="../_images/Screenshot_273.png" />
 <p>Fifth invoke Class3.smethod_18 is just sleep (antiSandbox)</p>
-<img alt="../_images/Screenshot_281.png" src="../_images/Screenshot_281.png" />
+<img alt="../_images/Screenshot_282.png" src="../_images/Screenshot_282.png" />
 <p>Class3.smethod_72 is another hidden command <code class="docutils literal notranslate"><span class="pre">powershell</span> <span class="pre">-enc</span></code> with String</p>
-<img alt="../_images/Screenshot_291.png" src="../_images/Screenshot_291.png" />
-<img alt="../_images/Screenshot_301.png" src="../_images/Screenshot_301.png" />
+<img alt="../_images/Screenshot_293.png" src="../_images/Screenshot_293.png" />
+<img alt="../_images/Screenshot_303.png" src="../_images/Screenshot_303.png" />
 <p>Class3.smethod_61 is persistent invoke that puts vbs script in run registry</p>
-<img alt="../_images/Screenshot_314.png" src="../_images/Screenshot_314.png" />
-<img alt="../_images/Screenshot_323.png" src="../_images/Screenshot_323.png" />
+<img alt="../_images/Screenshot_318.png" src="../_images/Screenshot_318.png" />
+<img alt="../_images/Screenshot_324.png" src="../_images/Screenshot_324.png" />
 <p>Class3.smethod_26 prepares for process injection for explorer</p>
-<img alt="../_images/Screenshot_332.png" src="../_images/Screenshot_332.png" />
-<img alt="../_images/Screenshot_342.png" src="../_images/Screenshot_342.png" />
+<img alt="../_images/Screenshot_334.png" src="../_images/Screenshot_334.png" />
+<img alt="../_images/Screenshot_344.png" src="../_images/Screenshot_344.png" />
 <p>Before last invoke renew network adapters ip</p>
-<img alt="../_images/Screenshot_352.png" src="../_images/Screenshot_352.png" />
-<img alt="../_images/Screenshot_362.png" src="../_images/Screenshot_362.png" />
+<img alt="../_images/Screenshot_354.png" src="../_images/Screenshot_354.png" />
+<img alt="../_images/Screenshot_364.png" src="../_images/Screenshot_364.png" />
 <p>Last invoke Class3.smethod_86 likely will be the main file to be injected</p>
-<img alt="../_images/Screenshot_372.png" src="../_images/Screenshot_372.png" />
+<img alt="../_images/Screenshot_374.png" src="../_images/Screenshot_374.png" />
 <p>We get a byte array which likely carries our file but obfuscated</p>
-<img alt="../_images/Screenshot_382.png" src="../_images/Screenshot_382.png" />
+<img alt="../_images/Screenshot_384.png" src="../_images/Screenshot_384.png" />
 <p>That one of those methods will deobfuscate, but the file exited before running them so will just break on those to go directly to them</p>
-<img alt="../_images/Screenshot_392.png" src="../_images/Screenshot_392.png" />
+<img alt="../_images/Screenshot_394.png" src="../_images/Screenshot_394.png" />
 <p>Ok, so after MANY tries, i resorted to <code class="docutils literal notranslate"><span class="pre">hollows_hunter.exe</span> <span class="pre">/loop</span> <span class="pre">/kill</span></code> to dump the process from memory
 Which was the same result i got later from Dnspy when i reached [[ns8.class18]]::smethod_0, the byte array byte_0 contained the real malware</p>
-<img alt="../_images/Screenshot_401.png" src="../_images/Screenshot_401.png" />
+<img alt="../_images/Screenshot_403.png" src="../_images/Screenshot_403.png" />
 <p>The new file SHA256:45DC4518FBF43BF4611446159F72CDBC37641707BB924BD2A52644A3AF5BAB76
 and It is also .Net 32 bit</p>
-<img alt="../_images/Screenshot_413.png" src="../_images/Screenshot_413.png" />
+<img alt="../_images/Screenshot_417.png" src="../_images/Screenshot_417.png" />
 <p>It containes the typical bad libraries keylogger(Used GetforegroundWindow and SetWindowsHook) , Process injection, web request , registry</p>
-<img alt="../_images/Screenshot_431.png" src="../_images/Screenshot_431.png" />
-<img alt="../_images/Screenshot_421.png" src="../_images/Screenshot_421.png" />
+<img alt="../_images/Screenshot_433.png" src="../_images/Screenshot_433.png" />
+<img alt="../_images/Screenshot_422.png" src="../_images/Screenshot_422.png" />
 <p>we also see these which may indicate obfuscation with .NET Reactor</p>
-<img alt="../_images/Screenshot_441.png" src="../_images/Screenshot_441.png" />
+<img alt="../_images/Screenshot_443.png" src="../_images/Screenshot_443.png" />
 <p>It is obfucated</p>
-<img alt="../_images/Screenshot_451.png" src="../_images/Screenshot_451.png" />
+<img alt="../_images/Screenshot_453.png" src="../_images/Screenshot_453.png" />
 <p>we will go from reverse searching for known strings we got from Pstudio like telegram, then analyze where is it used</p>
-<img alt="../_images/Screenshot_461.png" src="../_images/Screenshot_461.png" />
+<img alt="../_images/Screenshot_463.png" src="../_images/Screenshot_463.png" />
 <p>Used in yrE class with a lot of interesting things around Obfuscated</p>
-<img alt="../_images/Screenshot_471.png" src="../_images/Screenshot_471.png" />
+<img alt="../_images/Screenshot_473.png" src="../_images/Screenshot_473.png" />
 <p>Using de4dot for deobfuscation</p>
-<img alt="../_images/Screenshot_481.png" src="../_images/Screenshot_481.png" />
+<img alt="../_images/Screenshot_483.png" src="../_images/Screenshot_483.png" />
 <p>But it messed it up, made it worse , will try another tool <a class="reference external" href="https://github.com/SychicBoy/NETReactorSlayer">https://github.com/SychicBoy/NETReactorSlayer</a></p>
-<img alt="../_images/Screenshot_491.png" src="../_images/Screenshot_491.png" />
+<img alt="../_images/Screenshot_493.png" src="../_images/Screenshot_493.png" />
 <p>going with those options as true, to reduce the mess deobfuscation does as first pass , then just pass the malware again to the tool as final step</p>
-<img alt="../_images/Screenshot_501.png" src="../_images/Screenshot_501.png" />
+<img alt="../_images/Screenshot_503.png" src="../_images/Screenshot_503.png" />
 <p>Now the configuration is clear</p>
-<img alt="../_images/Screenshot_512.png" src="../_images/Screenshot_512.png" />
+<img alt="../_images/Screenshot_517.png" src="../_images/Screenshot_517.png" />
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">public</span> <span class="n">static</span> <span class="n">string</span> <span class="n">PcHwid</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
 
 <span class="o">//</span> <span class="n">Token</span><span class="p">:</span> <span class="mh">0x04000006</span> <span class="n">RID</span><span class="p">:</span> <span class="mi">6</span>

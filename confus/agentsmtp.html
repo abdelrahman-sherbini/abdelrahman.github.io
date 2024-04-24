@@ -124,69 +124,69 @@
 <div class="line">We got a sample1, let’s pass it to exeinfo</div>
 <div class="line">It is a .NET 32bit exe and it is also obfuscated</div>
 </div>
-<img alt="../_images/Screenshot_120.png" src="../_images/Screenshot_120.png" />
+<img alt="../_images/Screenshot_14.png" src="../_images/Screenshot_14.png" />
 <p>it is obfuscated with bunch of calcuations and conditional jumps</p>
-<img alt="../_images/Screenshot_220.png" src="../_images/Screenshot_220.png" />
+<img alt="../_images/Screenshot_21.png" src="../_images/Screenshot_21.png" />
 <div class="line-block">
 <div class="line">cleaning it with de4dot</div>
 <div class="line">going into entrypoint, then the main function for unpacking</div>
 </div>
-<img alt="../_images/Screenshot_319.png" src="../_images/Screenshot_319.png" />
+<img alt="../_images/Screenshot_31.png" src="../_images/Screenshot_31.png" />
 <p>the unpacking is just a string replace and concatenate and base64 decode, following the program it gives us a dll which
 then gets the second function (type) in that dll and calls it with paramter text2</p>
-<img alt="../_images/Screenshot_419.png" src="../_images/Screenshot_419.png" />
+<img alt="../_images/Screenshot_41.png" src="../_images/Screenshot_41.png" />
 <p>Following the invoke by stepping into createinstance call</p>
-<img alt="../_images/Screenshot_517.png" src="../_images/Screenshot_517.png" />
+<img alt="../_images/Screenshot_51.png" src="../_images/Screenshot_51.png" />
 </section>
 <section id="stage-2">
 <h2>Stage 2<a class="headerlink" href="#stage-2" title="Link to this heading"></a></h2>
 <p>We get into the dll decompiled by dsnpy, which seems like another unpacking</p>
-<img alt="../_images/Screenshot_616.png" src="../_images/Screenshot_616.png" />
+<img alt="../_images/Screenshot_61.png" src="../_images/Screenshot_61.png" />
 <p>Dumping that new binary</p>
-<img alt="../_images/Screenshot_78.png" src="../_images/Screenshot_78.png" />
+<img alt="../_images/Screenshot_71.png" src="../_images/Screenshot_71.png" />
 </section>
 <section id="stage-3">
 <h2>Stage 3<a class="headerlink" href="#stage-3" title="Link to this heading"></a></h2>
 <p>It is a .Net 32bit exe which is confused with confuserex :(</p>
-<img alt="../_images/Screenshot_88.png" src="../_images/Screenshot_88.png" />
-<img alt="../_images/Screenshot_97.png" src="../_images/Screenshot_97.png" />
+<img alt="../_images/Screenshot_81.png" src="../_images/Screenshot_81.png" />
+<img alt="../_images/Screenshot_9.png" src="../_images/Screenshot_9.png" />
 <p>It is running some protections bypass</p>
-<img alt="../_images/Screenshot_781.png" src="../_images/Screenshot_781.png" />
+<img alt="../_images/Screenshot_78.png" src="../_images/Screenshot_78.png" />
 <p>getting some config <a class="reference external" href="https://github.com/abdelrahman-sherbini/config-extract/blob/main/AgentTesla/values.py">runit</a></p>
 <img alt="../_images/Screenshot_79.png" src="../_images/Screenshot_79.png" />
 <p>and adding the executable into scheduled tasks</p>
-<img alt="../_images/Screenshot_761.png" src="../_images/Screenshot_761.png" />
-<img alt="../_images/Screenshot_771.png" src="../_images/Screenshot_771.png" />
-<img alt="../_images/Screenshot_751.png" src="../_images/Screenshot_751.png" />
+<img alt="../_images/Screenshot_76.png" src="../_images/Screenshot_76.png" />
+<img alt="../_images/Screenshot_77.png" src="../_images/Screenshot_77.png" />
+<img alt="../_images/Screenshot_75.png" src="../_images/Screenshot_75.png" />
 <p>setting breakpoints at every invoke, assembly load</p>
-<img alt="../_images/Screenshot_108.png" src="../_images/Screenshot_108.png" />
+<img alt="../_images/Screenshot_101.png" src="../_images/Screenshot_101.png" />
 <p>we hit a breakpoint but can’t view locals (proxy call probably from confuserex)</p>
-<img alt="../_images/Screenshot_1110.png" src="../_images/Screenshot_1110.png" />
+<img alt="../_images/Screenshot_111.png" src="../_images/Screenshot_111.png" />
 <p>Then it invokes that</p>
-<img alt="../_images/Screenshot_146.png" src="../_images/Screenshot_146.png" />
+<img alt="../_images/Screenshot_141.png" src="../_images/Screenshot_141.png" />
 <p>showing modules then dumping that</p>
-<img alt="../_images/Screenshot_127.png" src="../_images/Screenshot_127.png" />
+<img alt="../_images/Screenshot_121.png" src="../_images/Screenshot_121.png" />
 <p>Seems like a helper dll, for process injection</p>
-<img alt="../_images/Screenshot_137.png" src="../_images/Screenshot_137.png" />
+<img alt="../_images/Screenshot_131.png" src="../_images/Screenshot_131.png" />
 <p>Following the execution into that invoke</p>
-<img alt="../_images/Screenshot_157.png" src="../_images/Screenshot_157.png" />
-<img alt="../_images/Screenshot_167.png" src="../_images/Screenshot_167.png" />
+<img alt="../_images/Screenshot_15.png" src="../_images/Screenshot_15.png" />
+<img alt="../_images/Screenshot_16.png" src="../_images/Screenshot_16.png" />
 </section>
 <section id="stage-4">
 <h2>Stage 4<a class="headerlink" href="#stage-4" title="Link to this heading"></a></h2>
 <p>And look what we got , the executable that is going to be injected (looks like self injection)</p>
-<img alt="../_images/Screenshot_176.png" src="../_images/Screenshot_176.png" />
-<img alt="../_images/Screenshot_205.png" src="../_images/Screenshot_205.png" />
+<img alt="../_images/Screenshot_17.png" src="../_images/Screenshot_17.png" />
+<img alt="../_images/Screenshot_20.png" src="../_images/Screenshot_20.png" />
 </section>
 <section id="stage-5">
 <h2>Stage 5<a class="headerlink" href="#stage-5" title="Link to this heading"></a></h2>
 <p>dumping that, and we get our final stage .Net executable 32bit</p>
-<img alt="../_images/Screenshot_186.png" src="../_images/Screenshot_186.png" />
+<img alt="../_images/Screenshot_18.png" src="../_images/Screenshot_18.png" />
 <p>We see methods likely strange names like &lt;Module&gt;.u200B to make it easier passing it to de4dot</p>
-<img alt="../_images/Screenshot_196.png" src="../_images/Screenshot_196.png" />
+<img alt="../_images/Screenshot_19.png" src="../_images/Screenshot_19.png" />
 <p>smethod_0 is a decryptor, decrypting the arrays present</p>
-<img alt="../_images/Screenshot_227.png" src="../_images/Screenshot_227.png" />
-<img alt="../_images/Screenshot_2111.png" src="../_images/Screenshot_2111.png" />
+<img alt="../_images/Screenshot_22.png" src="../_images/Screenshot_22.png" />
+<img alt="../_images/Screenshot_211.png" src="../_images/Screenshot_211.png" />
 </section>
 <section id="config-extract">
 <h2>config-extract<a class="headerlink" href="#config-extract" title="Link to this heading"></a></h2>
@@ -201,75 +201,75 @@ then gets the second function (type) in that dll and calls it with paramter text
 <div class="line">Lets walk through the last stage binary now that we did our preparation</div>
 <div class="line">First it grabs my hwid</div>
 </div>
-<img alt="../_images/Screenshot_235.png" src="../_images/Screenshot_235.png" />
+<img alt="../_images/Screenshot_23.png" src="../_images/Screenshot_23.png" />
 <p>my computer and user name  and then grabs the startup folder path preparing to install something there with the place holder</p>
-<img alt="../_images/Screenshot_246.png" src="../_images/Screenshot_246.png" />
-<img alt="../_images/Screenshot_255.png" src="../_images/Screenshot_255.png" />
+<img alt="../_images/Screenshot_24.png" src="../_images/Screenshot_24.png" />
+<img alt="../_images/Screenshot_25.png" src="../_images/Screenshot_25.png" />
 <p>Then sleeps for 15 seconds (sandbox evasion) and if it can’t sleep it will exit.</p>
-<img alt="../_images/Screenshot_265.png" src="../_images/Screenshot_265.png" />
-<img alt="../_images/Screenshot_275.png" src="../_images/Screenshot_275.png" />
+<img alt="../_images/Screenshot_26.png" src="../_images/Screenshot_26.png" />
+<img alt="../_images/Screenshot_27.png" src="../_images/Screenshot_27.png" />
 <p>then compares some value to be true or not, if true it will exit</p>
-<img alt="../_images/Screenshot_284.png" src="../_images/Screenshot_284.png" />
+<img alt="../_images/Screenshot_28.png" src="../_images/Screenshot_28.png" />
 <p>which checks my username is any of these names</p>
-<img alt="../_images/Screenshot_295.png" src="../_images/Screenshot_295.png" />
-<img alt="../_images/Screenshot_305.png" src="../_images/Screenshot_305.png" />
+<img alt="../_images/Screenshot_29.png" src="../_images/Screenshot_29.png" />
+<img alt="../_images/Screenshot_30.png" src="../_images/Screenshot_30.png" />
 <p>Then it kills any instances of itself except itself</p>
-<img alt="../_images/Screenshot_3110.png" src="../_images/Screenshot_3110.png" />
+<img alt="../_images/Screenshot_311.png" src="../_images/Screenshot_311.png" />
 <p>it does a check to do this code blob which modifies <code class="docutils literal notranslate"><span class="pre">temp.tmp</span></code> file in temp folder</p>
-<img alt="../_images/Screenshot_327.png" src="../_images/Screenshot_327.png" />
+<img alt="../_images/Screenshot_32.png" src="../_images/Screenshot_32.png" />
 <p>and bypasses uac</p>
-<img alt="../_images/Screenshot_346.png" src="../_images/Screenshot_346.png" />
-<img alt="../_images/Screenshot_356.png" src="../_images/Screenshot_356.png" />
+<img alt="../_images/Screenshot_34.png" src="../_images/Screenshot_34.png" />
+<img alt="../_images/Screenshot_35.png" src="../_images/Screenshot_35.png" />
 <p>but the check it self is hard coded false</p>
-<img alt="../_images/Screenshot_336.png" src="../_images/Screenshot_336.png" />
+<img alt="../_images/Screenshot_33.png" src="../_images/Screenshot_33.png" />
 <div class="line-block">
 <div class="line">Next it checks if file location isnot at temp folder if true it will excecute next code which create a folder in temp folder</div>
 <div class="line">then checks if the binary is in that folder if true it will delete it</div>
 </div>
-<img alt="../_images/Screenshot_366.png" src="../_images/Screenshot_366.png" />
-<img alt="../_images/Screenshot_376.png" src="../_images/Screenshot_376.png" />
+<img alt="../_images/Screenshot_36.png" src="../_images/Screenshot_36.png" />
+<img alt="../_images/Screenshot_37.png" src="../_images/Screenshot_37.png" />
 <p>Then sets the binary in run registry for persistence</p>
-<img alt="../_images/Screenshot_396.png" src="../_images/Screenshot_396.png" />
-<img alt="../_images/Screenshot_386.png" src="../_images/Screenshot_386.png" />
+<img alt="../_images/Screenshot_39.png" src="../_images/Screenshot_39.png" />
+<img alt="../_images/Screenshot_38.png" src="../_images/Screenshot_38.png" />
 <p>but again the check hardcoded to false so it won’t do the above <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(afg.cev</span> <span class="pre">&amp;&amp;</span> <span class="pre">Operators.CompareString(afg.ceq,</span> <span class="pre">afg.ceu,</span> <span class="pre">false)</span> <span class="pre">!=</span> <span class="pre">0)</span></code></p>
-<img alt="../_images/Screenshot_405.png" src="../_images/Screenshot_405.png" />
+<img alt="../_images/Screenshot_40.png" src="../_images/Screenshot_40.png" />
 <p>Then it deletes the file in the temp folder</p>
-<img alt="../_images/Screenshot_4110.png" src="../_images/Screenshot_4110.png" />
-<img alt="../_images/Screenshot_425.png" src="../_images/Screenshot_425.png" />
+<img alt="../_images/Screenshot_411.png" src="../_images/Screenshot_411.png" />
+<img alt="../_images/Screenshot_42.png" src="../_images/Screenshot_42.png" />
 <p>then another check which is coded to be false</p>
-<img alt="../_images/Screenshot_435.png" src="../_images/Screenshot_435.png" />
+<img alt="../_images/Screenshot_43.png" src="../_images/Screenshot_43.png" />
 <p>where it will move the binary into temp with half-random name</p>
-<img alt="../_images/Screenshot_445.png" src="../_images/Screenshot_445.png" />
-<img alt="../_images/Screenshot_455.png" src="../_images/Screenshot_455.png" />
+<img alt="../_images/Screenshot_44.png" src="../_images/Screenshot_44.png" />
+<img alt="../_images/Screenshot_45.png" src="../_images/Screenshot_45.png" />
 <p>another check where the check is code to be false , where it will run restart from shell</p>
-<img alt="../_images/Screenshot_475.png" src="../_images/Screenshot_475.png" />
-<img alt="../_images/Screenshot_465.png" src="../_images/Screenshot_465.png" />
+<img alt="../_images/Screenshot_47.png" src="../_images/Screenshot_47.png" />
+<img alt="../_images/Screenshot_46.png" src="../_images/Screenshot_46.png" />
 <p>then it will start a new thread</p>
-<img alt="../_images/Screenshot_485.png" src="../_images/Screenshot_485.png" />
+<img alt="../_images/Screenshot_48.png" src="../_images/Screenshot_48.png" />
 <p>the new thread will check few checks which destined to be false to run some uac and bypass policies</p>
-<img alt="../_images/Screenshot_518.png" src="../_images/Screenshot_518.png" />
-<img alt="../_images/Screenshot_505.png" src="../_images/Screenshot_505.png" />
-<img alt="../_images/Screenshot_495.png" src="../_images/Screenshot_495.png" />
+<img alt="../_images/Screenshot_511.png" src="../_images/Screenshot_511.png" />
+<img alt="../_images/Screenshot_50.png" src="../_images/Screenshot_50.png" />
+<img alt="../_images/Screenshot_49.png" src="../_images/Screenshot_49.png" />
 <p>Next it will run another thread which will sleep</p>
-<img alt="../_images/Screenshot_533.png" src="../_images/Screenshot_533.png" />
-<img alt="../_images/Screenshot_523.png" src="../_images/Screenshot_523.png" />
+<img alt="../_images/Screenshot_53.png" src="../_images/Screenshot_53.png" />
+<img alt="../_images/Screenshot_52.png" src="../_images/Screenshot_52.png" />
 <p>another sleep (wont execute)</p>
-<img alt="../_images/Screenshot_543.png" src="../_images/Screenshot_543.png" />
-<img alt="../_images/Screenshot_551.png" src="../_images/Screenshot_551.png" />
+<img alt="../_images/Screenshot_54.png" src="../_images/Screenshot_54.png" />
+<img alt="../_images/Screenshot_55.png" src="../_images/Screenshot_55.png" />
 <p>then we got a class initialization and a method call , likely our main functions</p>
-<img alt="../_images/Screenshot_561.png" src="../_images/Screenshot_561.png" />
+<img alt="../_images/Screenshot_56.png" src="../_images/Screenshot_56.png" />
 <p>the class has a constuctor which sets this values</p>
-<img alt="../_images/Screenshot_571.png" src="../_images/Screenshot_571.png" />
+<img alt="../_images/Screenshot_57.png" src="../_images/Screenshot_57.png" />
 </section>
 <section id="steal">
 <h2>steal<a class="headerlink" href="#steal" title="Link to this heading"></a></h2>
 <p>onto the second function, it prepares a string and populates it with date.now() and the hwid and other data it grabbed ,with type being passwords</p>
-<img alt="../_images/Screenshot_581.png" src="../_images/Screenshot_581.png" />
-<img alt="../_images/Screenshot_591.png" src="../_images/Screenshot_591.png" />
+<img alt="../_images/Screenshot_58.png" src="../_images/Screenshot_58.png" />
+<img alt="../_images/Screenshot_59.png" src="../_images/Screenshot_59.png" />
 <p>Then it will start a series of adding to a list bunch of data to steal</p>
-<img alt="../_images/Screenshot_602.png" src="../_images/Screenshot_602.png" />
-<img alt="../_images/Screenshot_617.png" src="../_images/Screenshot_617.png" />
-<img alt="../_images/Screenshot_623.png" src="../_images/Screenshot_623.png" />
+<img alt="../_images/Screenshot_60.png" src="../_images/Screenshot_60.png" />
+<img alt="../_images/Screenshot_611.png" src="../_images/Screenshot_611.png" />
+<img alt="../_images/Screenshot_62.png" src="../_images/Screenshot_62.png" />
 <p>it will repeat same step for this data</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>\Google\Chrome\User Data\ 539600
 Chrome 539632
@@ -338,11 +338,11 @@ blob0            541232
 </pre></div>
 </div>
 <p>then it will construct another list</p>
-<img alt="../_images/Screenshot_632.png" src="../_images/Screenshot_632.png" />
+<img alt="../_images/Screenshot_63.png" src="../_images/Screenshot_63.png" />
 <p>with this format, with type being passwords</p>
-<img alt="../_images/Screenshot_642.png" src="../_images/Screenshot_642.png" />
+<img alt="../_images/Screenshot_641.png" src="../_images/Screenshot_641.png" />
 <p>then addes bunch of things to steal to that list</p>
-<img alt="../_images/Screenshot_651.png" src="../_images/Screenshot_651.png" />
+<img alt="../_images/Screenshot_65.png" src="../_images/Screenshot_65.png" />
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Opera Browser 570480
 Opera Software\Opera Stable\Login Data 570896
 Yandex Browser 570672
@@ -398,17 +398,17 @@ Coowon\Coowon\User Data                                                         
 </pre></div>
 </div>
 <p>And for each one on the list</p>
-<img alt="../_images/Screenshot_661.png" src="../_images/Screenshot_661.png" />
+<img alt="../_images/Screenshot_66.png" src="../_images/Screenshot_66.png" />
 <p>it will add to the list the following from each one in the list</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>origin_url 538864
 username_value 538768
 password_value 539056
 </pre></div>
 </div>
-<img alt="../_images/Screenshot_671.png" src="../_images/Screenshot_671.png" />
+<img alt="../_images/Screenshot_67.png" src="../_images/Screenshot_67.png" />
 <p>then we are back to adding to list to steal bunch of things</p>
-<img alt="../_images/Screenshot_691.png" src="../_images/Screenshot_691.png" />
-<img alt="../_images/Screenshot_681.png" src="../_images/Screenshot_681.png" />
+<img alt="../_images/Screenshot_69.png" src="../_images/Screenshot_69.png" />
+<img alt="../_images/Screenshot_68.png" src="../_images/Screenshot_68.png" />
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>SeaMonkey 544016
 SeaMonkey 543792
 logins
@@ -531,9 +531,9 @@ password= 550032
 <a class="reference external" href="https://github.com/abdelrahman-sherbini/config-extract/blob/main/AgentTesla/dumpedtext.txt">Link</a></p>
 <p>Then at the end, for each item in the list</p>
 <p>it will first check what method to send that data (webPanel ,ftp , smtp)</p>
-<img alt="../_images/Screenshot_701.png" src="../_images/Screenshot_701.png" />
+<img alt="../_images/Screenshot_70.png" src="../_images/Screenshot_70.png" />
 <p>here is the code for the smtp since the configuration is for smtp</p>
-<img alt="../_images/Screenshot_712.png" src="../_images/Screenshot_712.png" />
+<img alt="../_images/Screenshot_711.png" src="../_images/Screenshot_711.png" />
 <p>where it will prepare the email it will send and the reciever is <a class="reference external" href="mailto:sales&#37;&#52;&#48;satamwa&#46;com">sales<span>&#64;</span>satamwa<span>&#46;</span>com</a></p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>smtp             578928
 Recovered Accounts 583440
@@ -553,10 +553,10 @@ yyyy_MM_dd_HH_mm_ss 584432
 </pre></div>
 </div>
 <p>and sends the data as an attachment</p>
-<img alt="../_images/Screenshot_722.png" src="../_images/Screenshot_722.png" />
+<img alt="../_images/Screenshot_72.png" src="../_images/Screenshot_72.png" />
 <p>after that it will start a keylogger and does nothing with the data and sleep then exits</p>
-<img alt="../_images/Screenshot_731.png" src="../_images/Screenshot_731.png" />
-<img alt="../_images/Screenshot_741.png" src="../_images/Screenshot_741.png" />
+<img alt="../_images/Screenshot_73.png" src="../_images/Screenshot_73.png" />
+<img alt="../_images/Screenshot_74.png" src="../_images/Screenshot_74.png" />
 </section>
 <section id="iocs">
 <h2>IOCs<a class="headerlink" href="#iocs" title="Link to this heading"></a></h2>

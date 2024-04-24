@@ -34,11 +34,11 @@ It sent post requests to png(camouflage) files that will likely drop them to the
 Unpacking
 ----------
 
-The unpacking is custom and easy here.It allocates memory for the main code using `VirtualAlloc()` and changes memory protection using `VirtualProtect`
-.So we put 2 breakpoints at `VirtualAlloc` and `VirtualProtect` we can also put at `NTCreateUserProcess`
+The unpacking is custom and easy here.It allocates memory for the main code using `VirtualAlloc()` and it is used a lot so we can use it to look if our main payload is writtern between the calls
+.So we put breakpoint at `VirtualAlloc` (we can also put at `NTCreateUserProcess`)
 
-We hit our VirtualAlloc then run till return, There will a lot VirtualAlloc calls the main malware was at the third call, followed into dump 
-Then run till we hit a breakpoint at another VirtualAlloc. And the headers are fixed so we don't to do anything else
+We hit our VirtualAlloc then run till return, There will be a lot VirtualAlloc calls the main malware was at the third call, followed into dump 
+Then run till we hit a breakpoint at another VirtualAlloc. 
 
 .. image:: Screenshot_8.png
 

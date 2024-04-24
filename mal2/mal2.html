@@ -66,6 +66,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../mal3/mal3.html">Agent tesla</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../SignedUrl/text.html">SignedUrl Hub</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../mal4/mal4.html">Vidar</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../laugh/chals.html">0xLaugh Rev Challenges</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal5/agenttesla.html">Agent Tesla Malware Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal6/remcos.html">Remcos Malware Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../confus/agentsmtp.html">Agent tesla (sample1)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal8/sample2.html">AndroMeda Malware analysis</a></li>
 </ul>
 
         </div>
@@ -96,66 +101,66 @@
 <h1>Blackcat Ransomware<a class="headerlink" href="#blackcat-ransomware" title="Link to this heading"></a></h1>
 <p>sha256: 847fb7609f53ed334d5affbb07256c21cb5e6f68b1cc14004f5502d714d2a456</p>
 <p>Using PEID, it is using CRC32 a checksome algorithm and crpytographic library</p>
-<img alt="../_images/Screenshot_210.png" src="../_images/Screenshot_210.png" />
+<img alt="../_images/Screenshot_216.png" src="../_images/Screenshot_216.png" />
 <p>the libraries the malware needed in rust</p>
-<img alt="../_images/Screenshot_391.png" src="../_images/Screenshot_391.png" />
+<img alt="../_images/Screenshot_393.png" src="../_images/Screenshot_393.png" />
 <p>It requires a key to run</p>
-<img alt="../_images/Screenshot_310.png" src="../_images/Screenshot_310.png" />
+<img alt="../_images/Screenshot_315.png" src="../_images/Screenshot_315.png" />
 <p>in x32dbg, noticed accesstoken is passed to this function and the program closes if i step over it</p>
-<img alt="../_images/Screenshot_231.png" src="../_images/Screenshot_231.png" />
+<img alt="../_images/Screenshot_233.png" src="../_images/Screenshot_233.png" />
 <p>which in IDA psuedo code looks like this</p>
-<img alt="../_images/Screenshot_241.png" src="../_images/Screenshot_241.png" />
+<img alt="../_images/Screenshot_243.png" src="../_images/Screenshot_243.png" />
 <p>It has TLS functions</p>
-<img alt="../_images/Screenshot_410.png" src="../_images/Screenshot_410.png" />
+<img alt="../_images/Screenshot_415.png" src="../_images/Screenshot_415.png" />
 <p>Going into first TLS callback, it uses TlsGetValue with TlsIndex set to global variable</p>
-<img alt="../_images/Screenshot_52.png" src="../_images/Screenshot_52.png" />
+<img alt="../_images/Screenshot_515.png" src="../_images/Screenshot_515.png" />
 <p>Finding the TlsAlloc import where it is called as it has to be called to set TlsIndex first ,not in TLS callback
 but passing all TLS callbacks in x32 i get to the entrypoint, and nothing happens on the VM</p>
-<img alt="../_images/Screenshot_610.png" src="../_images/Screenshot_610.png" />
+<img alt="../_images/Screenshot_615.png" src="../_images/Screenshot_615.png" />
 <p>will reverse backwards a bit to make easier starting with our CryptGenRandom found in PEID (that generates a random number)
 One of places it is called under LABEL 8, here it gets the rand number and just returns</p>
-<img alt="../_images/Screenshot_83.png" src="../_images/Screenshot_83.png" />
+<img alt="../_images/Screenshot_85.png" src="../_images/Screenshot_85.png" />
 <p>and that is called depending on value from TLS</p>
-<img alt="../_images/Screenshot_92.png" src="../_images/Screenshot_92.png" />
+<img alt="../_images/Screenshot_94.png" src="../_images/Screenshot_94.png" />
 <p>then naming the caller of all above to Rand and going to where it is called, we notice the use of SSE instructions for vectorized processing (used in acceleration)
 the encryption used based on this maybe AES also since it uses _mm_loadu_si128 maybe it outputs 128-bit result</p>
-<img alt="../_images/Screenshot_103.png" src="../_images/Screenshot_103.png" />
+<img alt="../_images/Screenshot_105.png" src="../_images/Screenshot_105.png" />
 <p>naming above function Encrypt_SSE, looking where it is called we see some more encryption related stuff</p>
-<img alt="../_images/Screenshot_112.png" src="../_images/Screenshot_112.png" />
+<img alt="../_images/Screenshot_117.png" src="../_images/Screenshot_117.png" />
 <p>the function is called within more encryption stuff then all is called with some passed as parameters maybe the block that will be encrypted</p>
-<img alt="../_images/Screenshot_122.png" src="../_images/Screenshot_122.png" />
-<img alt="../_images/Screenshot_132.png" src="../_images/Screenshot_132.png" />
+<img alt="../_images/Screenshot_124.png" src="../_images/Screenshot_124.png" />
+<img alt="../_images/Screenshot_134.png" src="../_images/Screenshot_134.png" />
 <p>Let’s check other commonly used function by Ransomware like Reg*, findnextfile, findNextVolume createToolSnapShot, Getsysteminfo , SystemParameters , ControlService , and SC manager and others for networking and system
 First ControlService used in this function</p>
-<img alt="../_images/Screenshot_142.png" src="../_images/Screenshot_142.png" />
+<img alt="../_images/Screenshot_143.png" src="../_images/Screenshot_143.png" />
 <p>Notice it is recursive function</p>
-<img alt="../_images/Screenshot_152.png" src="../_images/Screenshot_152.png" />
+<img alt="../_images/Screenshot_153.png" src="../_images/Screenshot_153.png" />
 <p>with enumerating depending services passed to the caller (a1) and then processing information about the services</p>
-<img alt="../_images/Screenshot_162.png" src="../_images/Screenshot_162.png" />
-<img alt="../_images/Screenshot_171.png" src="../_images/Screenshot_171.png" />
+<img alt="../_images/Screenshot_163.png" src="../_images/Screenshot_163.png" />
+<img alt="../_images/Screenshot_173.png" src="../_images/Screenshot_173.png" />
 <p>Then uses the mentinoned above ControlService which Sends a control code to a service. with passed second parameter the code is 1 which is stop
 So it is stopping all depending services</p>
-<img alt="../_images/Screenshot_191.png" src="../_images/Screenshot_191.png" />
-<img alt="../_images/Screenshot_201.png" src="../_images/Screenshot_201.png" />
+<img alt="../_images/Screenshot_193.png" src="../_images/Screenshot_193.png" />
+<img alt="../_images/Screenshot_203.png" src="../_images/Screenshot_203.png" />
 <p>Then retrieves the current status of the specified services based on the specified information level then returns 1 if all is well</p>
-<img alt="../_images/Screenshot_181.png" src="../_images/Screenshot_181.png" />
+<img alt="../_images/Screenshot_183.png" src="../_images/Screenshot_183.png" />
 <p>stepping out of the function, we see it opens the service control manager with all rights whose handle is passed into services_enumed function</p>
-<img alt="../_images/Screenshot_222.png" src="../_images/Screenshot_222.png" />
-<img alt="../_images/Screenshot_212.png" src="../_images/Screenshot_212.png" />
+<img alt="../_images/Screenshot_223.png" src="../_images/Screenshot_223.png" />
+<img alt="../_images/Screenshot_217.png" src="../_images/Screenshot_217.png" />
 <p>It uses openprocesstoken and NTopenProcessToken to do some functions with higherprivilege (if it was started in higher privilege which makes me think there is a privilege escalation)</p>
-<img alt="../_images/Screenshot_312.png" src="../_images/Screenshot_312.png" />
-<img alt="../_images/Screenshot_322.png" src="../_images/Screenshot_322.png" />
+<img alt="../_images/Screenshot_316.png" src="../_images/Screenshot_316.png" />
+<img alt="../_images/Screenshot_323.png" src="../_images/Screenshot_323.png" />
 <p>It also uses FindFirstVolume and findNextVolume loops through all the volume most likely for encryption</p>
-<img alt="../_images/Screenshot_331.png" src="../_images/Screenshot_331.png" />
-<img alt="../_images/Screenshot_341.png" src="../_images/Screenshot_341.png" />
+<img alt="../_images/Screenshot_333.png" src="../_images/Screenshot_333.png" />
+<img alt="../_images/Screenshot_343.png" src="../_images/Screenshot_343.png" />
 <p>We notice it is also using NetShareSum and used for SMB like services and encryptes the shared files as well</p>
-<img alt="../_images/Screenshot_351.png" src="../_images/Screenshot_351.png" />
+<img alt="../_images/Screenshot_353.png" src="../_images/Screenshot_353.png" />
 <p>It grabs my system information like number of processors and architecture likely for antiVM</p>
-<img alt="../_images/Screenshot_361.png" src="../_images/Screenshot_361.png" />
+<img alt="../_images/Screenshot_363.png" src="../_images/Screenshot_363.png" />
 <p>It changes the wallpaper by accessing SystemParametersInfo function with parameter 14
 Then finally it creates the ransome note using WriteFile</p>
-<img alt="../_images/Screenshot_371.png" src="../_images/Screenshot_371.png" />
-<img alt="../_images/Screenshot_381.png" src="../_images/Screenshot_381.png" />
+<img alt="../_images/Screenshot_373.png" src="../_images/Screenshot_373.png" />
+<img alt="../_images/Screenshot_383.png" src="../_images/Screenshot_383.png" />
 </section>
 
 

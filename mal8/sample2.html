@@ -119,30 +119,30 @@
 <div class="line">Cleaning the sample with hashdb plugin and fixing variable types to correctly display the peb walking and renaming some functions</div>
 </div>
 <p>First it gets the kernel32 base address from the peb and then resolves LdrGetDllHandle</p>
-<img alt="../_images/Screenshot_129.png" src="../_images/Screenshot_129.png" />
+<img alt="../_images/Screenshot_130.png" src="../_images/Screenshot_130.png" />
 <p>Then it resolves some additional functions from the kernel32 dll handle and storing it into v31</p>
 <img alt="../_images/Screenshot_228.png" src="../_images/Screenshot_228.png" />
-<img alt="../_images/Screenshot_328.png" src="../_images/Screenshot_328.png" />
+<img alt="../_images/Screenshot_327.png" src="../_images/Screenshot_327.png" />
 <p>using hashdb we get the functions</p>
 <img alt="../_images/Screenshot_426.png" src="../_images/Screenshot_426.png" />
 <p>then it calls some function with <code class="docutils literal notranslate"><span class="pre">lol</span></code></p>
-<img alt="../_images/Screenshot_520.png" src="../_images/Screenshot_520.png" />
+<img alt="../_images/Screenshot_524.png" src="../_images/Screenshot_524.png" />
 <p>turns out it was openmutex call, so the mutex name is <code class="docutils literal notranslate"><span class="pre">lol</span></code></p>
-<img alt="../_images/Screenshot_619.png" src="../_images/Screenshot_619.png" />
+<img alt="../_images/Screenshot_620.png" src="../_images/Screenshot_620.png" />
 <p>then checks last error from teb equals two (likely ERROR_FILE_NOT_FOUND error code), seems like if mutex opened successful</p>
-<img alt="../_images/Screenshot_713.png" src="../_images/Screenshot_713.png" />
+<img alt="../_images/Screenshot_718.png" src="../_images/Screenshot_718.png" />
 <p>passing the check, then it iterates over the process searching for any vm processes</p>
 <img alt="../_images/Screenshot_99.png" src="../_images/Screenshot_99.png" />
 <img alt="../_images/Screenshot_1010.png" src="../_images/Screenshot_1010.png" />
 <p>passing the check, we arrive at another check for sandboxie dll it tries to gethandle of that dll if succeed we go to that rabbit hole function</p>
-<img alt="../_images/Screenshot_1111.png" src="../_images/Screenshot_1111.png" />
+<img alt="../_images/Screenshot_1112.png" src="../_images/Screenshot_1112.png" />
 <img alt="../_images/Screenshot_1210.png" src="../_images/Screenshot_1210.png" />
 <p>Then another check for checking registry keys at system\currentcontrolset\services\disk\enum which contains the name and serial ID of disk (antiVM)</p>
 <img alt="../_images/Screenshot_138.png" src="../_images/Screenshot_138.png" />
 <img alt="../_images/Screenshot_147.png" src="../_images/Screenshot_147.png" />
-<img alt="../_images/Screenshot_158.png" src="../_images/Screenshot_158.png" />
+<img alt="../_images/Screenshot_157.png" src="../_images/Screenshot_157.png" />
 <p>Then does a check to check time elapsed between instruction (antidebugging but does nothing with it nopped)</p>
-<img alt="../_images/Screenshot_168.png" src="../_images/Screenshot_168.png" />
+<img alt="../_images/Screenshot_167.png" src="../_images/Screenshot_167.png" />
 <p>We arrive at last bit of code which seems like our main functions</p>
 <img alt="../_images/Screenshot_177.png" src="../_images/Screenshot_177.png" />
 <p>it takes in a huge blob likely a packed code</p>
@@ -182,9 +182,9 @@
 <img alt="../_images/Screenshot_296.png" src="../_images/Screenshot_296.png" />
 <img alt="../_images/Screenshot_306.png" src="../_images/Screenshot_306.png" />
 <p>This line sounds interesting, running till that instruction, and letting all deobfuscation write to that dynamic function that is called</p>
-<img alt="../_images/Screenshot_3111.png" src="../_images/Screenshot_3111.png" />
+<img alt="../_images/Screenshot_3112.png" src="../_images/Screenshot_3112.png" />
 <p>Then we see the decoded routine, where the process injection happens</p>
-<img alt="../_images/Screenshot_329.png" src="../_images/Screenshot_329.png" />
+<img alt="../_images/Screenshot_328.png" src="../_images/Screenshot_328.png" />
 <p>Going till the virtualalloc and grabbing the allocated address in the dump, and turns out it only contained value for the process name to inject</p>
 <img alt="../_images/Screenshot_337.png" src="../_images/Screenshot_337.png" />
 <p>basically what is happening is similar to this code</p>
@@ -385,19 +385,19 @@ And here it is deciding what to inject based on OS 32 or 64 bit ,i get svchost b
 <div class="line">Fixing the section alignment with put raw address on disk as virtual address on memory</div>
 <div class="line">And then we can view it on pstudio</div>
 </div>
-<img alt="../_images/Screenshot_524.png" src="../_images/Screenshot_524.png" />
-<img alt="../_images/Screenshot_5110.png" src="../_images/Screenshot_5110.png" />
+<img alt="../_images/Screenshot_525.png" src="../_images/Screenshot_525.png" />
+<img alt="../_images/Screenshot_5111.png" src="../_images/Screenshot_5111.png" />
 <p>So the executable didn’t run, there was an error, i decided to break at NtResumeThread, then run to that function, in windbg attach to the created process svchost and break of entry <code class="docutils literal notranslate"><span class="pre">bp</span> <span class="pre">$exentry</span></code> and run in windbg , and then step over the NtResumeThread
 and we get a hit on windbg</p>
-<img alt="../_images/Screenshot_534.png" src="../_images/Screenshot_534.png" />
-<img alt="../_images/Screenshot_544.png" src="../_images/Screenshot_544.png" />
+<img alt="../_images/Screenshot_533.png" src="../_images/Screenshot_533.png" />
+<img alt="../_images/Screenshot_543.png" src="../_images/Screenshot_543.png" />
 <p>First it get the next instruction address by call and pop , where EAX will be at the end address of the first instruction</p>
 <img alt="../_images/Screenshot_552.png" src="../_images/Screenshot_552.png" />
 <img alt="../_images/Screenshot_562.png" src="../_images/Screenshot_562.png" />
 <p>then it calls a function with that address</p>
 <img alt="../_images/Screenshot_572.png" src="../_images/Screenshot_572.png" />
 <p>and we get peb walking and api hashing</p>
-<img alt="../_images/Screenshot_624.png" src="../_images/Screenshot_624.png" />
+<img alt="../_images/Screenshot_623.png" src="../_images/Screenshot_623.png" />
 <p>to make it easier i will use ida with windbg debugger with same steps, attach process , run over to NtResumeThread , break on entrypoint , run , then stepover NtResumeThread</p>
 <img alt="../_images/Screenshot_592.png" src="../_images/Screenshot_592.png" />
 <img alt="../_images/Screenshot_603.png" src="../_images/Screenshot_603.png" />
@@ -417,20 +417,20 @@ and we get a hit on windbg</p>
 <p>and we got a reference from a clean sample</p>
 <img alt="../_images/Screenshot_702.png" src="../_images/Screenshot_702.png" />
 <p>fixed</p>
-<img alt="../_images/Screenshot_714.png" src="../_images/Screenshot_714.png" />
-<img alt="../_images/Screenshot_723.png" src="../_images/Screenshot_723.png" />
+<img alt="../_images/Screenshot_719.png" src="../_images/Screenshot_719.png" />
+<img alt="../_images/Screenshot_722.png" src="../_images/Screenshot_722.png" />
 <p>we arrive at the jump address but it is also patched, so we have to fix it same way from the clean sample</p>
 <img alt="../_images/Screenshot_732.png" src="../_images/Screenshot_732.png" />
 <img alt="../_images/Screenshot_742.png" src="../_images/Screenshot_742.png" />
-<img alt="../_images/Screenshot_752.png" src="../_images/Screenshot_752.png" />
+<img alt="../_images/Screenshot_751.png" src="../_images/Screenshot_751.png" />
 </section>
 <section id="stage-2">
 <h2>Stage 2<a class="headerlink" href="#stage-2" title="Link to this heading"></a></h2>
 <p>And finally we arrive the main malicious code</p>
-<img alt="../_images/Screenshot_762.png" src="../_images/Screenshot_762.png" />
+<img alt="../_images/Screenshot_761.png" src="../_images/Screenshot_761.png" />
 <p>First function is a kernel32dll seterror, going into the second , it is also peb walking and api hashing</p>
-<img alt="../_images/Screenshot_772.png" src="../_images/Screenshot_772.png" />
-<img alt="../_images/Screenshot_782.png" src="../_images/Screenshot_782.png" />
+<img alt="../_images/Screenshot_771.png" src="../_images/Screenshot_771.png" />
+<img alt="../_images/Screenshot_781.png" src="../_images/Screenshot_781.png" />
 <p>It gets the volume information and OS version</p>
 <img alt="../_images/Screenshot_791.png" src="../_images/Screenshot_791.png" />
 <p>Then checks if process is 64 or 32 bit</p>
@@ -496,7 +496,7 @@ The WD part specifies that this ACE applies to the &quot;Everyone&quot; group.
 <img alt="../_images/Screenshot_1081.png" src="../_images/Screenshot_1081.png" />
 <p>and sets the directory to %alluserprofile%</p>
 <img alt="../_images/Screenshot_1101.png" src="../_images/Screenshot_1101.png" />
-<img alt="../_images/Screenshot_1112.png" src="../_images/Screenshot_1112.png" />
+<img alt="../_images/Screenshot_1113.png" src="../_images/Screenshot_1113.png" />
 <p>Third function calls www.update.microsoft.com</p>
 <img alt="../_images/Screenshot_1121.png" src="../_images/Screenshot_1121.png" />
 <p>Now onto the main function, it is in an infinite loop with a sleep at the end</p>
@@ -523,7 +523,7 @@ The WD part specifies that this ACE applies to the &quot;Everyone&quot; group.
 <p>Then does series of checks to  try to resolve the host</p>
 <img alt="../_images/Screenshot_1281.png" src="../_images/Screenshot_1281.png" />
 <img alt="../_images/Screenshot_1291.png" src="../_images/Screenshot_1291.png" />
-<img alt="../_images/Screenshot_130.png" src="../_images/Screenshot_130.png" />
+<img alt="../_images/Screenshot_1301.png" src="../_images/Screenshot_1301.png" />
 <p>we got ip 1677745305 converting it to ip we get</p>
 <img alt="../_images/Screenshot_1311.png" src="../_images/Screenshot_1311.png" />
 <img alt="../_images/Screenshot_1321.png" src="../_images/Screenshot_1321.png" />

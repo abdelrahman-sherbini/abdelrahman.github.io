@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Automated malware analysis with frida &mdash; abdelrahman walkthrough 1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=29a6c3e3"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="AndroMeda Malware analysis" href="../mal8/sample2.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            abdelrahman walkthrough
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../lab1/lab1.html">Practical Malware Analysis - Lab 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab3/lab3.html">Practical Malware Analysis - Lab 3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab5/lab5.html">Practical Malware Analysis - Lab 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab6/lab6.html">Practical Malware Analysis - Lab 6</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab7/lab7.html">Practical Malware Analysis - Lab 7</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab9/lab9.html">Practical Malware Analysis - Lab 9</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab10/lab10.html">Practical Malware Analysis - Lab 10</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab11/lab11.html">Practical Malware Analysis - Lab 11</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab12/lab12.html">Practical Malware Analysis - Lab 12</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab13/lab13.html">Practical Malware Analysis - Lab 13</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab14/lab14.html">Practical Malware Analysis - Lab 14</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab15/lab15.html">Practical Malware Analysis - Lab 15</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab16/lab16.html">Practical Malware Analysis - Lab 16</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab17/lab17.html">Practical Malware Analysis - Lab 17</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab18/lab18.html">Practical Malware Analysis - Lab 18</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab19/lab19.html">Practical Malware Analysis - Lab 19</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal1/mal1.html">Princess Locker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal2/mal2.html">Blackcat Ransomware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal3/mal3.html">Agent tesla</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../SignedUrl/text.html">SignedUrl Hub</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal4/mal4.html">Vidar</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../laugh/chals.html">0xLaugh Rev Challenges</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal5/agenttesla.html">Agent Tesla Malware Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal6/remcos.html">Remcos Malware Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../confus/agentsmtp.html">Agent tesla (sample1)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal8/sample2.html">AndroMeda Malware analysis</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Automated malware analysis with frida</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#first-part">First Part</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#second-part">Second Part</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">abdelrahman walkthrough</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Automated malware analysis with frida</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/frida/frida.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="automated-malware-analysis-with-frida">
+<h1>Automated malware analysis with frida<a class="headerlink" href="#automated-malware-analysis-with-frida" title="Link to this heading"></a></h1>
+<p>Frida is Dynamic instrumentation toolkit for developers, reverse-engineers, and security researchers. Dynamic instrumentation is the process of modifying the instructions of a binary program while it executes.</p>
+<p>It is possible to inject your own scripts into application processes and hook any function, spy on crypto APIs or trace private application code. This also allows modifying your injecting script and seeing the results instantly. With the help of Frida, we can bypass certificate pinning, root detection, dump memory…etc.</p>
+<section id="first-part">
+<h2>First Part<a class="headerlink" href="#first-part" title="Link to this heading"></a></h2>
+<p>install it with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">frida</span><span class="o">-</span><span class="n">tools</span>
+</pre></div>
+</div>
+<p>Runs with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">frida</span><span class="o">-</span><span class="n">trace</span> <span class="o">-</span><span class="n">f</span> <span class="o">&lt;</span><span class="n">program</span> <span class="n">name</span><span class="o">&gt;</span> <span class="o">-</span><span class="n">i</span> <span class="o">&lt;</span><span class="n">Function</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="n">to</span> <span class="n">monitor</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>We can use for example to see what a malware will code inject into.
+Using <a class="reference external" href="https://abdelrahman-sherbini.github.io/abdelrahman.github.io/mal8/sample2.html">my analysis of Andromeda</a>  as an example.</p>
+<p>One important api call in code injection is createprocess or openprocess to get a handle to the process it will inject to
+We hook that api with following command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>frida-trace -f andromeda -i KERNEL32.DLL!CreateProcessW
+</pre></div>
+</div>
+<p>We get one hit</p>
+<img alt="../_images/Screenshot_158.png" src="../_images/Screenshot_158.png" />
+<div class="line-block">
+<div class="line">To add arguments to our output we modify the generated js file in <code class="docutils literal notranslate"><span class="pre">_handlers</span></code> folder.</div>
+<div class="line">According to our analysis the injected process will be passed in lpcommandline argument and its type is LPWSTR (wide string / utf16).</div>
+</div>
+<img alt="../_images/Screenshot_230.png" src="../_images/Screenshot_230.png" />
+<div class="line-block">
+<div class="line">The generated file contains onEnter (on accessing the hooked api call ) and onLeave (returning from the hooked api call)</div>
+<div class="line">we modify onEnter as follow to print the to-be injected process</div>
+</div>
+<img alt="../_images/Screenshot_329.png" src="../_images/Screenshot_329.png" />
+<p>And we get the hooked process</p>
+<img alt="../_images/Screenshot_428.png" src="../_images/Screenshot_428.png" />
+<p>We can use it same way with LoadLibraryA</p>
+<img alt="../_images/Screenshot_624.png" src="../_images/Screenshot_624.png" />
+<img alt="../_images/Screenshot_526.png" src="../_images/Screenshot_526.png" />
+<p>According to our analysis we know that 4010E6 is the function that resolves the api calls from a dll and returns address of the function</p>
+<img alt="../_images/Screenshot_720.png" src="../_images/Screenshot_720.png" />
+<p>we will need a custom script to input our <code class="docutils literal notranslate"><span class="pre">4010E6</span></code> function and get the name of the function from the address returned, so we will use <code class="docutils literal notranslate"><span class="pre">`frida`</span></code> command this time not <code class="docutils literal notranslate"><span class="pre">`frida-trace`</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">frida</span> <span class="o">-</span><span class="n">l</span> <span class="n">resolver</span><span class="o">.</span><span class="n">js</span> <span class="o">-</span><span class="n">f</span> <span class="n">andromeda</span>
+</pre></div>
+</div>
+<p>with this custom script:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Interceptor</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">ptr</span><span class="p">(</span><span class="s1">&#39;0x4010E6&#39;</span><span class="p">),</span> <span class="p">{</span>
+    <span class="n">onEnter</span><span class="p">:</span> <span class="n">function</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="p">},</span>
+    <span class="n">onLeave</span><span class="p">:</span> <span class="n">function</span><span class="p">(</span><span class="n">retval</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">var</span> <span class="n">resolvedFunction</span> <span class="o">=</span> <span class="n">DebugSymbol</span><span class="o">.</span><span class="n">fromAddress</span><span class="p">(</span><span class="n">retval</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">;</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;Return value:&#39;</span><span class="p">,</span> <span class="n">resolvedFunction</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>And we get the resolved APIs (same way can be used for config extraction for other malwares)</p>
+<img alt="../_images/Screenshot_810.png" src="../_images/Screenshot_810.png" />
+</section>
+<section id="second-part">
+<h2>Second Part<a class="headerlink" href="#second-part" title="Link to this heading"></a></h2>
+<div class="line-block">
+<div class="line">In second part i will use vidar sample i analyzed <a class="reference external" href="https://abdelrahman-sherbini.github.io/abdelrahman.github.io/mal4/mal4.html">here</a>  to automtically unpack with frida</div>
+<div class="line">According to our analysis the unpacking is simple  , it uses <code class="docutils literal notranslate"><span class="pre">VirtualAlloc</span></code> to allocate space for the main payload, and we will use VirtualAlloc as a checkpoint as it is used a lot to check if our main payload is written into the allocated space</div>
+</div>
+<img alt="../_images/Screenshot_910.png" src="../_images/Screenshot_910.png" />
+<p>Then using the below python script which gets address of allocate address at onLeave and at the next VirtualAlloc call onEnter i check if there an executable written and dump it</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">frida</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+
+<span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Unpacker via frida&#39;</span><span class="p">)</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-f&quot;</span><span class="p">,</span><span class="s2">&quot;--file&quot;</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+<span class="n">pid</span> <span class="o">=</span> <span class="n">frida</span><span class="o">.</span><span class="n">spawn</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">file</span><span class="p">)</span>
+<span class="n">session</span> <span class="o">=</span> <span class="n">frida</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">pid</span><span class="p">)</span>
+<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">script</span> <span class="o">=</span>  <span class="n">session</span><span class="o">.</span><span class="n">create_script</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    var vaExportAddress = Module.findExportByName(&quot;kernel32.dll&quot;, &quot;VirtualAlloc&quot;);</span>
+<span class="s2">    var count = 0;</span>
+<span class="s2">    var vaRet = 0;</span>
+<span class="s2">    var vaSize = 0;</span>
+<span class="s2">    if (vaExportAddress != null) {</span>
+<span class="s2">        console.log(&quot;VirtualAlloc found at: &quot; + vaExportAddress);</span>
+<span class="s2">        Interceptor.attach(vaExportAddress, {</span>
+<span class="s2">            onEnter: function (args) {</span>
+
+<span class="s2">            if (vaRet != 0 ){</span>
+<span class="s2">            if (vaRet.readAnsiString(2) === &quot;MZ&quot;) {</span>
+<span class="s2">                        console.log(&quot;Found PE header at allocated memory&quot;);</span>
+<span class="s2">                        count += 1;</span>
+<span class="s2">                        var mainP = vaRet.readByteArray(vaSize);</span>
+<span class="s2">                        var fileName = &quot;Dumped_&quot; + count + &quot;.bin&quot;;</span>
+<span class="s2">                        var file = new File(fileName, &quot;wb&quot;);</span>
+<span class="s2">                        file.write(mainP);</span>
+<span class="s2">                        file.flush();</span>
+<span class="s2">                        file.close();</span>
+<span class="s2">                        console.log(&quot;Dumped -&gt; &quot; + fileName);</span>
+<span class="s2">                    }</span>
+<span class="s2">                    }</span>
+<span class="s2">                vaSize = args[1].toInt32();</span>
+<span class="s2">                console.log(&quot;VirtualAlloc called with size: &quot; + vaSize);</span>
+<span class="s2">            },</span>
+<span class="s2">            onLeave: function (retval) {</span>
+<span class="s2">                if (retval.isNull()) {</span>
+<span class="s2">                    console.log(&quot;VirtualAlloc returned NULL&quot;);</span>
+<span class="s2">                } else {</span>
+
+<span class="s2">                    vaRet = ptr(retval);</span>
+
+
+<span class="s2">                }</span>
+<span class="s2">            }</span>
+<span class="s2">        });</span>
+<span class="s2">    } else {</span>
+<span class="s2">        console.error(&quot;VirtualAlloc not found in kernel32.dll&quot;);</span>
+<span class="s2">    }</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="n">script</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+<span class="n">frida</span><span class="o">.</span><span class="n">resume</span><span class="p">(</span><span class="n">pid</span><span class="p">)</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>It dumped three files</p>
+<img alt="../_images/Screenshot_1114.png" src="../_images/Screenshot_1114.png" />
+<p>Where our unpacked binary is second file dumped and the others is just windows dlls</p>
+<img alt="../_images/Screenshot_1012.png" src="../_images/Screenshot_1012.png" />
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../mal8/sample2.html" class="btn btn-neutral float-left" title="AndroMeda Malware analysis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, abdelrahman khaled.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

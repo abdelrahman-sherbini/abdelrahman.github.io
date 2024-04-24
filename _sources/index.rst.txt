@@ -35,6 +35,7 @@ Welcome to my blog! LinkedIn: `abdelrahman-abouelsherbini <https://www.linkedin.
    mal6/remcos
    confus/agentsmtp
    mal8/sample2
+   frida/frida
 
 Indices and tables
 ==================

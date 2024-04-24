@@ -65,6 +65,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../mal2/mal2.html">Blackcat Ransomware</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../mal3/mal3.html">Agent tesla</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../SignedUrl/text.html">SignedUrl Hub</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal4/mal4.html">Vidar</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../laugh/chals.html">0xLaugh Rev Challenges</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal5/agenttesla.html">Agent Tesla Malware Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal6/remcos.html">Remcos Malware Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../confus/agentsmtp.html">Agent tesla (sample1)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal8/sample2.html">AndroMeda Malware analysis</a></li>
 </ul>
 
         </div>
@@ -95,96 +101,96 @@
 <h1>Princess Locker<a class="headerlink" href="#princess-locker" title="Link to this heading"></a></h1>
 <p>sha256:dc7ab2e7ed26554a11da51a184e95b01e685b1a2f99c7fc77d54d5966530bf60</p>
 <p>exeinfo shows it is unpacked(lies) and it is made with c++ with a GUI</p>
-<img alt="../_images/Screenshot_16.png" src="../_images/Screenshot_16.png" />
+<img alt="../_images/Screenshot_116.png" src="../_images/Screenshot_116.png" />
 <p>it has decent number of imports with antidebugging import so we have to be carefull and import for iterating files marked x by pstudio and virtual protect (which changes permission in memory)</p>
-<img alt="../_images/Screenshot_22.png" src="../_images/Screenshot_22.png" />
+<img alt="../_images/Screenshot_214.png" src="../_images/Screenshot_214.png" />
 <p>we will set breakpoint on virtualprotect to capture the address it will change permission on , it will be first parameter
 and we can breakpoint on virtualalloc to capture return address on EAX for the memory address</p>
-<img alt="../_images/Screenshot_32.png" src="../_images/Screenshot_32.png" />
+<img alt="../_images/Screenshot_313.png" src="../_images/Screenshot_313.png" />
 <p>we hit our entrypoint breakpoint, continuing run</p>
-<img alt="../_images/Screenshot_42.png" src="../_images/Screenshot_42.png" />
+<img alt="../_images/Screenshot_413.png" src="../_images/Screenshot_413.png" />
 <p>we hit our first breakpoint on virtualalloc</p>
-<img alt="../_images/Screenshot_72.png" src="../_images/Screenshot_72.png" />
+<img alt="../_images/Screenshot_713.png" src="../_images/Screenshot_713.png" />
 <p>stepping into till we get the main virtualalloc</p>
-<img alt="../_images/Screenshot_82.png" src="../_images/Screenshot_82.png" />
+<img alt="../_images/Screenshot_84.png" src="../_images/Screenshot_84.png" />
 <p>stepping over then get the value in EAX and following it in dump we get this</p>
-<img alt="../_images/Screenshot_91.png" src="../_images/Screenshot_91.png" />
+<img alt="../_images/Screenshot_93.png" src="../_images/Screenshot_93.png" />
 <p>it may look like garbage data but looking ahead we rdata text .rsrc in the dump so this is our main application, so we set a breakpoint on execution there</p>
-<img alt="../_images/Screenshot_102.png" src="../_images/Screenshot_102.png" />
+<img alt="../_images/Screenshot_104.png" src="../_images/Screenshot_104.png" />
 <p>then we hit our virtualprotect</p>
-<img alt="../_images/Screenshot_62.png" src="../_images/Screenshot_62.png" />
+<img alt="../_images/Screenshot_613.png" src="../_images/Screenshot_613.png" />
 <p>following with stepping till we reach the main virtualprotect call</p>
-<img alt="../_images/Screenshot_121.png" src="../_images/Screenshot_121.png" />
+<img alt="../_images/Screenshot_123.png" src="../_images/Screenshot_123.png" />
 <p>looking at the stack to look at the pushed data (we want the first pop top of the stack which will be the first parameter)</p>
-<img alt="../_images/Screenshot_131.png" src="../_images/Screenshot_131.png" />
+<img alt="../_images/Screenshot_133.png" src="../_images/Screenshot_133.png" />
 <p>with the third parameter is 0x20 which is execute read (third from top of stack) setting hard breakpoint on execute there</p>
-<img alt="../_images/Screenshot_151.png" src="../_images/Screenshot_151.png" />
+<img alt="../_images/Screenshot_152.png" src="../_images/Screenshot_152.png" />
 <p>And we hit the hardware breakpoint</p>
-<img alt="../_images/Screenshot_23.png" src="../_images/Screenshot_23.png" />
+<img alt="../_images/Screenshot_232.png" src="../_images/Screenshot_232.png" />
 <p>Going there at that address we find what looks like to be code starting with call E8 dumping all that to a binary</p>
-<img alt="../_images/Screenshot_141.png" src="../_images/Screenshot_141.png" />
+<img alt="../_images/Screenshot_142.png" src="../_images/Screenshot_142.png" />
 <p>Opening in hex we know the header is grabage we need to change to a good header, we will replace all before the Machine value as it is in the File header which the OS needs it to load the executable into memory so it won’t be corrupted
 The machine value on 32-bit file is 0x014C which in memory will little endian 4C  01 ,</p>
-<img alt="../_images/Screenshot_161.png" src="../_images/Screenshot_161.png" />
+<img alt="../_images/Screenshot_162.png" src="../_images/Screenshot_162.png" />
 <p>replacing the garbage header, but notice it is different in size so will need to fix some sections alignment</p>
-<img alt="../_images/Screenshot_17.png" src="../_images/Screenshot_17.png" />
-<img alt="../_images/Screenshot_18.png" src="../_images/Screenshot_18.png" />
+<img alt="../_images/Screenshot_172.png" src="../_images/Screenshot_172.png" />
+<img alt="../_images/Screenshot_182.png" src="../_images/Screenshot_182.png" />
 <p>now we can open it in PEbear, we need to fix first the raw address since we dumped it from memory it is equal to the virtual address</p>
-<img alt="../_images/Screenshot_19.png" src="../_images/Screenshot_19.png" />
+<img alt="../_images/Screenshot_192.png" src="../_images/Screenshot_192.png" />
 <p>Now we need to fix the raw size like start of .rdata at 31000 and .text at 1000 so raw size of .text is 31000-1000=30000</p>
-<img alt="../_images/Screenshot_20.png" src="../_images/Screenshot_20.png" />
-<img alt="../_images/Screenshot_24.png" src="../_images/Screenshot_24.png" />
+<img alt="../_images/Screenshot_202.png" src="../_images/Screenshot_202.png" />
+<img alt="../_images/Screenshot_242.png" src="../_images/Screenshot_242.png" />
 <p>now saving the file then trying to fix the misalignment we created earlier in HxD beacause we copied header of different size
 Opening at the start .text in 1000 address</p>
-<img alt="../_images/Screenshot_211.png" src="../_images/Screenshot_211.png" />
+<img alt="../_images/Screenshot_215.png" src="../_images/Screenshot_215.png" />
 <p>we need to just pad zeroes till it is fixed</p>
-<img alt="../_images/Screenshot_221.png" src="../_images/Screenshot_221.png" />
+<img alt="../_images/Screenshot_222.png" src="../_images/Screenshot_222.png" />
 <p>trying to open it in ida i get error, after checking we see here size on disk is smaller that size of PE file, we can add zeroes(difference of both sizes) to match both sizes</p>
-<img alt="../_images/Screenshot_25.png" src="../_images/Screenshot_25.png" />
-<img alt="../_images/Screenshot_26.png" src="../_images/Screenshot_26.png" />
+<img alt="../_images/Screenshot_252.png" src="../_images/Screenshot_252.png" />
+<img alt="../_images/Screenshot_262.png" src="../_images/Screenshot_262.png" />
 <p>Opening the unpacked in pstudio</p>
-<img alt="../_images/Screenshot_27.png" src="../_images/Screenshot_27.png" />
+<img alt="../_images/Screenshot_272.png" src="../_images/Screenshot_272.png" />
 <p>Let’s check the unpacked file in ida, first it calls 121900 then the output of that function is set to mutex name</p>
-<img alt="../_images/Screenshot_28.png" src="../_images/Screenshot_28.png" />
+<img alt="../_images/Screenshot_281.png" src="../_images/Screenshot_281.png" />
 <p>That function is a decrypting routine with convulted functions, we can just see the output in a debugger to check the mutex name created</p>
-<img alt="../_images/Screenshot_29.png" src="../_images/Screenshot_29.png" />
+<img alt="../_images/Screenshot_292.png" src="../_images/Screenshot_292.png" />
 <p>Mutex name is “lCQhNOCPFC”</p>
-<img alt="../_images/Screenshot_321.png" src="../_images/Screenshot_321.png" />
+<img alt="../_images/Screenshot_322.png" src="../_images/Screenshot_322.png" />
 <p>If there is mutex created before close the exe</p>
-<img alt="../_images/Screenshot_30.png" src="../_images/Screenshot_30.png" />
+<img alt="../_images/Screenshot_302.png" src="../_images/Screenshot_302.png" />
 <p>If not then create a mutex and based on call 122B40 it will either continue or not</p>
-<img alt="../_images/Screenshot_311.png" src="../_images/Screenshot_311.png" />
+<img alt="../_images/Screenshot_314.png" src="../_images/Screenshot_314.png" />
 <p>in 122B40 call it check if some file found in some place (cant see it now in ida) if not found create it</p>
-<img alt="../_images/Screenshot_33.png" src="../_images/Screenshot_33.png" />
+<img alt="../_images/Screenshot_332.png" src="../_images/Screenshot_332.png" />
 <p>Will open that function in x32 to see what is the file, it is Opening roaming path</p>
-<img alt="../_images/Screenshot_34.png" src="../_images/Screenshot_34.png" />
+<img alt="../_images/Screenshot_342.png" src="../_images/Screenshot_342.png" />
 <p>So it searches for file name “vnjJCGkc.PyO” under roaming folder it opens that with createfile with Creationdisposition 3</p>
-<img alt="../_images/Screenshot_35.png" src="../_images/Screenshot_35.png" />
-<img alt="../_images/Screenshot_36.png" src="../_images/Screenshot_36.png" />
+<img alt="../_images/Screenshot_352.png" src="../_images/Screenshot_352.png" />
+<img alt="../_images/Screenshot_362.png" src="../_images/Screenshot_362.png" />
 <p>returns 1 if file exits which then makes the if condition false so nothing happens  (probably checks if it already infected this machine)</p>
-<img alt="../_images/Screenshot_37.png" src="../_images/Screenshot_37.png" />
+<img alt="../_images/Screenshot_372.png" src="../_images/Screenshot_372.png" />
 <p>After that it just makes sure to run this call 123780</p>
-<img alt="../_images/Screenshot_38.png" src="../_images/Screenshot_38.png" />
+<img alt="../_images/Screenshot_382.png" src="../_images/Screenshot_382.png" />
 <p>it iterates in all drives the local and remote</p>
-<img alt="../_images/Screenshot_39.png" src="../_images/Screenshot_39.png" />
-<img alt="../_images/Screenshot_40.png" src="../_images/Screenshot_40.png" />
-<img alt="../_images/Screenshot_411.png" src="../_images/Screenshot_411.png" />
+<img alt="../_images/Screenshot_392.png" src="../_images/Screenshot_392.png" />
+<img alt="../_images/Screenshot_402.png" src="../_images/Screenshot_402.png" />
+<img alt="../_images/Screenshot_414.png" src="../_images/Screenshot_414.png" />
 <p>After that we see routine that created mutex also creates some libraries which will be loaded with loadlibrary</p>
-<img alt="../_images/Screenshot_43.png" src="../_images/Screenshot_43.png" />
-<img alt="../_images/Screenshot_44.png" src="../_images/Screenshot_44.png" />
+<img alt="../_images/Screenshot_432.png" src="../_images/Screenshot_432.png" />
+<img alt="../_images/Screenshot_442.png" src="../_images/Screenshot_442.png" />
 <p>then calls 124040</p>
-<img alt="../_images/Screenshot_45.png" src="../_images/Screenshot_45.png" />
+<img alt="../_images/Screenshot_452.png" src="../_images/Screenshot_452.png" />
 <p>it will iterate over the drive path converting to smaller</p>
-<img alt="../_images/Screenshot_46.png" src="../_images/Screenshot_46.png" />
-<img alt="../_images/Screenshot_47.png" src="../_images/Screenshot_47.png" />
+<img alt="../_images/Screenshot_462.png" src="../_images/Screenshot_462.png" />
+<img alt="../_images/Screenshot_472.png" src="../_images/Screenshot_472.png" />
 <p>After it will decrypt some string and put that in a function</p>
-<img alt="../_images/Screenshot_48.png" src="../_images/Screenshot_48.png" />
+<img alt="../_images/Screenshot_482.png" src="../_images/Screenshot_482.png" />
 <p>It was recycle bin</p>
-<img alt="../_images/Screenshot_49.png" src="../_images/Screenshot_49.png" />
+<img alt="../_images/Screenshot_492.png" src="../_images/Screenshot_492.png" />
 <p>Then insert the string recycle bin into function call 127E30 which i saw only use is give out value if it is -1 (2’s complement of FFFFFF) then break (from likely encryption)</p>
-<img alt="../_images/Screenshot_50.png" src="../_images/Screenshot_50.png" />
+<img alt="../_images/Screenshot_502.png" src="../_images/Screenshot_502.png" />
 <p>so it break on some folders it wont encrypt</p>
-<img alt="../_images/Screenshot_511.png" src="../_images/Screenshot_511.png" />
+<img alt="../_images/Screenshot_514.png" src="../_images/Screenshot_514.png" />
 <p>second values it will break on and don’t encrypt:
 1. system volume information
 2. temporary internet files
@@ -198,29 +204,29 @@ Opening at the start .text in 1000 address</p>
 10. recycler
 11. mosache</p>
 <p>now it iterates over drive:\* and encrypts them using findfirstfile and findnextfile</p>
-<img alt="../_images/Screenshot_60.png" src="../_images/Screenshot_60.png" />
+<img alt="../_images/Screenshot_601.png" src="../_images/Screenshot_601.png" />
 <p>then checks if it is a file or directory if directory it starts all above again if file continue flow</p>
-<img alt="../_images/Screenshot_63.png" src="../_images/Screenshot_63.png" />
-<img alt="../_images/Screenshot_611.png" src="../_images/Screenshot_611.png" />
+<img alt="../_images/Screenshot_631.png" src="../_images/Screenshot_631.png" />
+<img alt="../_images/Screenshot_614.png" src="../_images/Screenshot_614.png" />
 <img alt="../_images/Screenshot_621.png" src="../_images/Screenshot_621.png" />
 <p>out the function it loads another hidden library then calls 1278A0</p>
-<img alt="../_images/Screenshot_641.png" src="../_images/Screenshot_641.png" />
-<img alt="../_images/Screenshot_65.png" src="../_images/Screenshot_65.png" />
+<img alt="../_images/Screenshot_642.png" src="../_images/Screenshot_642.png" />
+<img alt="../_images/Screenshot_651.png" src="../_images/Screenshot_651.png" />
 <p>in the call 122E00 it first calls getdefaultlcid which Returns the locale identifier for the user default locale then checks it with 1049(Russia) if it checks out then abort the ransomware</p>
-<img alt="../_images/Screenshot_66.png" src="../_images/Screenshot_66.png" />
+<img alt="../_images/Screenshot_661.png" src="../_images/Screenshot_661.png" />
 <p>then calls a function which take a random number between 21 and 27 and empty array which it will set</p>
-<img alt="../_images/Screenshot_67.png" src="../_images/Screenshot_67.png" />
+<img alt="../_images/Screenshot_671.png" src="../_images/Screenshot_671.png" />
 <p>in 121D50 it will load encrypted dlls</p>
-<img alt="../_images/Screenshot_68.png" src="../_images/Screenshot_68.png" />
+<img alt="../_images/Screenshot_681.png" src="../_images/Screenshot_681.png" />
 <p>acquiring advapi then some encrypting functions</p>
-<img alt="../_images/Screenshot_69.png" src="../_images/Screenshot_69.png" />
-<img alt="../_images/Screenshot_70.png" src="../_images/Screenshot_70.png" />
-<img alt="../_images/Screenshot_711.png" src="../_images/Screenshot_711.png" />
+<img alt="../_images/Screenshot_691.png" src="../_images/Screenshot_691.png" />
+<img alt="../_images/Screenshot_701.png" src="../_images/Screenshot_701.png" />
+<img alt="../_images/Screenshot_714.png" src="../_images/Screenshot_714.png" />
 <p>the rest is encryption of files then creating the encrypted file using AES</p>
 <img alt="../_images/Screenshot_721.png" src="../_images/Screenshot_721.png" />
 <p>and sends some data (base64 related to my machine)</p>
-<img alt="../_images/Screenshot_73.png" src="../_images/Screenshot_73.png" />
-<img alt="../_images/Screenshot_74.png" src="../_images/Screenshot_74.png" />
+<img alt="../_images/Screenshot_731.png" src="../_images/Screenshot_731.png" />
+<img alt="../_images/Screenshot_741.png" src="../_images/Screenshot_741.png" />
 </section>
 
 

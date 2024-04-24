@@ -75,6 +75,10 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../laugh/chals.html">0xLaugh Rev Challenges</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../mal5/agenttesla.html">Agent Tesla Malware Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal6/remcos.html">Remcos Malware Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../confus/agentsmtp.html">Agent tesla (sample1)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mal8/sample2.html">AndroMeda Malware analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../frida/frida.html">Automated malware analysis with frida</a></li>
 </ul>
 
         </div>
@@ -115,100 +119,100 @@ Vidar has grown to one of the most successful infostealers in the business. Acco
 <section id="basic-dynamic-analysis">
 <h2>Basic Dynamic analysis<a class="headerlink" href="#basic-dynamic-analysis" title="Link to this heading"></a></h2>
 <p>The malware is combiled with visual studio c++ and is 32-bit</p>
-<img alt="../_images/Screenshot_414.png" src="../_images/Screenshot_414.png" />
+<img alt="../_images/Screenshot_418.png" src="../_images/Screenshot_418.png" />
 <p>Running Regshot we observe it changes 7800 registries from scheduled tasks to policies to local settings, i saw it queried my local langauge so maybe it won’t infect certain countries</p>
-<img alt="../_images/Screenshot_114.png" src="../_images/Screenshot_114.png" />
+<img alt="../_images/Screenshot_120.png" src="../_images/Screenshot_120.png" />
 <p>It sent post requests to png(camouflage) files that will likely drop them to the machine from 1 to 7.png to host <code class="docutils literal notranslate"><span class="pre">himarkh.xyz</span></code></p>
-<img alt="../_images/Screenshot_215.png" src="../_images/Screenshot_215.png" />
-<img alt="../_images/Screenshot_315.png" src="../_images/Screenshot_315.png" />
+<img alt="../_images/Screenshot_220.png" src="../_images/Screenshot_220.png" />
+<img alt="../_images/Screenshot_319.png" src="../_images/Screenshot_319.png" />
 </section>
 <section id="unpacking">
 <h2>Unpacking<a class="headerlink" href="#unpacking" title="Link to this heading"></a></h2>
-<p>The unpacking is custom and easy here.It allocates memory for the main code using <cite>VirtualAlloc()</cite> and changes memory protection using <cite>VirtualProtect</cite>
-.So we put 2 breakpoints at <cite>VirtualAlloc</cite> and <cite>VirtualProtect</cite> we can also put at <cite>NTCreateUserProcess</cite></p>
-<p>We hit our VirtualAlloc then run till return, There will a lot VirtualAlloc calls the main malware was at the third call, followed into dump
-Then run till we hit a breakpoint at another VirtualAlloc. And the headers are fixed so we don’t to do anything else</p>
-<img alt="../_images/Screenshot_85.png" src="../_images/Screenshot_85.png" />
-<img alt="../_images/Screenshot_54.png" src="../_images/Screenshot_54.png" />
+<p>The unpacking is custom and easy here.It allocates memory for the main code using <cite>VirtualAlloc()</cite> and it is used a lot so we can use it to look if our main payload is writtern between the calls
+.So we put breakpoint at <cite>VirtualAlloc</cite> (we can also put at <cite>NTCreateUserProcess</cite>)</p>
+<p>We hit our VirtualAlloc then run till return, There will be a lot VirtualAlloc calls the main malware was at the third call, followed into dump
+Then run till we hit a breakpoint at another VirtualAlloc.</p>
+<img alt="../_images/Screenshot_87.png" src="../_images/Screenshot_87.png" />
+<img alt="../_images/Screenshot_518.png" src="../_images/Screenshot_518.png" />
 </section>
 <section id="ida">
 <h2>IDA<a class="headerlink" href="#ida" title="Link to this heading"></a></h2>
 <p>In Winmain looks simple three functions</p>
-<img alt="../_images/Screenshot_94.png" src="../_images/Screenshot_94.png" />
+<img alt="../_images/Screenshot_96.png" src="../_images/Screenshot_96.png" />
 <p>First function, we see our host string and some numbers variable Then bunch of strings that sounds like base64 is then pushed to a function</p>
-<img alt="../_images/Screenshot_105.png" src="../_images/Screenshot_105.png" />
+<img alt="../_images/Screenshot_107.png" src="../_images/Screenshot_107.png" />
 <p>,Running base64 decode on those strings we get nothing, so we go into the deobfuscate routine</p>
-<img alt="../_images/Screenshot_115.png" src="../_images/Screenshot_115.png" />
+<img alt="../_images/Screenshot_1110.png" src="../_images/Screenshot_1110.png" />
 <p>The third function call is a typical base64 routine</p>
-<img alt="../_images/Screenshot_124.png" src="../_images/Screenshot_124.png" />
+<img alt="../_images/Screenshot_126.png" src="../_images/Screenshot_126.png" />
 <p>Then we got another function which is RC4 as The arrays v11 and v7 are initialized with values based on the input a2 which is likey key.
 The first loop initializes the arrays with values from 0 to 255.
 The second loop shuffles the values in the v11 array based on the values in the v7 array.</p>
-<img alt="../_images/Screenshot_134.png" src="../_images/Screenshot_134.png" />
+<img alt="../_images/Screenshot_136.png" src="../_images/Screenshot_136.png" />
 <p>Trying one string to check the process with RC4 key 056139954853430408</p>
-<img alt="../_images/Screenshot_144.png" src="../_images/Screenshot_144.png" />
+<img alt="../_images/Screenshot_145.png" src="../_images/Screenshot_145.png" />
 <p>As the deobfuscate function is used a lot, we will set the variables to the deobfuscated values to make analysis easier using thise scripte <a class="reference external" href="https://github.com/nullcharb/IDAPythonScripts/blob/main/Vidar/1-Decode_Strings.py">https://github.com/nullcharb/IDAPythonScripts/blob/main/Vidar/1-Decode_Strings.py</a></p>
-<img alt="../_images/Screenshot_154.png" src="../_images/Screenshot_154.png" />
-<img alt="../_images/Screenshot_164.png" src="../_images/Screenshot_164.png" />
+<img alt="../_images/Screenshot_155.png" src="../_images/Screenshot_155.png" />
+<img alt="../_images/Screenshot_165.png" src="../_images/Screenshot_165.png" />
 <p>Then after deobfuscating strings, it calls a function with loadlibrary string variable then uses the output as a function with other multiple library calls</p>
-<img alt="../_images/Screenshot_173.png" src="../_images/Screenshot_173.png" />
+<img alt="../_images/Screenshot_175.png" src="../_images/Screenshot_175.png" />
 <p>The function that takes in loadlibrary looks like this</p>
-<img alt="../_images/Screenshot_183.png" src="../_images/Screenshot_183.png" />
+<img alt="../_images/Screenshot_185.png" src="../_images/Screenshot_185.png" />
 <p>But we can make it more understable with power of ida, we see this line <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(</span> <span class="pre">*(_WORD</span> <span class="pre">*)a1</span> <span class="pre">!=</span> <span class="pre">'ZM'</span> <span class="pre">)</span></code> then a1 is of type IMAGE_DOS_HEADER and it is getting magic number the first byte of that structure you can refer to <a class="reference external" href="https://0xrick.github.io/win-internals/pe3/#dos-header">https://0xrick.github.io/win-internals/pe3/#dos-header</a></p>
 <p>So we click of a1 and select set lvar type and change it from int to _IMAGE_DOS_HEADER*</p>
-<img alt="../_images/Screenshot_193.png" src="../_images/Screenshot_193.png" />
-<img alt="../_images/Screenshot_202.png" src="../_images/Screenshot_202.png" />
+<img alt="../_images/Screenshot_195.png" src="../_images/Screenshot_195.png" />
+<img alt="../_images/Screenshot_204.png" src="../_images/Screenshot_204.png" />
 <p>And we get</p>
-<img alt="../_images/Screenshot_216.png" src="../_images/Screenshot_216.png" />
+<img alt="../_images/Screenshot_2110.png" src="../_images/Screenshot_2110.png" />
 <p>Also same thing with v4 it is getting e_lfnew which is start of NT headers (pe headers), so we set type to IMAGE_NT_HEADER</p>
-<img alt="../_images/Screenshot_224.png" src="../_images/Screenshot_224.png" />
+<img alt="../_images/Screenshot_225.png" src="../_images/Screenshot_225.png" />
 <p>Also it is accessing first item from DataDirectory <code class="docutils literal notranslate"><span class="pre">OptionalHeader.DataDirectory[0].VirtualAddress);</span></code> which is Image_Directory_Entry_Export
 <code class="docutils literal notranslate"><span class="pre">#define</span> <span class="pre">IMAGE_DIRECTORY_ENTRY_EXPORT</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0</span>&#160;&#160; <span class="pre">//</span> <span class="pre">Export</span> <span class="pre">Directory</span></code> you can refer to <a class="reference external" href="https://0xrick.github.io/win-internals/pe5/">https://0xrick.github.io/win-internals/pe5/</a> and <a class="reference external" href="https://dev.to/wireless90/exploring-the-export-table-windows-pe-internals-4l47">https://dev.to/wireless90/exploring-the-export-table-windows-pe-internals-4l47</a>
 We fix it using ida enum</p>
-<img alt="../_images/Screenshot_232.png" src="../_images/Screenshot_232.png" />
+<img alt="../_images/Screenshot_234.png" src="../_images/Screenshot_234.png" />
 <p>Let’s also fix type for IMAGE_EXPORT_DIRECTORY</p>
-<img alt="../_images/Screenshot_243.png" src="../_images/Screenshot_243.png" />
+<img alt="../_images/Screenshot_245.png" src="../_images/Screenshot_245.png" />
 <p>In the end it looks like this which first does some checks that it is a PE file,
 then searches for a function name in the export directory of a PE file.
 It uses the export directory information to locate the function by name and return its address.
 iterates over the export names and checks if any matches the variable a2. If a match is found,
 it calculates the function’s address and returns that address</p>
-<img alt="../_images/Screenshot_252.png" src="../_images/Screenshot_252.png" />
+<img alt="../_images/Screenshot_254.png" src="../_images/Screenshot_254.png" />
 <p>So it indireclty gets loadlibrary from PEB Kernel32dll to image dos header to imageNTHeaders to its address of the functions</p>
-<img alt="../_images/Screenshot_262.png" src="../_images/Screenshot_262.png" />
+<img alt="../_images/Screenshot_264.png" src="../_images/Screenshot_264.png" />
 <p>And in same way gets GetProcAddress which is used to get all necessary functions, we will use another script to set variable names to the function <a class="reference external" href="https://github.com/nullcharb/IDAPythonScripts/blob/main/Vidar/2-Rename_Dynamic_Functions.py">https://github.com/nullcharb/IDAPythonScripts/blob/main/Vidar/2-Rename_Dynamic_Functions.py</a></p>
-<img alt="../_images/Screenshot_272.png" src="../_images/Screenshot_272.png" />
-<img alt="../_images/Screenshot_282.png" src="../_images/Screenshot_282.png" />
+<img alt="../_images/Screenshot_274.png" src="../_images/Screenshot_274.png" />
+<img alt="../_images/Screenshot_283.png" src="../_images/Screenshot_283.png" />
 <p>Now back to Winmain, it first deobfuscate strings, then resolve some apis, then does two checks if passed calls the main function malware</p>
-<img alt="../_images/Screenshot_292.png" src="../_images/Screenshot_292.png" />
+<img alt="../_images/Screenshot_294.png" src="../_images/Screenshot_294.png" />
 <div class="line-block">
 <div class="line">First checks gets user langauge and exits if it is certain values</div>
 <div class="line">1091=Uzbek (Latin) 2092=Azerbaijani (Cyrillic) 1087=Kazakh  1058=Ukrainian  1049=Russian  1059=Belarusian</div>
 <div class="line">refer to <a class="reference external" href="https://learn.microsoft.com/en-us/openspecs/office_standards/ms-oe376/6c085406-a698-4e12-9d4d-c3b0ee3dbc4a">https://learn.microsoft.com/en-us/openspecs/office_standards/ms-oe376/6c085406-a698-4e12-9d4d-c3b0ee3dbc4a</a></div>
 </div>
-<img alt="../_images/Screenshot_302.png" src="../_images/Screenshot_302.png" />
+<img alt="../_images/Screenshot_304.png" src="../_images/Screenshot_304.png" />
 <p>Second check Gets the computer name and checks it against HAL9TH and JohnDoe and exits if it is</p>
-<img alt="../_images/Screenshot_316.png" src="../_images/Screenshot_316.png" />
-<img alt="../_images/Screenshot_324.png" src="../_images/Screenshot_324.png" />
+<img alt="../_images/Screenshot_3110.png" src="../_images/Screenshot_3110.png" />
+<img alt="../_images/Screenshot_325.png" src="../_images/Screenshot_325.png" />
 <p>Into the main functionality, first it initalizes some values in the class</p>
-<img alt="../_images/Screenshot_333.png" src="../_images/Screenshot_333.png" />
+<img alt="../_images/Screenshot_335.png" src="../_images/Screenshot_335.png" />
 <p>Then it prepares some urls that will be fetched later like himarkh.xyz/main.php</p>
-<img alt="../_images/Screenshot_343.png" src="../_images/Screenshot_343.png" />
+<img alt="../_images/Screenshot_345.png" src="../_images/Screenshot_345.png" />
 <p>Then it will create random directories inside programData directory</p>
-<img alt="../_images/Screenshot_353.png" src="../_images/Screenshot_353.png" />
-<img alt="../_images/Screenshot_363.png" src="../_images/Screenshot_363.png" />
+<img alt="../_images/Screenshot_355.png" src="../_images/Screenshot_355.png" />
+<img alt="../_images/Screenshot_365.png" src="../_images/Screenshot_365.png" />
 <p>Then it will call a function with url string first argument and second argument a dll file that it will likely overwrite</p>
-<img alt="../_images/Screenshot_373.png" src="../_images/Screenshot_373.png" />
+<img alt="../_images/Screenshot_375.png" src="../_images/Screenshot_375.png" />
 <p>The function will first call the url using http and post request</p>
-<img alt="../_images/Screenshot_383.png" src="../_images/Screenshot_383.png" />
+<img alt="../_images/Screenshot_385.png" src="../_images/Screenshot_385.png" />
 <p>Then it will write the response to a file with name as inputted</p>
-<img alt="../_images/Screenshot_393.png" src="../_images/Screenshot_393.png" />
+<img alt="../_images/Screenshot_395.png" src="../_images/Screenshot_395.png" />
 <p>Now it will start to steal any data, first function, it will create file passwords and start to steal data from various browsers</p>
-<img alt="../_images/Screenshot_402.png" src="../_images/Screenshot_402.png" />
+<img alt="../_images/Screenshot_404.png" src="../_images/Screenshot_404.png" />
 <p>First function,this <cite>link &lt;https://www.codeproject.com/Articles/1167943/The-Secrets-of-Internet-Explorer-Credentials&gt;</cite> explains the usage of these functions that are used to steal from IE browser</p>
-<img alt="../_images/Screenshot_415.png" src="../_images/Screenshot_415.png" />
+<img alt="../_images/Screenshot_419.png" src="../_images/Screenshot_419.png" />
 <p>Then it dynamically loads some api calls from the downloaded sqlite</p>
-<img alt="../_images/Screenshot_422.png" src="../_images/Screenshot_422.png" />
+<img alt="../_images/Screenshot_423.png" src="../_images/Screenshot_423.png" />
 <p>It will go to the data location for each browser of these</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Google_Chrome
 Chromium
@@ -240,29 +244,29 @@ KMeleon
 Thunderbird
 </pre></div>
 </div>
-<img alt="../_images/Screenshot_432.png" src="../_images/Screenshot_432.png" />
+<img alt="../_images/Screenshot_434.png" src="../_images/Screenshot_434.png" />
 <p>In chrome it will read local state file in chrome folder</p>
-<img alt="../_images/Screenshot_452.png" src="../_images/Screenshot_452.png" />
+<img alt="../_images/Screenshot_454.png" src="../_images/Screenshot_454.png" />
 <p>and starts to read from encrypted_key</p>
-<img alt="../_images/Screenshot_462.png" src="../_images/Screenshot_462.png" />
-<img alt="../_images/Screenshot_442.png" src="../_images/Screenshot_442.png" />
+<img alt="../_images/Screenshot_464.png" src="../_images/Screenshot_464.png" />
+<img alt="../_images/Screenshot_444.png" src="../_images/Screenshot_444.png" />
 <p>And likely tries to decrypt it</p>
-<img alt="../_images/Screenshot_472.png" src="../_images/Screenshot_472.png" />
+<img alt="../_images/Screenshot_474.png" src="../_images/Screenshot_474.png" />
 <p>In mozilla it goes to profiles directory in appdata</p>
-<img alt="../_images/Screenshot_492.png" src="../_images/Screenshot_492.png" />
+<img alt="../_images/Screenshot_494.png" src="../_images/Screenshot_494.png" />
 <p>And prepares api calls we see example of its usage here to steal firefox passwords <a class="reference external" href="https://github.com/lacostej/firefox_password_dump/tree/master">https://github.com/lacostej/firefox_password_dump/tree/master</a></p>
-<img alt="../_images/Screenshot_482.png" src="../_images/Screenshot_482.png" />
+<img alt="../_images/Screenshot_484.png" src="../_images/Screenshot_484.png" />
 <p>Iterating recursively the directory</p>
-<img alt="../_images/Screenshot_502.png" src="../_images/Screenshot_502.png" />
+<img alt="../_images/Screenshot_504.png" src="../_images/Screenshot_504.png" />
 <p>Then utilizing sqlite</p>
-<img alt="../_images/Screenshot_521.png" src="../_images/Screenshot_521.png" />
+<img alt="../_images/Screenshot_522.png" src="../_images/Screenshot_522.png" />
 <p>and performing below queries</p>
-<img alt="../_images/Screenshot_513.png" src="../_images/Screenshot_513.png" />
+<img alt="../_images/Screenshot_519.png" src="../_images/Screenshot_519.png" />
 <p>Next it goes into outlook</p>
-<img alt="../_images/Screenshot_531.png" src="../_images/Screenshot_531.png" />
-<img alt="../_images/Screenshot_541.png" src="../_images/Screenshot_541.png" />
+<img alt="../_images/Screenshot_532.png" src="../_images/Screenshot_532.png" />
+<img alt="../_images/Screenshot_542.png" src="../_images/Screenshot_542.png" />
 <p>Then aims to harvest data from cryptocurrency wallets and puts the stolen info in the folder.</p>
-<img alt="../_images/Screenshot_55.png" src="../_images/Screenshot_55.png" />
+<img alt="../_images/Screenshot_551.png" src="../_images/Screenshot_551.png" />
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>multidoge.wallet
 Bitcoin
 Ethereum
@@ -302,18 +306,18 @@ YACoin\\
 <div class="line">And it is copying respective files to each wallet with directories of their name to the created directory</div>
 <div class="line">Like createdDir\Ethereum\Keystore and if not respective file it copies any thing containing <em>wal</em></div>
 </div>
-<img alt="../_images/Screenshot_56.png" src="../_images/Screenshot_56.png" />
-<img alt="../_images/Screenshot_57.png" src="../_images/Screenshot_57.png" />
+<img alt="../_images/Screenshot_561.png" src="../_images/Screenshot_561.png" />
+<img alt="../_images/Screenshot_571.png" src="../_images/Screenshot_571.png" />
 <p>Then likely sends all the data with post request to the hosthimarkh.xyz/main.php</p>
-<img alt="../_images/Screenshot_631.png" src="../_images/Screenshot_631.png" />
+<img alt="../_images/Screenshot_632.png" src="../_images/Screenshot_632.png" />
 <img alt="../_images/Screenshot_622.png" src="../_images/Screenshot_622.png" />
 <p>In the end it does some cleanup, First function does shellexecute on some generate random generated file.exe in program data , maybe to thwart analysis
 Then it cleans directory created and deletes files downloaded</p>
-<img alt="../_images/Screenshot_58.png" src="../_images/Screenshot_58.png" />
-<img alt="../_images/Screenshot_59.png" src="../_images/Screenshot_59.png" />
+<img alt="../_images/Screenshot_581.png" src="../_images/Screenshot_581.png" />
+<img alt="../_images/Screenshot_591.png" src="../_images/Screenshot_591.png" />
 <p>Then runs cmd with taskkill of current process created and exits</p>
-<img alt="../_images/Screenshot_601.png" src="../_images/Screenshot_601.png" />
-<img alt="../_images/Screenshot_613.png" src="../_images/Screenshot_613.png" />
+<img alt="../_images/Screenshot_602.png" src="../_images/Screenshot_602.png" />
+<img alt="../_images/Screenshot_617.png" src="../_images/Screenshot_617.png" />
 <div class="highlight-yara notranslate"><div class="highlight"><pre><span></span><span class="kd">rule</span><span class="w"> </span>V<span class="n">idar_Stealer</span><span class="w"> </span><span class="p">:</span><span class="w"> </span>V<span class="n">idar</span>
 <span class="p">{</span>
 <span class="w">    </span><span class="k">meta</span><span class="p">:</span>
